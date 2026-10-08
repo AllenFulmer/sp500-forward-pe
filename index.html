@@ -1,74 +1,187 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-theme="dark">
 <head>
 <meta charset="utf-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1" />
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
 <title>S&amp;P 500 valuation measures — Forward P/E</title>
+<script>
+  // Set theme before first paint to avoid a flash. Default is dark for first-time
+  // visitors (OS preference intentionally ignored); a saved choice is respected.
+  (function () {
+    var t = "dark";
+    try { var s = localStorage.getItem("theme"); if (s === "light" || s === "dark") t = s; } catch (e) {}
+    document.documentElement.setAttribute("data-theme", t);
+  })();
+</script>
+<meta name="color-scheme" content="dark light" />
+<link rel="icon" href="data:," />
+<meta name="theme-color" content="#0e1013" />
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/chartjs-adapter-date-fns@3.0.0/dist/chartjs-adapter-date-fns.bundle.min.js"></script>
 <style>
-  :root {
+  /* Light theme (original palette) */
+  :root, [data-theme="light"] {
+    color-scheme: light;
+    --page-bg: #f2f2f2;
+    --bg: #ffffff;
     --ink: #1a1a1a;
     --muted: #555;
+    --footer-ink: #666;
+    --link: #444;
+    --card-border: #c8c8c8;
+    --rule: #e5e5e5;
     --grid: #d9d9d9;
     --green: #5f8a31;
     --line: #3a3a3a;
-    --bg: #ffffff;
+    --tick: #333;
+    --axis: #888;
     --badge: #1a1a1a;
+    --badge-ink: #fff;
+    --pill-bg: #eef5e4;
+    --pill-warn-bg: #f7f0df; --pill-warn-ink: #8a6d1f;
+    --pill-err-bg: #f6e4e4;  --pill-err-ink: #8a2f2f;
+    --inset-bg: rgba(255,255,255,0.94);
+    --inset-border: #222;
+    --inset-head-bg: #f7f7f7;
+    --inset-desc: #444;
+    --msg-ink: #8a2f2f; --msg-bg: #fff; --msg-border: #d9b3b3;
+    --tip-bg: rgba(255,255,255,0.97);
+    --tip-ink: #1a1a1a;
+    --tip-border: #c8c8c8;
+    --btn-bg: #ffffff;
+    --btn-border: #bdbdbd;
+    --btn-hover: #f0f0f0;
+    --focus: #2f6fd6;
+    --shadow: 0 1px 2px rgba(0,0,0,.04);
+  }
+  /* Dark theme (default) */
+  [data-theme="dark"] {
+    color-scheme: dark;
+    --page-bg: #0e1013;
+    --bg: #171a1f;
+    --ink: #e9ebee;
+    --muted: #a7adb6;
+    --footer-ink: #9aa0a8;
+    --link: #c8cdd4;
+    --card-border: #2b3038;
+    --rule: #2b3038;
+    --grid: #2a2f37;
+    --green: #8cc152;
+    --line: #e4e7eb;
+    --tick: #b9bec6;
+    --axis: #5b626c;
+    --badge: #e9ebee;
+    --badge-ink: #111317;
+    --pill-bg: rgba(140,193,82,0.14);
+    --pill-warn-bg: rgba(224,180,70,0.15); --pill-warn-ink: #e3c169;
+    --pill-err-bg: rgba(230,100,100,0.15);  --pill-err-ink: #f09a9a;
+    --inset-bg: rgba(23,26,31,0.94);
+    --inset-border: #5b626c;
+    --inset-head-bg: #20242b;
+    --inset-desc: #b9bec6;
+    --msg-ink: #f09a9a; --msg-bg: #171a1f; --msg-border: #6b3a3a;
+    --tip-bg: rgba(32,36,43,0.97);
+    --tip-ink: #e9ebee;
+    --tip-border: #3a404a;
+    --btn-bg: #20242b;
+    --btn-border: #3a404a;
+    --btn-hover: #2a2f37;
+    --focus: #7fb0ff;
+    --shadow: 0 1px 2px rgba(0,0,0,.4);
   }
   * { box-sizing: border-box; }
-  html, body { margin: 0; padding: 0; background: #f2f2f2; color: var(--ink);
+  html { -webkit-text-size-adjust: 100%; text-size-adjust: 100%; }
+  html, body { margin: 0; padding: 0; background: var(--page-bg); color: var(--ink);
     font-family: "Helvetica Neue", Helvetica, Arial, sans-serif; }
   .page { max-width: 1100px; margin: 24px auto; padding: 0 16px 40px; }
   .card {
-    background: var(--bg); border: 1px solid #c8c8c8; border-radius: 2px;
-    padding: 18px 22px 14px; box-shadow: 0 1px 2px rgba(0,0,0,.04);
+    background: var(--bg); border: 1px solid var(--card-border); border-radius: 2px;
+    padding: 18px 22px 14px; box-shadow: var(--shadow);
   }
   .header { display: flex; justify-content: space-between; align-items: flex-start; gap: 12px; }
+  .header .titles { min-width: 0; }
   h1 { font-size: 22px; font-weight: 700; margin: 0 0 4px; letter-spacing: -0.2px; }
   h2 { font-size: 15px; font-weight: 700; margin: 0; color: var(--ink); }
+  .header-actions { display: flex; align-items: center; gap: 10px; flex-shrink: 0; }
   .badges { display: flex; gap: 6px; flex-shrink: 0; }
   .badge {
-    background: var(--badge); color: #fff; font-size: 11px; font-weight: 700;
+    background: var(--badge); color: var(--badge-ink); font-size: 11px; font-weight: 700;
     padding: 4px 9px; border-radius: 3px; letter-spacing: 0.3px;
   }
+  .theme-toggle {
+    display: inline-flex; align-items: center; justify-content: center;
+    width: 44px; height: 44px; padding: 0; margin: -6px 0 0;
+    background: var(--btn-bg); color: var(--ink); border: 1px solid var(--btn-border);
+    border-radius: 8px; cursor: pointer; flex-shrink: 0;
+    transition: background-color .15s ease, border-color .15s ease;
+    -webkit-tap-highlight-color: transparent;
+  }
+  .theme-toggle:hover { background: var(--btn-hover); }
+  .theme-toggle:focus-visible { outline: 2px solid var(--focus); outline-offset: 2px; }
+  .theme-toggle svg { width: 20px; height: 20px; display: block; }
+  /* Show the icon of the theme you will switch TO */
+  [data-theme="dark"] .theme-toggle .icon-moon { display: none; }
+  [data-theme="light"] .theme-toggle .icon-sun { display: none; }
   .status {
     margin: 10px 0 6px; font-size: 12px; color: var(--muted);
     display: flex; flex-wrap: wrap; gap: 8px 16px; align-items: center;
   }
   .status .pill {
     display: inline-block; padding: 2px 8px; border-radius: 999px;
-    background: #eef5e4; color: var(--green); font-weight: 600; font-size: 11px;
+    background: var(--pill-bg); color: var(--green); font-weight: 600; font-size: 11px;
   }
-  .status .pill.warn { background: #f7f0df; color: #8a6d1f; }
-  .status .pill.err { background: #f6e4e4; color: #8a2f2f; }
-  .chart-wrap { position: relative; width: 100%; height: clamp(380px, 52vw, 520px); margin-top: 4px; }
-  canvas { width: 100% !important; height: 100% !important; }
+  .status .pill.warn { background: var(--pill-warn-bg); color: var(--pill-warn-ink); }
+  .status .pill.err { background: var(--pill-err-bg); color: var(--pill-err-ink); }
+  .chart-block { position: relative; width: 100%; margin-top: 4px; }
+  .chart-wrap { position: relative; width: 100%; height: clamp(380px, 52vw, 520px); }
+  canvas { width: 100% !important; height: 100% !important; display: block; }
   .chart-msg { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center;
-    text-align: center; padding: 24px; color: #8a2f2f; font-size: 15px; background: #fff;
-    border: 1px dashed #d9b3b3; }
+    text-align: center; padding: 24px; color: var(--msg-ink); font-size: 15px; background: var(--msg-bg);
+    border: 1px dashed var(--msg-border); }
   /* Inset valuation table overlay */
   .inset {
     position: absolute; left: 29%; top: 30px; z-index: 2;
-    background: rgba(255,255,255,0.94); border: 1px solid #222;
+    background: var(--inset-bg); border: 1px solid var(--inset-border);
     font-size: 11.5px; line-height: 1.35; min-width: 310px;
     box-shadow: 0 1px 0 rgba(0,0,0,.04);
   }
   .inset table { border-collapse: collapse; width: 100%; }
-  .inset th, .inset td { padding: 5px 10px; text-align: left; border-bottom: 1px solid #e5e5e5; white-space: nowrap; }
+  .inset th, .inset td { padding: 5px 10px; text-align: left; border-bottom: 1px solid var(--rule); white-space: nowrap; }
   .inset tr:last-child td { border-bottom: none; }
-  .inset th { font-weight: 700; background: #f7f7f7; border-bottom: 1px solid #222; }
+  .inset th { font-weight: 700; background: var(--inset-head-bg); border-bottom: 1px solid var(--inset-border); }
   .inset td.num, .inset th.num { text-align: right; font-variant-numeric: tabular-nums; }
-  .inset td.desc { color: #444; }
+  .inset td.desc { color: var(--inset-desc); }
   footer {
-    margin-top: 12px; font-size: 11px; color: #666; line-height: 1.45;
-    border-top: 1px solid #e5e5e5; padding-top: 10px;
+    margin-top: 12px; font-size: 11px; color: var(--footer-ink); line-height: 1.45;
+    border-top: 1px solid var(--rule); padding-top: 10px;
   }
-  footer a { color: #444; }
+  footer a { color: var(--link); }
   @media (max-width: 700px) {
-    .inset { left: 8px; top: 8px; min-width: 0; font-size: 10.5px; max-width: calc(100% - 16px); }
-    .inset th, .inset td { padding: 4px 6px; }
-    h1 { font-size: 18px; }
+    .page { margin: 12px auto; padding: 0 10px 24px; }
+    .card { padding: 14px 14px 12px; }
+    h1 { font-size: 19px; line-height: 1.25; }
+    h2 { font-size: 15px; line-height: 1.3; }
+    .header { flex-wrap: wrap; }
+    .header .titles { flex: 1 1 200px; }
+    .status { font-size: 13px; }
+    .status .pill { font-size: 12px; padding: 3px 9px; line-height: 1.4; }
+    /* Table moves out of the chart overlay and scrolls within its own box if needed */
+    .inset {
+      position: static; min-width: 0; max-width: 100%; width: 100%;
+      font-size: 13px; margin: 6px 0 10px;
+      overflow-x: auto; -webkit-overflow-scrolling: touch;
+    }
+    .inset th, .inset td { padding: 7px 8px; }
+    .inset th { white-space: normal; vertical-align: bottom; }
+    .inset td.desc { white-space: normal; min-width: 7em; }
+    .chart-wrap { height: clamp(300px, 92vw, 420px); }
+    footer { font-size: 13px; line-height: 1.75; }
+    footer a { padding: 6px 0; }
+  }
+  @media (max-width: 400px) {
+    .card { padding: 12px 10px 10px; }
+    .inset { font-size: 12.5px; }
+    .inset th, .inset td { padding: 7px 6px; }
   }
 </style>
 </head>
@@ -76,18 +189,24 @@
 <div class="page">
   <div class="card">
     <div class="header">
-      <div>
+      <div class="titles">
         <h1>S&amp;P 500 valuation measures</h1>
         <h2>S&amp;P 500 index: Forward P/E ratio</h2>
       </div>
-      <div class="badges" aria-hidden="true">
-        <span class="badge">GTM</span>
-        <span class="badge">U.S.</span>
-        <span class="badge">5</span>
+      <div class="header-actions">
+        <div class="badges" aria-hidden="true">
+          <span class="badge">GTM</span>
+          <span class="badge">U.S.</span>
+          <span class="badge">5</span>
+        </div>
+        <button type="button" class="theme-toggle" id="theme-toggle" aria-label="Switch to light mode" title="Switch to light mode">
+          <svg class="icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><circle cx="12" cy="12" r="4.5"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41"/></svg>
+          <svg class="icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+        </button>
       </div>
     </div>
     <div class="status" id="status">Loading…</div>
-    <div class="chart-wrap">
+    <div class="chart-block">
       <div class="inset" id="inset">
         <table>
           <thead>
@@ -103,7 +222,9 @@
           </tbody>
         </table>
       </div>
-      <canvas id="chart" role="img" aria-label="S&amp;P 500 forward P/E chart"></canvas>
+      <div class="chart-wrap">
+        <canvas id="chart" role="img" aria-label="S&amp;P 500 forward P/E chart"></canvas>
+      </div>
     </div>
     <footer>
       Inspired by J.P. Morgan Guide to the Markets style. Not affiliated with J.P. Morgan.
@@ -124,9 +245,25 @@
 (function () {
   "use strict";
 
-  const GREEN = "#5f8a31";
-  const LINE = "#3a3a3a";
-  const GRID = "#d9d9d9";
+  // Theme-aware chart colours, read from the CSS variables of the active theme.
+  function themeColors() {
+    const cs = getComputedStyle(document.documentElement);
+    const v = (n, fb) => (cs.getPropertyValue(n) || "").trim() || fb;
+    return {
+      green: v("--green", "#5f8a31"),
+      line: v("--line", "#3a3a3a"),
+      grid: v("--grid", "#d9d9d9"),
+      tick: v("--tick", "#333"),
+      axis: v("--axis", "#888"),
+      ink: v("--ink", "#1a1a1a"),
+      bg: v("--bg", "#ffffff"),
+      tipBg: v("--tip-bg", "rgba(255,255,255,0.97)"),
+      tipInk: v("--tip-ink", "#1a1a1a"),
+      tipBorder: v("--tip-border", "#c8c8c8"),
+    };
+  }
+  let C = themeColors();
+  const isNarrow = (chart) => (chart && chart.width ? chart.width : window.innerWidth) < 560;
   const URL_FWD = "https://historyofmarket.com/api/sp500/forward-pe.json";
   const URL_CAPE = "https://historyofmarket.com/api/sp500/pe.json";
   // Moody's Seasoned Baa Corporate Bond Yield, monthly %, FRED series BAA (public domain).
@@ -257,6 +394,8 @@
       if (!opts || !opts.lines) return;
       const yScale = scales.y;
       const xScale = scales.x;
+      const GREEN = C.green;
+      const narrow = isNarrow(chart);
       ctx.save();
       for (const L of opts.lines) {
         const y = yScale.getPixelForValue(L.value);
@@ -270,14 +409,24 @@
         ctx.stroke();
         ctx.setLineDash([]);
         ctx.fillStyle = GREEN;
-        ctx.font = "600 11px Helvetica Neue, Helvetica, Arial, sans-serif";
+        ctx.font = "600 " + (narrow ? 10 : 11) + "px Helvetica Neue, Helvetica, Arial, sans-serif";
         ctx.textAlign = "left";
         ctx.textBaseline = "bottom";
         // GTM-style placement: +1σ right, average centre, −1σ left
         const w = chartArea.right - chartArea.left;
-        const labelX = chartArea.left + w * (L.pos != null ? L.pos : 0.4);
+        const pos = narrow && L.posNarrow != null ? L.posNarrow : (L.pos != null ? L.pos : 0.4);
+        const text = L.label + ": " + L.value.toFixed(1) + "x";
+        const tw = ctx.measureText(text).width;
+        // Keep the label fully inside the plot area on small screens
+        const labelX = Math.min(chartArea.right - tw / 2 - 2, Math.max(chartArea.left + tw / 2 + 2, chartArea.left + w * pos));
         ctx.textAlign = "center";
-        ctx.fillText(L.label + ": " + L.value.toFixed(1) + "x", labelX, y - 4);
+        // Soft backdrop so the label stays legible where it crosses the P/E line
+        ctx.save();
+        ctx.globalAlpha = 0.8;
+        ctx.fillStyle = C.bg;
+        ctx.fillRect(labelX - tw / 2 - 3, y - 4 - (narrow ? 12 : 13), tw + 6, narrow ? 12 : 13);
+        ctx.restore();
+        ctx.fillText(text, labelX, y - 4);
       }
 
       // Endpoint green label
@@ -286,7 +435,7 @@
         const x = xScale.getPixelForValue(new Date(date + "T00:00:00"));
         const y = yScale.getPixelForValue(value);
         ctx.fillStyle = GREEN;
-        ctx.font = "700 12px Helvetica Neue, Helvetica, Arial, sans-serif";
+        ctx.font = "700 " + (narrow ? 11 : 12) + "px Helvetica Neue, Helvetica, Arial, sans-serif";
         ctx.textAlign = "right";
         ctx.textBaseline = "bottom";
         const label = fmtDate(date) + ": " + value.toFixed(1) + "x";
@@ -355,7 +504,8 @@
 
     // Point styles: only last point is a green filled circle
     const pointR = values.map((_, i) => i === values.length - 1 ? 5 : 0);
-    const pointC = values.map((_, i) => i === values.length - 1 ? GREEN : "transparent");
+    C = themeColors();
+    const pointC = values.map((_, i) => i === values.length - 1 ? C.green : "transparent");
 
     const yMin = Math.min(8, Math.floor(Math.min(...values, metrics.minus1) - 1));
     const yMax = Math.max(30, Math.ceil(Math.max(...values, metrics.plus1) + 1));
@@ -367,7 +517,7 @@
         datasets: [{
           label: "Forward P/E",
           data: values,
-          borderColor: LINE,
+          borderColor: C.line,
           backgroundColor: "transparent",
           borderWidth: 1.6,
           tension: 0.05,
@@ -384,8 +534,15 @@
         animation: false,
         interaction: { mode: "index", intersect: false },
         plugins: {
-          legend: { display: false },
+          legend: { display: false, labels: { color: C.ink } },
           tooltip: {
+            backgroundColor: C.tipBg,
+            titleColor: C.tipInk,
+            bodyColor: C.tipInk,
+            borderColor: C.tipBorder,
+            borderWidth: 1,
+            displayColors: false,
+            padding: 8,
             callbacks: {
               title: (items) => items[0] ? fmtDate(items[0].label) : "",
               label: (item) => " Forward P/E: " + (+item.raw).toFixed(2) + "x",
@@ -393,7 +550,7 @@
           },
           refs: {
             lines: [
-              { value: metrics.plus1, label: "+1 Std. dev.", pos: 0.72 },
+              { value: metrics.plus1, label: "+1 Std. dev.", pos: 0.72, posNarrow: 0.6 },
               { value: metrics.mu, label: "30-year average", pos: 0.45 },
               { value: metrics.minus1, label: "−1 Std. dev.", pos: 0.18 },
             ],
@@ -406,13 +563,14 @@
             time: { unit: "year", tooltipFormat: "MMM d, yyyy" },
             min: "1996-01-01",
             ticks: {
-              color: "#333",
+              color: C.tick,
               font: { size: 11 },
               callback: function (val, i, ticks) {
-                // Every 2 years, short year label
+                // Every 2 years, short year label (every 4 years on narrow screens)
                 const d = new Date(val);
                 const y = d.getFullYear();
-                if (y % 2 !== 0) return "";
+                const step = isNarrow(this.chart) ? 4 : 2;
+                if (y % step !== 0) return "";
                 return "'" + String(y).slice(2);
               },
               maxRotation: 0,
@@ -420,18 +578,18 @@
               source: "auto",
             },
             grid: { display: false },
-            border: { color: "#888" },
+            border: { color: C.axis },
           },
           y: {
             min: Math.max(6, yMin),
             max: Math.min(34, yMax),
             ticks: {
               stepSize: 2,
-              color: "#333",
+              color: C.tick,
               font: { size: 11 },
               callback: (v) => v + "x",
             },
-            grid: { color: GRID, drawTicks: false },
+            grid: { color: C.grid, drawTicks: false },
             border: { display: false },
           }
         },
@@ -439,6 +597,9 @@
       },
       plugins: [refPlugin]
     };
+    const narrowNow = window.innerWidth < 560;
+    cfg.options.scales.x.ticks.font.size = narrowNow ? 10 : 11;
+    cfg.options.scales.y.ticks.font.size = narrowNow ? 10 : 11;
 
     const canvas = document.getElementById("chart");
     if (chart) chart.destroy();
@@ -494,6 +655,62 @@
     } catch (e) {
       showUnavailable(e && e.message);
     }
+  }
+
+  // Re-apply theme colours to an existing chart without rebuilding it.
+  function applyChartTheme() {
+    C = themeColors();
+    if (!chart) return;
+    const o = chart.options, ds = chart.data.datasets[0];
+    ds.borderColor = C.line;
+    const n = ds.data.length;
+    ds.pointBackgroundColor = ds.data.map((_, i) => i === n - 1 ? C.green : "transparent");
+    ds.pointBorderColor = ds.pointBackgroundColor;
+    o.scales.x.ticks.color = C.tick;
+    o.scales.x.border.color = C.axis;
+    o.scales.y.ticks.color = C.tick;
+    o.scales.y.grid.color = C.grid;
+    o.plugins.legend.labels.color = C.ink;
+    Object.assign(o.plugins.tooltip, {
+      backgroundColor: C.tipBg, titleColor: C.tipInk, bodyColor: C.tipInk, borderColor: C.tipBorder,
+    });
+    chart.update("none");
+  }
+
+  // Font size for axis ticks follows the viewport (Chart.js re-renders on resize).
+  window.addEventListener("resize", () => {
+    if (!chart) return;
+    const size = window.innerWidth < 560 ? 10 : 11;
+    const o = chart.options;
+    if (o.scales.x.ticks.font.size !== size) {
+      o.scales.x.ticks.font.size = size;
+      o.scales.y.ticks.font.size = size;
+      chart.update("none");
+    }
+  });
+
+  // Dark/light toggle. Default dark; the user's explicit choice is saved in localStorage.
+  const toggle = document.getElementById("theme-toggle");
+  function currentTheme() {
+    return document.documentElement.getAttribute("data-theme") === "light" ? "light" : "dark";
+  }
+  function syncToggle() {
+    const next = currentTheme() === "dark" ? "light" : "dark";
+    const label = "Switch to " + next + " mode";
+    toggle.setAttribute("aria-label", label);
+    toggle.setAttribute("title", label);
+    const meta = document.querySelector('meta[name="theme-color"]');
+    if (meta) meta.setAttribute("content", currentTheme() === "dark" ? "#0e1013" : "#f2f2f2");
+  }
+  function setTheme(t) {
+    document.documentElement.setAttribute("data-theme", t);
+    try { localStorage.setItem("theme", t); } catch (e) {}
+    syncToggle();
+    applyChartTheme();
+  }
+  if (toggle) {
+    syncToggle();
+    toggle.addEventListener("click", () => setTheme(currentTheme() === "dark" ? "light" : "dark"));
   }
 
   load();
