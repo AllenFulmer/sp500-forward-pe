@@ -11,11 +11,15 @@ Sources (none send CORS headers, so the data is embedded like BAA_MONTHLY):
   Robert J. Shiller, "Irrational Exuberance" data (ie_data.xls from shillerdata.com):
     D / P * 100  S&P 500 dividend yield (trailing 4-quarter dividends / monthly avg price)
     E / P * 100  S&P 500 earnings yield (trailing 4-quarter reported earnings / monthly avg price)
+    D_t / D_t-12 S&P 500 dividend growth: year-over-year % change in trailing 4-quarter dividends
+                 (Shiller's monthly D is the S&P four-quarter dividend total, linearly interpolated
+                 to months, so this is growth in trailing 12-month dividends per index share)
 
-Requires: curl, and the `xlrd` package to read Shiller's .xls (pip install xlrd).
+Requires: curl, and the `xlrd` package to read Shiller's .xls (pip install xlrd). If xlrd is
+missing, it re-runs itself under /workspace/.pwvenv/bin/python when that exists (shared box).
 Prints CHANGED or UNCHANGED. Leaves everything outside the marked block untouched.
 """
-import csv, io, json, re, subprocess, sys
+import csv, io, json, os, re, subprocess, sys
 from pathlib import Path
 
 START = "1996-01"  # same start as the main forward P/E chart
@@ -53,6 +57,11 @@ def shiller():
     try:
         import xlrd
     except ImportError:
+        # On the shared box, plain python3 lacks xlrd; re-run under the venv that has it.
+        venv = Path("/workspace/.pwvenv/bin/python")
+        if venv.exists() and not os.environ.get("UPDATE_MACRO_REEXEC"):
+            os.environ["UPDATE_MACRO_REEXEC"] = "1"
+            os.execv(str(venv), [str(venv), str(Path(__file__).resolve())] + sys.argv[1:])
         sys.exit("ERROR: the xlrd package is required (pip install xlrd)")
     page = curl("https://shillerdata.com/")
     m = re.search(r'(?:https?:)?//[^"\'\s<>]+/ie_data\.xls[^"\'\s<>]*', page)
@@ -66,7 +75,7 @@ def shiller():
     hdr = [str(x).strip() for x in sh.row_values(7)]
     if hdr[:4] != ["Date", "P", "D", "E"]:
         sys.exit(f"ERROR: unexpected Shiller header {hdr[:4]}")
-    dy, ey = [], []
+    dy, ey, divs = [], [], {}
     for r in range(8, sh.nrows):
         date, P, D, E = sh.row_values(r)[:4]
         if not isinstance(date, float) or not isinstance(P, float) or P <= 0:
@@ -74,19 +83,26 @@ def shiller():
         y = int(date)
         mth = int(round((date - y) * 100))
         ym = f"{y}-{mth:02d}"
+        if isinstance(D, float) and D > 0:
+            divs[ym] = D
         if ym < START:
             continue
         if isinstance(D, float):
             dy.append([ym, round(D / P * 100, 2)])
         if isinstance(E, float):
             ey.append([ym, round(E / P * 100, 2)])
-    if len(dy) < 300 or len(ey) < 300:
-        sys.exit(f"ERROR: too few Shiller rows (div {len(dy)}, earn {len(ey)})")
-    return dy, ey
+    dg = []
+    for ym in sorted(divs):
+        prev = divs.get(f"{int(ym[:4]) - 1:04d}{ym[4:]}")
+        if ym >= START and prev:
+            dg.append([ym, round((divs[ym] / prev - 1) * 100, 2)])
+    if len(dy) < 300 or len(ey) < 300 or len(dg) < 300:
+        sys.exit(f"ERROR: too few Shiller rows (div {len(dy)}, earn {len(ey)}, growth {len(dg)})")
+    return dy, ey, dg
 
 
 def main():
-    div_yield, earn_yield = shiller()
+    div_yield, earn_yield, div_growth = shiller()
     cpi = fred("CPIAUCSL")
     gdp = fred("GDP")
     rgdp = fred("GDPC1")
@@ -95,6 +111,7 @@ def main():
     data = {
         "div_yield": div_yield,
         "earn_yield": earn_yield,
+        "div_growth": div_growth,
         "cpi_yoy": yoy(cpi),
         "gdp_yoy": yoy(gdp),
         "rgdp_yoy": yoy(rgdp),
