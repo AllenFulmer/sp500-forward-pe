@@ -14,6 +14,8 @@ Sources (none send CORS headers, so the data is embedded like BAA_MONTHLY):
     D_t / D_t-12 S&P 500 dividend growth: year-over-year % change in trailing 4-quarter dividends
                  (Shiller's monthly D is the S&P four-quarter dividend total, linearly interpolated
                  to months, so this is growth in trailing 12-month dividends per index share)
+    CAPE         Shiller P/E (cyclically adjusted P/E, P/E10), monthly. Only a fallback for the
+                 Shiller PE card, which normally loads History of Market's live CAPE series.
 
 Requires: curl, and the `xlrd` package to read Shiller's .xls (pip install xlrd). If xlrd is
 missing, it re-runs itself under /workspace/.pwvenv/bin/python when that exists (shared box).
@@ -73,11 +75,13 @@ def shiller():
     book = xlrd.open_workbook(file_contents=curl(url, binary=True))
     sh = book.sheet_by_name("Data")
     hdr = [str(x).strip() for x in sh.row_values(7)]
-    if hdr[:4] != ["Date", "P", "D", "E"]:
-        sys.exit(f"ERROR: unexpected Shiller header {hdr[:4]}")
-    dy, ey, divs = [], [], {}
+    if hdr[:4] != ["Date", "P", "D", "E"] or hdr[12] != "CAPE":
+        sys.exit(f"ERROR: unexpected Shiller header {hdr[:4]} / {hdr[12:13]}")
+    dy, ey, divs, cape = [], [], {}, []
     for r in range(8, sh.nrows):
-        date, P, D, E = sh.row_values(r)[:4]
+        row = sh.row_values(r)
+        date, P, D, E = row[:4]
+        CAPE = row[12] if len(row) > 12 else None
         if not isinstance(date, float) or not isinstance(P, float) or P <= 0:
             continue
         y = int(date)
@@ -91,18 +95,20 @@ def shiller():
             dy.append([ym, round(D / P * 100, 2)])
         if isinstance(E, float):
             ey.append([ym, round(E / P * 100, 2)])
+        if isinstance(CAPE, float) and CAPE > 0:
+            cape.append([ym, round(CAPE, 2)])
     dg = []
     for ym in sorted(divs):
         prev = divs.get(f"{int(ym[:4]) - 1:04d}{ym[4:]}")
         if ym >= START and prev:
             dg.append([ym, round((divs[ym] / prev - 1) * 100, 2)])
-    if len(dy) < 300 or len(ey) < 300 or len(dg) < 300:
-        sys.exit(f"ERROR: too few Shiller rows (div {len(dy)}, earn {len(ey)}, growth {len(dg)})")
-    return dy, ey, dg
+    if len(dy) < 300 or len(ey) < 300 or len(dg) < 300 or len(cape) < 300:
+        sys.exit(f"ERROR: too few Shiller rows (div {len(dy)}, earn {len(ey)}, growth {len(dg)}, cape {len(cape)})")
+    return dy, ey, dg, cape
 
 
 def main():
-    div_yield, earn_yield, div_growth = shiller()
+    div_yield, earn_yield, div_growth, cape = shiller()
     cpi = fred("CPIAUCSL")
     gdp = fred("GDP")
     rgdp = fred("GDPC1")
@@ -112,6 +118,7 @@ def main():
         "div_yield": div_yield,
         "earn_yield": earn_yield,
         "div_growth": div_growth,
+        "cape": cape,
         "cpi_yoy": yoy(cpi),
         "gdp_yoy": yoy(gdp),
         "rgdp_yoy": yoy(rgdp),
