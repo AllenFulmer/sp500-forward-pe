@@ -102,6 +102,16 @@
   .header .titles { min-width: 0; }
   h1 { font-size: 22px; font-weight: 700; margin: 0 0 4px; letter-spacing: -0.2px; }
   h2 { font-size: 15px; font-weight: 700; margin: 0; color: var(--ink); }
+  .subtitle-row { display: flex; align-items: center; flex-wrap: wrap; gap: 6px 12px; }
+  .seg { display: inline-flex; border: 1px solid var(--btn-border); border-radius: 7px; overflow: hidden;
+    background: var(--btn-bg); flex-shrink: 0; }
+  .seg button { appearance: none; -webkit-appearance: none; border: 0; margin: 0; background: transparent;
+    color: var(--muted); font: 600 12px/1 "Helvetica Neue", Helvetica, Arial, sans-serif; letter-spacing: 0.2px;
+    height: 28px; min-width: 52px; padding: 0 12px; cursor: pointer; -webkit-tap-highlight-color: transparent; }
+  .seg button + button { border-left: 1px solid var(--btn-border); }
+  .seg button:hover { background: var(--btn-hover); color: var(--ink); }
+  .seg button[aria-pressed="true"] { background: var(--ink); color: var(--bg); }
+  .seg button:focus-visible { outline: 2px solid var(--focus); outline-offset: -2px; position: relative; }
   .header-actions { display: flex; align-items: center; gap: 10px; flex-shrink: 0; }
   .badges { display: flex; gap: 6px; flex-shrink: 0; }
   .badge {
@@ -179,6 +189,7 @@
     h2 { font-size: 15px; line-height: 1.3; }
     .header { flex-wrap: wrap; }
     .header .titles { flex: 1 1 200px; }
+    .seg button { height: 40px; min-width: 64px; font-size: 13px; }
     .status { font-size: 13px; }
     .status .pill { font-size: 12px; padding: 3px 9px; line-height: 1.4; }
     /* Table moves out of the chart overlay and scrolls within its own box if needed */
@@ -216,7 +227,13 @@
     <div class="header">
       <div class="titles">
         <h1>S&amp;P 500 valuation measures</h1>
-        <h2>S&amp;P 500 index: Forward P/E ratio</h2>
+        <div class="subtitle-row">
+          <h2 id="chart-subtitle">S&amp;P 500 index: Forward P/E ratio</h2>
+          <div class="seg" role="group" aria-label="Show the headline chart as">
+            <button type="button" id="mode-pe" data-mode="pe" aria-pressed="true" title="Show forward P/E ratio">P/E</button>
+            <button type="button" id="mode-yield" data-mode="yield" aria-pressed="false" title="Show forward earnings yield (100 ÷ forward P/E)">Yield</button>
+          </div>
+        </div>
       </div>
       <div class="header-actions">
         <div class="badges" aria-hidden="true">
@@ -500,6 +517,42 @@
     };
   }
 
+  // Endpoint label geometry (shared by drawing and by band-label collision checks)
+  function endLabelGeom(chart, opts, fmtRef) {
+    const { ctx, chartArea, scales } = chart;
+    const { date, value } = opts.endPoint;
+    const narrow = isNarrow(chart);
+    const x = scales.x.getPixelForValue(new Date(date + "T00:00:00"));
+    const y = scales.y.getPixelForValue(value);
+    const fs = narrow ? 11 : 12;
+    const font = "700 " + fs + "px Helvetica Neue, Helvetica, Arial, sans-serif";
+    const label = fmtDate(date) + ": " + fmtRef(value);
+    ctx.save(); ctx.font = font;
+    const tw = ctx.measureText(label).width;
+    ctx.restore();
+    // Keep the label on-canvas; nudge left if near the right edge
+    let lx = x + 8;
+    if (lx + 2 > chartArea.right) lx = chartArea.right - 2;
+    if (lx - tw < chartArea.left) lx = chartArea.left + tw + 2;
+    // Lift label above the recent peak (last ~18 months), like the GTM original
+    let peakY = y;
+    const ds = chart.data.datasets[0].data, lbls = chart.data.labels;
+    const cutoff = new Date(new Date(date + "T00:00:00").getTime() - 548 * 864e5);
+    for (let i = ds.length - 1; i >= 0; i--) {
+      const d = new Date(lbls[i] + "T00:00:00");
+      if (d < cutoff) break;
+      peakY = Math.min(peakY, scales.y.getPixelForValue(ds[i]));
+    }
+    if (opts.auto) {
+      // Yield mode: older data under the label can be higher than the recent peak, so clear
+      // everything beneath the label's full width.
+      for (const e of chart.getDatasetMeta(0).data) {
+        if (e.x >= lx - tw - 4 && e.x <= lx + 4) peakY = Math.min(peakY, e.y);
+      }
+    }
+    return { label, lx, ly: Math.max(chartArea.top + 14, peakY - 8), tw, fs, font };
+  }
+
   // Plugin: dashed green reference lines + endpoint label
   const refPlugin = {
     id: "refs",
@@ -511,6 +564,23 @@
       const GREEN = C.green;
       const narrow = isNarrow(chart);
       ctx.save();
+      const fmtRef = opts.fmt || ((v) => v.toFixed(1) + "x");
+      // Yield mode: place each band label where it clears the line, the endpoint label,
+      // the overlaid valuation table and the other band labels (P/E mode keeps fixed spots).
+      const obstacles = [];
+      let pts = null;
+      if (opts.auto) {
+        pts = chart.getDatasetMeta(0).data.map(e => [e.x, e.y]);
+        const ins = document.getElementById("inset");
+        if (ins && getComputedStyle(ins).position === "absolute" && ins.offsetParent) {
+          const ir = ins.getBoundingClientRect(), cr = chart.canvas.getBoundingClientRect();
+          obstacles.push([ir.left - cr.left - 4, ir.top - cr.top - 4, ir.right - cr.left + 4, ir.bottom - cr.top + 4]);
+        }
+        if (opts.endPoint) {
+          const g = endLabelGeom(chart, opts, fmtRef);
+          obstacles.push([g.lx - g.tw - 4, g.ly - g.fs - 4, g.lx + 4, g.ly + 4]);
+        }
+      }
       for (const L of opts.lines) {
         const y = yScale.getPixelForValue(L.value);
         if (y < chartArea.top || y > chartArea.bottom) continue;
@@ -529,45 +599,54 @@
         // GTM-style placement: +1σ right, average centre, −1σ left
         const w = chartArea.right - chartArea.left;
         const pos = narrow && L.posNarrow != null ? L.posNarrow : (L.pos != null ? L.pos : 0.4);
-        const text = L.label + ": " + L.value.toFixed(1) + "x";
+        const text = (narrow && L.short ? L.short : L.label) + ": " + fmtRef(L.value);
         const tw = ctx.measureText(text).width;
         // Keep the label fully inside the plot area on small screens
-        const labelX = Math.min(chartArea.right - tw / 2 - 2, Math.max(chartArea.left + tw / 2 + 2, chartArea.left + w * pos));
+        const clampX = (cx) => Math.min(chartArea.right - tw / 2 - 2, Math.max(chartArea.left + tw / 2 + 2, cx));
+        let labelX = clampX(chartArea.left + w * pos);
+        const h = narrow ? 12 : 13;
+        let ty = y - 4;                       // text bottom (label sits just above its line)
+        if (opts.auto) {
+          let best = null;
+          for (const below of [false, true]) {
+            const by0 = below ? y - 2 : y - 4 - h - 3, by1 = below ? y + 4 + h + 3 : y + 2;
+            if (by0 < chartArea.top || by1 > chartArea.bottom) continue;
+            for (let c = 0.04; c <= 0.96; c += 0.01) {
+              const cx = clampX(chartArea.left + w * c), x0 = cx - tw / 2 - 4, x1 = cx + tw / 2 + 4;
+              let score = 0;
+              for (const [px, py] of pts) if (px >= x0 && px <= x1 && py >= by0 && py <= by1) score++;
+              for (const o of obstacles) if (x0 < o[2] && x1 > o[0] && by0 < o[3] && by1 > o[1]) score += 1000;
+              const key = score * 10 + Math.abs(c - pos) + (below ? 0.5 : 0);
+              if (!best || key < best.key) best = { key, cx, below, by0, by1 };
+            }
+          }
+          labelX = best.cx;
+          ty = best.below ? y + 4 + h : y - 4;
+          obstacles.push([labelX - tw / 2 - 4, best.by0, labelX + tw / 2 + 4, best.by1]);
+        }
         ctx.textAlign = "center";
         // Soft backdrop so the label stays legible where it crosses the P/E line
         ctx.save();
         ctx.globalAlpha = 0.8;
         ctx.fillStyle = C.bg;
-        ctx.fillRect(labelX - tw / 2 - 3, y - 4 - (narrow ? 12 : 13), tw + 6, narrow ? 12 : 13);
+        ctx.fillRect(labelX - tw / 2 - 3, ty - h, tw + 6, h);
         ctx.restore();
-        ctx.fillText(text, labelX, y - 4);
+        ctx.fillText(text, labelX, ty);
       }
 
       // Endpoint green label
       if (opts.endPoint) {
-        const { date, value } = opts.endPoint;
-        const x = xScale.getPixelForValue(new Date(date + "T00:00:00"));
-        const y = yScale.getPixelForValue(value);
+        const g = endLabelGeom(chart, opts, fmtRef);
+        if (opts.auto) {                      // yield mode: backdrop in case it sits on a band line
+          ctx.save(); ctx.globalAlpha = 0.8; ctx.fillStyle = C.bg;
+          ctx.fillRect(g.lx - g.tw - 3, g.ly - g.fs - 1, g.tw + 6, g.fs + 2);
+          ctx.restore();
+        }
         ctx.fillStyle = GREEN;
-        ctx.font = "700 " + (narrow ? 11 : 12) + "px Helvetica Neue, Helvetica, Arial, sans-serif";
+        ctx.font = g.font;
         ctx.textAlign = "right";
         ctx.textBaseline = "bottom";
-        const label = fmtDate(date) + ": " + value.toFixed(1) + "x";
-        // Keep the label on-canvas; nudge left if near the right edge
-        let lx = x + 8;
-        const tw = ctx.measureText(label).width;
-        if (lx + 2 > chartArea.right) lx = chartArea.right - 2;
-        if (lx - tw < chartArea.left) lx = chartArea.left + tw + 2;
-        // Lift label above the recent peak (last ~18 months), like the GTM original
-        let peakY = y;
-        const ds = chart.data.datasets[0].data, lbls = chart.data.labels;
-        const cutoff = new Date(new Date(date + "T00:00:00").getTime() - 548 * 864e5);
-        for (let i = ds.length - 1; i >= 0; i--) {
-          const d = new Date(lbls[i] + "T00:00:00");
-          if (d < cutoff) break;
-          peakY = Math.min(peakY, yScale.getPixelForValue(ds[i]));
-        }
-        ctx.fillText(label, lx, Math.max(chartArea.top + 14, peakY - 8));
+        ctx.fillText(g.label, g.lx, g.ly);
       }
       ctx.restore();
     }
@@ -575,7 +654,29 @@
 
   let chart;
 
+  // Headline view: "pe" (default) or "yield" (forward earnings yield = 100 / forward P/E), saved like the theme.
+  let valMode = "pe";
+  try { if (localStorage.getItem("valMode") === "yield") valMode = "yield"; } catch (e) {}
+  let lastRender = null, lastOverlay = null;
+  const insetIsOverlay = () => {
+    const ins = document.getElementById("inset");
+    return !!ins && getComputedStyle(ins).position === "absolute";
+  };
+
+  // Yield-space statistics are computed on the yield series itself over the same 30-year window
+  // (not by inverting the P/E average/bands: mean(100/PE) != 100/mean(PE)).
+  function yieldView(metrics) {
+    const ys = metrics.series.map(p => 100 / p.value);
+    const win = metrics.series.filter(p => p.date >= metrics.cut).map(p => 100 / p.value);
+    const mu = mean(win), sd = pstdev(win, mu);
+    return { values: ys, mu, sd, plus1: mu + sd, minus1: mu - sd, last: 100 / metrics.last.value };
+  }
+
   function render(metrics, modeNote) {
+    lastRender = [metrics, modeNote];
+    lastOverlay = insetIsOverlay();
+    const Y = valMode === "yield";
+    const yv = Y ? yieldView(metrics) : null;
     // Status
     const st = document.getElementById("status");
     st.innerHTML = "";
@@ -596,7 +697,8 @@
     // Inset table
     // Screenshot sanity (Sep 2026 Guide): P/E 19.0 / 17.2, CAPE 40.9 / 28.9, Div 1.4% / 2.0%, EY −1.0% / 0.7%
     const rows = [
-      ["P/E", "Forward P/E", fmtX(metrics.last.value, 1), fmtX(metrics.mu, 1)],
+      Y ? ["Fwd. EY", "Forward earnings yield", fmtPct(yv.last, 1), fmtPct(yv.mu, 1)]
+        : ["P/E", "Forward P/E", fmtX(metrics.last.value, 1), fmtX(metrics.mu, 1)],
       ["CAPE", "Shiller's P/E",
         metrics.cape != null ? fmtX(metrics.cape, 1) : "—",
         metrics.capeAvg != null ? fmtX(metrics.capeAvg, 1) : "—"],
@@ -614,7 +716,8 @@
     ).join("");
 
     const labels = metrics.series.map(p => p.date);
-    const values = metrics.series.map(p => p.value);
+    const peValues = metrics.series.map(p => p.value);
+    const values = Y ? yv.values : peValues;
 
     // Point styles: only last point is a green filled circle
     const pointR = values.map((_, i) => i === values.length - 1 ? 5 : 0);
@@ -623,13 +726,17 @@
 
     const yMin = Math.min(8, Math.floor(Math.min(...values, metrics.minus1) - 1));
     const yMax = Math.max(30, Math.ceil(Math.max(...values, metrics.plus1) + 1));
+    // Yield axis: headroom on top when the table overlays the chart (desktop), since in yield space
+    // the 2008-12 peak sits where the P/E trough was, right under the table.
+    const yLoY = Y ? Math.max(0, Math.floor(Math.min(...values, yv.minus1) - 0.5)) : null;
+    const yHiY = Y ? Math.ceil(Math.max(...values, yv.plus1)) + (lastOverlay ? 4 : 1) : null;
 
     const cfg = {
       type: "line",
       data: {
         labels,
         datasets: [{
-          label: "Forward P/E",
+          label: Y ? "Forward earnings yield" : "Forward P/E",
           data: values,
           borderColor: C.line,
           backgroundColor: "transparent",
@@ -659,10 +766,23 @@
             padding: 8,
             callbacks: {
               title: (items) => items[0] ? fmtDate(items[0].label) : "",
-              label: (item) => " Forward P/E: " + (+item.raw).toFixed(2) + "x",
+              label: (item) => Y
+                ? [" Forward earnings yield: " + (+item.raw).toFixed(2) + "%",
+                   " (Forward P/E: " + peValues[item.dataIndex].toFixed(2) + "x)"]
+                : " Forward P/E: " + (+item.raw).toFixed(2) + "x",
             }
           },
-          refs: {
+          refs: Y ? {
+            // Higher yield = cheaper: +1 std. dev. is the upper (cheaper) band, −1 the lower (dearer) one.
+            lines: [
+              { value: yv.plus1, label: "+1 Std. dev.", short: "+1σ", pos: 0.5 },
+              { value: yv.mu, label: "30-year average", short: "30y avg.", pos: 0.45 },
+              { value: yv.minus1, label: "−1 Std. dev.", short: "−1σ", pos: 0.5 },
+            ],
+            endPoint: { date: metrics.last.date, value: yv.last },
+            fmt: (v) => v.toFixed(2) + "%",
+            auto: true,
+          } : {
             lines: [
               { value: metrics.plus1, label: "+1 Std. dev.", pos: 0.72, posNarrow: 0.6 },
               { value: metrics.mu, label: "30-year average", pos: 0.45 },
@@ -695,13 +815,13 @@
             border: { color: C.axis },
           },
           y: {
-            min: Math.max(6, yMin),
-            max: Math.min(34, yMax),
+            min: Y ? yLoY : Math.max(6, yMin),
+            max: Y ? yHiY : Math.min(34, yMax),
             ticks: {
-              stepSize: 2,
+              stepSize: Y ? 1 : 2,
               color: C.tick,
               font: { size: 11 },
-              callback: (v) => v + "x",
+              callback: Y ? (v) => v + "%" : (v) => v + "x",
             },
             grid: { color: C.grid, drawTicks: false },
             border: { display: false },
@@ -964,6 +1084,7 @@
 
   // Font size for axis ticks follows the viewport (Chart.js re-renders on resize).
   window.addEventListener("resize", () => {
+    if (lastRender && valMode === "yield" && insetIsOverlay() !== lastOverlay) render(...lastRender);
     const size = window.innerWidth < 560 ? 10 : 11;
     for (const ch of miniCharts) {
       if (ch.options.scales.x.ticks.font.size !== size) { styleMini(ch); ch.update("none"); }
@@ -1000,6 +1121,29 @@
     syncToggle();
     toggle.addEventListener("click", () => setTheme(currentTheme() === "dark" ? "light" : "dark"));
   }
+
+  // P/E | Yield segmented control
+  function syncValMode() {
+    const Y = valMode === "yield";
+    const sub = document.getElementById("chart-subtitle");
+    if (sub) sub.textContent = Y ? "S&P 500 index: Forward earnings yield" : "S&P 500 index: Forward P/E ratio";
+    const cv = document.getElementById("chart");
+    if (cv) cv.setAttribute("aria-label", Y ? "S&P 500 forward earnings yield chart" : "S&P 500 forward P/E chart");
+    document.querySelectorAll(".seg button[data-mode]").forEach(b =>
+      b.setAttribute("aria-pressed", b.getAttribute("data-mode") === valMode ? "true" : "false"));
+  }
+  function setValMode(m) {
+    if (m !== "pe" && m !== "yield") return;
+    valMode = m;
+    try { localStorage.setItem("valMode", m); } catch (e) {}
+    syncValMode();
+    if (lastRender) {
+      try { render(...lastRender); } catch (e) { console.warn("Re-render failed:", e); }
+    }
+  }
+  document.querySelectorAll(".seg button[data-mode]").forEach(b =>
+    b.addEventListener("click", () => { if (b.getAttribute("data-mode") !== valMode) setValMode(b.getAttribute("data-mode")); }));
+  syncValMode();
 
   try { renderMinis(); } catch (e) { console.warn("Indicator charts failed:", e); }
   load();
