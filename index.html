@@ -321,7 +321,7 @@
           <h3>S&amp;P 500 Dividend Yield</h3>
           <div class="mini-latest"><span class="mini-value">—</span><span class="mini-date"></span></div>
         </div>
-        <p class="mini-def">Trailing 12-month dividends ÷ monthly average price.</p>
+        <p class="mini-def">Trailing 12-month dividends ÷ monthly average price. Dashed line: 30-year average.</p>
         <div class="mini-chart"><canvas role="img" aria-label="S&amp;P 500 dividend yield chart, 1996 to present"></canvas></div>
         <p class="mini-source">Source: <a href="https://shillerdata.com/" rel="noopener">Robert J. Shiller, Irrational Exuberance data</a> (monthly)</p>
       </article>
@@ -330,7 +330,7 @@
           <h3>S&amp;P 500 Dividend Growth</h3>
           <div class="mini-latest"><span class="mini-value">—</span><span class="mini-date"></span></div>
         </div>
-        <p class="mini-def">Trailing 12-month dividends per share, % change from a year earlier, monthly.</p>
+        <p class="mini-def">Trailing 12-month dividends per share, % change from a year earlier, monthly. Dashed line: 30-year average.</p>
         <div class="mini-chart"><canvas role="img" aria-label="S&amp;P 500 dividend growth chart, 1996 to present"></canvas></div>
         <p class="mini-source">Source: <a href="https://shillerdata.com/" rel="noopener">Robert J. Shiller, Irrational Exuberance data</a> (monthly)</p>
       </article>
@@ -339,7 +339,7 @@
           <h3>US Inflation Rate</h3>
           <div class="mini-latest"><span class="mini-value">—</span><span class="mini-date"></span></div>
         </div>
-        <p class="mini-def">CPI-U (seasonally adjusted), % change from a year earlier, monthly.</p>
+        <p class="mini-def">CPI-U (seasonally adjusted), % change from a year earlier, monthly. Dashed line: 30-year average.</p>
         <div class="mini-chart"><canvas role="img" aria-label="US inflation rate chart, 1996 to present"></canvas></div>
         <p class="mini-source">Source: U.S. Bureau of Labor Statistics via <a href="https://fred.stlouisfed.org/series/CPIAUCSL" rel="noopener">FRED (CPIAUCSL)</a></p>
       </article>
@@ -348,7 +348,7 @@
           <h3>US GDP Growth Rate</h3>
           <div class="mini-latest"><span class="mini-value">—</span><span class="mini-date"></span></div>
         </div>
-        <p class="mini-def">Nominal GDP (current dollars), % change from a year earlier, quarterly.</p>
+        <p class="mini-def">Nominal GDP (current dollars), % change from a year earlier, quarterly. Dashed line: 30-year average.</p>
         <div class="mini-chart"><canvas role="img" aria-label="US nominal GDP growth rate chart, 1996 to present"></canvas></div>
         <p class="mini-source">Source: U.S. Bureau of Economic Analysis via <a href="https://fred.stlouisfed.org/series/GDP" rel="noopener">FRED (GDP)</a></p>
       </article>
@@ -357,7 +357,7 @@
           <h3>US Real GDP Growth Rate</h3>
           <div class="mini-latest"><span class="mini-value">—</span><span class="mini-date"></span></div>
         </div>
-        <p class="mini-def">Real GDP (chained dollars, inflation-adjusted), % change from a year earlier, quarterly.</p>
+        <p class="mini-def">Real GDP (chained dollars, inflation-adjusted), % change from a year earlier, quarterly. Dashed line: 30-year average.</p>
         <div class="mini-chart"><canvas role="img" aria-label="US real GDP growth rate chart, 1996 to present"></canvas></div>
         <p class="mini-source">Source: U.S. Bureau of Economic Analysis via <a href="https://fred.stlouisfed.org/series/GDPC1" rel="noopener">FRED (GDPC1)</a></p>
       </article>
@@ -366,7 +366,7 @@
           <h3>10 Year Treasury Rate</h3>
           <div class="mini-latest"><span class="mini-value">—</span><span class="mini-date"></span></div>
         </div>
-        <p class="mini-def">10-year constant-maturity yield, monthly average; latest point is the most recent daily value.</p>
+        <p class="mini-def">10-year constant-maturity yield, monthly average; latest point is the most recent daily value. Dashed line: 30-year average of the monthly series.</p>
         <div class="mini-chart"><canvas role="img" aria-label="10 year Treasury rate chart, 1996 to present"></canvas></div>
         <p class="mini-source">Source: Federal Reserve Board (H.15) via <a href="https://fred.stlouisfed.org/series/GS10" rel="noopener">FRED (GS10)</a> and <a href="https://fred.stlouisfed.org/series/DGS10" rel="noopener">DGS10</a></p>
       </article>
@@ -954,9 +954,14 @@
       if (opts.auto) {
         // Pick the spot (above or below the line) that overlaps the series least
         const pts = chart.getDatasetMeta(0).data.map(e => [e.x, e.y]);
+        const endPt = pts.length ? pts[pts.length - 1] : null;
+        const yZero = chart.scales.y.getPixelForValue(0);
+        const zeroIn = yZero > chartArea.top + 1 && yZero < chartArea.bottom - 1;
         let best = null;
-        for (const below of [false, true]) {
-          const by0 = below ? y - 2 : y - 4 - fs - 4, by1 = below ? y + 4 + fs + 4 : y + 2;
+        const step = fs + 4;   // may sit up to two label-heights off the line when the series hugs its average
+        for (const below of [false, true]) for (let d = 0; d <= 2; d++) {
+          const off = (below ? 1 : -1) * d * step;
+          const by0 = (below ? y - 2 : y - 4 - fs - 4) + off, by1 = (below ? y + 4 + fs + 4 : y + 2) + off;
           if (by0 < chartArea.top || by1 > chartArea.bottom) continue;
           for (let c = 0.02; c <= 0.98; c += 0.01) {
             const x0 = chartArea.left + Math.min(W - tw - 6, W * c) - 4, x1 = x0 + tw + 8;
@@ -966,12 +971,14 @@
               const [ax, ay] = pts[i - 1], [bx, by] = pts[i];
               if (Math.max(ax, bx) >= x0 && Math.min(ax, bx) <= x1 && Math.max(ay, by) >= by0 && Math.min(ay, by) <= by1) score++;
             }
+            if (endPt && x0 < endPt[0] + 7 && x1 > endPt[0] - 7 && by0 < endPt[1] + 7 && by1 > endPt[1] - 7) score += 1000;
+            if (zeroIn && yZero >= by0 && yZero <= by1) score += 500;
             if (noteBox && x0 < noteBox[2] && x1 > noteBox[0] && by0 < noteBox[3] && by1 > noteBox[1]) score += 1000;
-            const key = score * 10 + Math.abs(c - (opts.pos != null ? opts.pos : 0.5)) + (below ? 0.5 : 0);
-            if (!best || key < best.key) best = { key, x: x0 + 4, below };
+            const key = score * 10 + d * 4 + Math.abs(c - (opts.pos != null ? opts.pos : 0.5)) + (below ? 0.5 : 0);
+            if (!best || key < best.key) best = { key, x: x0 + 4, below, off };
           }
         }
-        if (best) { x = best.x; ty = best.below ? y + 4 + fs + 1 : y - 4; }
+        if (best) { x = best.x; ty = (best.below ? y + 4 + fs + 1 : y - 4) + best.off; }
       }
       ctx.font = "600 " + fs + "px Helvetica Neue, Helvetica, Arial, sans-serif";
       ctx.globalAlpha = 0.8; ctx.fillStyle = C.bg;
@@ -1084,7 +1091,14 @@
           MACRO.dgs10_latest[0].slice(0, 7) >= pts[pts.length - 1].x.slice(0, 7)) {
         pts.push({ x: MACRO.dgs10_latest[0], y: MACRO.dgs10_latest[1], f: "D" });
       }
-      buildMini(card, key, pts, null);
+      // 30-year average on the card's own series: monthly = same windowValues rule as the table and the
+      // earnings-yield card; quarterly GDP = last 120 quarters; 10Y = monthly GS10 only (the daily point is excluded).
+      const rows = MACRO[key] || [];
+      let vals;
+      if (f === "Q") vals = rows.slice(-120).map(r => r[1]);
+      else vals = windowValues(rows.map(r => ({ date: r[0] + "-01", value: r[1] })), YEARS).values;
+      const avg = vals.length ? mean(vals) : null;
+      buildMini(card, key, pts, avg != null ? { value: avg, label: "30-year avg.: " + avg.toFixed(2) + "%", auto: true, pos: 0.5 } : null);
     });
   }
 
