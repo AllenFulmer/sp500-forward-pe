@@ -141,6 +141,15 @@
   }
   .status .pill.warn { background: var(--pill-warn-bg); color: var(--pill-warn-ink); }
   .status .pill.err { background: var(--pill-err-bg); color: var(--pill-err-ink); }
+  .range-row { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 14px; margin: 8px 0 6px; font-size: 13px; }
+  .range-row label { font-weight: 700; white-space: nowrap; }
+  .range-row output { font-weight: 700; font-variant-numeric: tabular-nums; min-width: 3.2em; color: var(--green); font-size: 15px; }
+  .range-wrap { flex: 1 1 260px; display: flex; align-items: center; gap: 8px; min-width: 0; }
+  .range-wrap span { color: var(--muted); font-size: 11.5px; font-variant-numeric: tabular-nums; }
+  #start-range { flex: 1; min-width: 0; height: 32px; accent-color: var(--green); cursor: pointer; touch-action: pan-y; }
+  #start-range:focus-visible { outline: 2px solid var(--focus); outline-offset: 2px; }
+  .c-note { font-size: 12px; color: var(--muted); margin: 2px 0 0; }
+  @media (max-width: 700px) { #start-range { height: 44px; } .range-row .seg button { height: 36px; } }
   .chart-block { position: relative; width: 100%; margin-top: 4px; }
   .chart-wrap { position: relative; width: 100%; height: clamp(380px, 52vw, 520px); }
   canvas { width: 100% !important; height: 100% !important; display: block; }
@@ -281,6 +290,14 @@
       </div>
     </div>
     <div class="status" id="status">Loading…</div>
+    <div class="range-row">
+      <label for="start-range">Start year</label><output id="start-out" for="start-range">1999</output>
+      <div class="range-wrap"><span>1999</span><input type="range" id="start-range" min="1999" max="2025" step="1" value="1999" aria-describedby="c-note"><span>2025</span></div>
+      <div class="seg" id="preset-seg" role="group" aria-label="Start year presets">
+        <button type="button" data-y="1999" aria-pressed="true">1999</button><button type="button" data-y="2009" aria-pressed="false">2009</button><button type="button" data-y="2012" aria-pressed="false">2012</button>
+      </div>
+    </div>
+    <p class="c-note" id="c-note"></p>
     <div class="chart-block"><div class="chart-wrap"><canvas id="chart" role="img" aria-label="Growth of $100: S&amp;P 500 vs Strategies A, B and C"></canvas></div></div>
     <div class="mom-stats" id="stats"></div>
     <p class="muted" id="since2009"></p>
@@ -370,12 +387,24 @@
       { key: "c", label: "Strategy C (top 5, equal weight)", color: C.c },
     ];
   }
+  let startYear = 1999;
+  // Every line rebased to $100 on Jan 1 of startYear. C is plotted from its own first year:
+  // if startYear is earlier, it starts at the S&P 500's (rebased) value on that date.
+  function windowData() {
+    const S = DATA.series, cv = cOnChart();
+    const i0 = startYear <= DATA.start ? 0 : S.labels.indexOf((startYear - 1) + "-12-31");
+    const reb = (arr, base) => arr.slice(i0).map(v => v == null ? null : 100 * v / base);
+    const out = { i0, labels: S.labels.slice(i0) };
+    ["sp500", "a", "b"].forEach(k => out[k] = reb(S[k], S[k][i0]));
+    out.c = startYear >= DATA.c.start ? reb(cv, cv[i0]) : reb(cv, S.sp500[i0]);
+    return out;
+  }
   function draw() {
-    const S = DATA.series, labels = S.labels.map(l => l.slice(0, 4) === l.slice(0, 4) && l.endsWith("-01-01") ? "Start " + l.slice(0, 4) : (l.endsWith("-12-31") ? l.slice(0, 4) : l + "*"));
-    const cData = cOnChart();
-    const ds = series().map(s => ({ label: s.label, data: s.key === "c" ? cData : S[s.key], spanGaps: false, borderColor: s.color, backgroundColor: s.color,
+    const W = windowData();
+    const labels = W.labels.map((l, i) => i === 0 ? "Start " + startYear : (l.endsWith("-12-31") ? l.slice(0, 4) : l + "*"));
+    const ds = series().map(s => ({ label: s.label, data: W[s.key], spanGaps: false, borderColor: s.color, backgroundColor: s.color,
       borderWidth: 2.2, pointRadius: 2, pointHoverRadius: 4, tension: 0 }));
-    if (chart) chart.destroy();
+    if (chart) { chart.data.labels = labels; chart.data.datasets = ds; chart.options.scales.y.type = scale; chart.update("none"); return; }
     chart = new Chart($("chart"), {
       type: "line", data: { labels, datasets: ds },
       options: { responsive: true, maintainAspectRatio: false, animation: false, interaction: { mode: "index", intersect: false },
@@ -387,6 +416,7 @@
             grid: { color: C.grid } } } }
     });
   }
+  function redraw() { if (chart) { chart.destroy(); chart = null; } draw(); }
   // Strategy C plotted from its start, scaled to the S&P 500's value on that date.
   function cOnChart() {
     const S = DATA.series, c = DATA.c, i0 = S.labels.indexOf(c.labels[0].replace("-01-01", "") - 1 + "-12-31");
@@ -395,12 +425,23 @@
       const j = i - i0; return j < c.values.length ? S.sp500[i0] * c.values[j] / 100 : null;
     });
   }
+  function winStats(arr, fromYear) {
+    const v = arr.filter(x => x != null), yrs = (new Date(DATA.last_close) - new Date(fromYear + "-01-01")) / (365.25 * 864e5);
+    let peak = v[0], mdd = 0; v.forEach(x => { peak = Math.max(peak, x); mdd = Math.min(mdd, x / peak - 1); });
+    const m = v[v.length - 1] / v[0];
+    return { ending: 100 * m, cagr: Math.pow(m, 1 / yrs) - 1, max_drawdown: mdd };
+  }
   function renderStats() {
-    const st = DATA.stats, S = DATA.series;
-    $("stats").innerHTML = series().map(s => `<div class="stat"><h3><span class="sw" style="background:${s.color}"></span>${esc(s.label)}${s.key === "c" ? " · from " + DATA.c.start : ""}</h3>
-      <dl><dt>Ending value of $100</dt><dd>${money(st[s.key].ending)}</dd><dt>CAGR</dt><dd>${pct(st[s.key].cagr, 2)}</dd>
+    const W = windowData(), cFrom = Math.max(startYear, DATA.c.start);
+    const st = { sp500: winStats(W.sp500, startYear), a: winStats(W.a, startYear), b: winStats(W.b, startYear), c: winStats(W.c, cFrom) };
+    window.__momStats = st;
+    $("stats").innerHTML = series().map(s => `<div class="stat" data-key="${s.key}"><h3><span class="sw" style="background:${s.color}"></span>${esc(s.label)} · from ${s.key === "c" ? cFrom : startYear}</h3>
+      <dl><dt>Ending value of $100</dt><dd class="ev">${money(st[s.key].ending)}</dd><dt>CAGR</dt><dd>${pct(st[s.key].cagr, 2)}</dd>
       <dt>Max drawdown (year-end)</dt><dd class="neg">${pct(st[s.key].max_drawdown)}</dd></dl></div>`).join("");
-    const cv = cOnChart(), n = S.labels.length - 1;
+    $("c-note").textContent = startYear < DATA.c.start
+      ? `Every line is rebased to $100 on Jan 1, ${startYear}. Strategy C only exists from ${DATA.c.start}, so its line starts on Jan 1, ${DATA.c.start} at the S&P 500's value on that date. Its stats cover ${DATA.c.start} onward ($100 invested then).`
+      : `Every line, including Strategy C, is rebased to $100 on Jan 1, ${startYear}. Stats cover Jan 1, ${startYear} to ${DATA.last_close}.`;
+    const S = DATA.series, cv = cOnChart(), n = S.labels.length - 1;
     const since = (y, id, lead) => {
       const i = S.labels.indexOf((y - 1) + "-12-31"); if (i < 0) return;
       const yrs = (new Date(DATA.last_close) - new Date(y + "-01-01")) / (365.25 * 864e5);
@@ -410,6 +451,15 @@
     since(DATA.c.start, "since2009", `Since Jan 1, ${DATA.c.start} (Strategy C's first verified year, same window for all four)`);
     since(2012, "since2012", "Since Jan 1, 2012 (the window in the original post)");
   }
+  function setStart(y) {
+    y = Math.min(2025, Math.max(1999, Math.round(+y) || 1999)); startYear = y;
+    $("start-range").value = y; $("start-out").textContent = y;
+    $("start-range").setAttribute("aria-valuetext", "Start " + y);
+    document.querySelectorAll("#preset-seg button").forEach(b => b.setAttribute("aria-pressed", +b.dataset.y === y ? "true" : "false"));
+    if (DATA) { draw(); renderStats(); }
+  }
+  $("start-range").addEventListener("input", (e) => setStart(e.target.value));
+  document.querySelectorAll("#preset-seg button").forEach(b => b.addEventListener("click", () => setStart(b.dataset.y)));
   function renderTable() {
     $("lastclose").textContent = DATA.last_close;
     $("wins-body").innerHTML = DATA.winners.slice().reverse().map(w => {
@@ -455,7 +505,7 @@
     const t = cur() === "dark" ? "light" : "dark";
     document.documentElement.setAttribute("data-theme", t);
     try { localStorage.setItem("theme", t); } catch (e) {}
-    syncToggle(); C = themeColors(); if (DATA) { draw(); renderStats(); }
+    syncToggle(); C = themeColors(); if (DATA) { redraw(); renderStats(); }
   });
   syncToggle();
 
