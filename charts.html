@@ -267,7 +267,9 @@
   .gallery { display: grid; grid-template-columns: minmax(0,1fr); gap: 16px; }
   @media (min-width: 1500px) { .gallery.narrow { grid-template-columns: repeat(2, minmax(0,1fr)); } }
   .chart-card { margin: 0; padding: 14px 16px 12px; }
-  .chart-card h2 { font-size: 16px; margin: 0 0 8px; }
+  .chart-card h2 { font-size: 16px; margin: 0 0 4px; }
+  .chart-card > .tag { margin-bottom: 8px; }
+  .chart-card[hidden] { display: none; }
   .frame { display: block; padding: 0; border: 1px solid var(--card-border); border-radius: 6px; background: #fff; overflow: hidden; cursor: zoom-in; width: 100%;
     box-shadow: 0 0 0 4px var(--btn-bg); }
   .frame img { display: block; width: 100%; height: auto; }
@@ -305,6 +307,7 @@
       </div>
     </div>
     <div class="status" id="status">Loading…</div>
+    <div class="seg" id="tag-seg" role="group" aria-label="Filter by tag" hidden style="margin-top:10px"></div>
   </div>
   <div class="gallery" id="gallery" style="margin-top:16px"></div>
   <footer id="foot">To add a chart: put the image in <code>assets/charts/</code> and add an entry to <a href="data/charts.json">data/charts.json</a> (instructions inside).</footer>
@@ -341,13 +344,20 @@
   $("lb-body").addEventListener("click", (e) => { if (e.target === $("lb-body")) closeLb(); });
   document.addEventListener("keydown", (e) => { if (e.key === "Escape" && !$("lb").hidden) closeLb(); });
   fetch("data/charts.json", { cache: "no-cache" }).then(r => { if (!r.ok) throw new Error("HTTP " + r.status); return r.json(); }).then(d => {
-    const list = (d.charts || []).slice().sort((a, b) => String(b.added).localeCompare(String(a.added)));
+    const list = (d.charts || []).slice().sort((a, b) => String(b.added).localeCompare(String(a.added)) || String(b.chart_date || "").localeCompare(String(a.chart_date || "")));
     const g = $("gallery");
     // Wide charts get a full-width card; only narrow images go two-up on very wide screens.
     if (list.length > 1 && list.every(c => c.width && c.height && c.width / c.height < 1.4)) g.classList.add("narrow");
-    g.innerHTML = list.map((c, i) => `<figure class="card chart-card"><h2>${esc(c.title)}</h2>
+    g.innerHTML = list.map((c, i) => `<figure class="card chart-card"><h2>${esc(c.title)}</h2>${(c.tags || []).map(t => `<span class="tag">${esc(t)}</span> `).join("")}
       <button type="button" class="frame" data-i="${i}" aria-label="Open ${esc(c.title)} full size"><img src="${esc(c.display || c.file)}" alt="${esc(c.title)}" loading="${i ? "lazy" : "eager"}"${c.width ? ` width="${c.width}" height="${c.height}"` : ""}></button>
       <figcaption>${esc(c.caption)}<div class="meta">Credit: ${c.source ? `<a href="${esc(c.source)}" target="_blank" rel="noopener">${esc(c.credit)}</a>` : esc(c.credit)} · Added ${esc(c.added)} · <a href="${esc(c.file)}" target="_blank" rel="noopener">Original image</a></div></figcaption></figure>`).join("");
+    const tags = [...new Set(list.flatMap(c => c.tags || []))];
+    if (tags.length > 1) { const ts = $("tag-seg"); ts.hidden = false;
+      ts.innerHTML = ["All"].concat(tags).map(t => `<button type="button" data-tag="${esc(t)}" aria-pressed="${t === "All"}">${esc(t)}</button>`).join("");
+      ts.querySelectorAll("button").forEach(b => b.addEventListener("click", () => {
+        ts.querySelectorAll("button").forEach(x => x.setAttribute("aria-pressed", x === b ? "true" : "false"));
+        g.querySelectorAll(".chart-card").forEach((el, i) => el.hidden = b.dataset.tag !== "All" && !(list[i].tags || []).includes(b.dataset.tag));
+      })); }
     g.querySelectorAll(".frame").forEach(b => b.addEventListener("click", () => openLb(list[+b.dataset.i])));
     $("status").innerHTML = `<span class="pill">${list.length} chart${list.length === 1 ? "" : "s"}</span><span>Tap or click a chart to open it full size.</span>`;
   }).catch(e => { $("status").innerHTML = `<span class="pill err">Could not load charts</span>`; console.warn("charts.json load failed:", e); });

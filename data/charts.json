@@ -1,5 +1,5 @@
 {
- "_how_to_add": "Put the image in assets/charts/ (optionally also a smaller .webp for display), then add an entry at the TOP of 'charts' (newest first): file = full-size image, display = optional smaller version shown in the card, title, caption, credit, source (optional URL), added (YYYY-MM-DD). The page sorts by 'added', newest first.",
+ "_how_to_add": "Put the image in assets/charts/ (optionally also a smaller .webp for display), then add an entry at the TOP of 'charts' (newest first): file = full-size image, display = optional smaller version shown in the card, title, caption, credit, source (optional URL), added (YYYY-MM-DD). The page sorts by 'added', newest first. Optional: chart_date (YYYY-MM-DD, the chart's own date; tie-break within the same 'added' day, newest first) and tags (e.g. [\"Stocks\"]; tag filter buttons appear automatically).",
  "charts": [
   {
    "file": "assets/charts/spx-quartercent-cycles.png",
@@ -10,7 +10,56 @@
    "caption": "Third-party chart, shown as published; it illustrates a cycle theory, not established fact. S&P 500 on a log scale from 1927 to the present, overlaid with a sine-wave cycle of roughly 25-year expansion phases separated by about 9–12-year 'Pause' periods (1929–42, 1966–75, 2000–09), with projected markers at '28, '34 and '41.",
    "credit": "CryptoCon_, created with TradingView, Oct 09, 2026",
    "source": "",
-   "added": "2026-10-12"
+   "added": "2026-10-12",
+   "chart_date": "2026-10-09",
+   "tags": [
+    "Stocks"
+   ]
+  },
+  {
+   "file": "assets/charts/btc-realized-cap-rsi-weekly.png",
+   "display": "assets/charts/btc-realized-cap-rsi-weekly.webp",
+   "width": 1200,
+   "height": 683,
+   "title": "Realized Market Cap RSI | Weekly",
+   "caption": "Third-party chart, shown as published; an indicator reading, not established fact. Bitcoin with its realized market cap and a weekly RSI panel that marks bull-market ceilings (RSI 100), the 50 'relative position' level (Dec 2014, Oct 2018, May 2022, Mar 2026) and bear-market lows.",
+   "credit": "CryptoCon_, created with TradingView, Apr 08, 2026",
+   "source": "",
+   "added": "2026-10-12",
+   "chart_date": "2026-04-08",
+   "tags": [
+    "Bitcoin"
+   ]
+  },
+  {
+   "file": "assets/charts/gold-10-4-cycles.png",
+   "display": "assets/charts/gold-10-4-cycles.webp",
+   "width": 1200,
+   "height": 842,
+   "title": "Gold 10/4 Cycles Theory",
+   "caption": "Third-party chart, shown as published; it illustrates a cycle theory, not established fact. Gold on a log scale since 1968, alternating roughly 10–11-year bull phases with 4–5-year bear phases, with top and bottom events and a sine-wave 'trigger zone' panel. It projects a bear phase from 2026 to 2030/31.",
+   "credit": "CryptoCon_, created with TradingView, Apr 07, 2026",
+   "source": "",
+   "added": "2026-10-12",
+   "chart_date": "2026-04-07",
+   "tags": [
+    "Gold"
+   ]
+  },
+  {
+   "file": "assets/charts/btc-cycle-runs-drawdowns.png",
+   "display": "assets/charts/btc-cycle-runs-drawdowns.webp",
+   "width": 1200,
+   "height": 842,
+   "title": "Cycle Runs and Drawdowns",
+   "caption": "Third-party chart, shown as published; it illustrates a cycle theory, not established fact. Bitcoin on a log scale with bull runs of roughly 1,056 days (+700,000%, +11,800%, +2,100%, +732%) and drawdowns (−86%, −84%, −77%, and −52% as of April 2026), with a halving-cycle sine wave.",
+   "credit": "CryptoCon_, created with TradingView, Apr 06, 2026",
+   "source": "",
+   "added": "2026-10-12",
+   "chart_date": "2026-04-06",
+   "tags": [
+    "Bitcoin"
+   ]
   }
  ]
 }

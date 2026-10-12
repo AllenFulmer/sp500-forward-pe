@@ -11,5 +11,5 @@ Static site: https://allenfulmer.github.io/sp500-forward-pe/ (Valuation & Macro,
    {"file": "assets/charts/my-chart.png", "display": "assets/charts/my-chart.webp", "width": 4096, "height": 2207,
     "title": "Title", "caption": "Short neutral description.", "credit": "Author / tool, date", "source": "https://optional-link", "added": "2026-10-12"}
    ```
-   `display`, `width`/`height` and `source` are optional. Cards are sorted by `added`, newest first.
+   `display`, `width`/`height`, `source`, `chart_date` (tie-break, newest first) and `tags` (e.g. `["Bitcoin"]`, adds filter buttons) are optional. Cards are sorted by `added`, newest first.
 3. Commit and push; GitHub Pages redeploys.
