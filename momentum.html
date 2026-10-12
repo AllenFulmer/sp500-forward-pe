@@ -227,7 +227,7 @@
   .topnav a[aria-current="page"] { color: var(--ink); border-bottom-color: var(--green); }
   .topnav a:focus-visible { outline: 2px solid var(--focus); outline-offset: -2px; }
   @media (max-width: 700px) { .topnav a { min-height: 44px; flex: 1 1 0; justify-content: center; } }
-  .mom-stats { display: grid; grid-template-columns: repeat(3, minmax(0,1fr)); gap: 12px; margin: 14px 0 6px; }
+  .mom-stats { display: grid; grid-template-columns: repeat(4, minmax(0,1fr)); gap: 12px; margin: 14px 0 6px; }
   .stat { border: 1px solid var(--card-border); border-radius: 6px; padding: 10px 12px; background: var(--btn-bg); }
   .stat h3 { margin: 0 0 6px; font-size: 13px; display: flex; align-items: center; gap: 8px; }
   .stat .sw { width: 14px; height: 3px; border-radius: 2px; display: inline-block; }
@@ -249,6 +249,9 @@
   .notes li { margin: 4px 0; } .notes a { color: var(--link); }
   .card + .card { margin-top: 16px; }
   .muted { color: var(--muted); font-size: 12.5px; }
+  details.t5 summary { cursor: pointer; font-weight: 700; padding: 6px 0; }
+  .wins td.list { white-space: normal; min-width: 18em; }
+  @media (max-width: 1000px) and (min-width: 701px) { .mom-stats { grid-template-columns: repeat(2, minmax(0,1fr)); } }
   @media (max-width: 700px) { .mom-stats { grid-template-columns: minmax(0,1fr); } .wins { font-size: 12.5px; } }
 </style>
 </head>
@@ -278,8 +281,9 @@
       </div>
     </div>
     <div class="status" id="status">Loading…</div>
-    <div class="chart-block"><div class="chart-wrap"><canvas id="chart" role="img" aria-label="Growth of $100: S&amp;P 500 vs Strategy A vs Strategy B"></canvas></div></div>
+    <div class="chart-block"><div class="chart-wrap"><canvas id="chart" role="img" aria-label="Growth of $100: S&amp;P 500 vs Strategies A, B and C"></canvas></div></div>
     <div class="mom-stats" id="stats"></div>
+    <p class="muted" id="since2009"></p>
     <p class="muted" id="since2012"></p>
   </div>
 
@@ -294,26 +298,42 @@
     </div>
   </div>
 
+  <div class="card">
+    <h2 class="section-title" style="padding:0">Strategy C: each year&rsquo;s top 5 S&amp;P 500 stocks</h2>
+    <p class="muted">Same winner rule (year-end members, full year, price return). &ldquo;Next yr&rdquo; = total return of each stock the following year. &ldquo;Portfolio&rdquo; = equal-weight (20% each) next-year return, which is what Strategy C earned. Years with incomplete or unverifiable top-5 lists are flagged and not used. Strategy C starts <span class="cstart"></span>-01-01, the first year after which every top-5 list is complete.</p>
+    <details class="t5" id="t5-details"><summary>Show top 5 by year (<span id="t5-count"></span> years)</summary>
+      <div class="tbl-wrap">
+        <table class="wins">
+          <thead><tr><th>Year</th><th>Top 5 (price return → next-yr total return)</th><th class="num">Portfolio next yr</th><th>Status</th></tr></thead>
+          <tbody id="t5-body"></tbody>
+        </table>
+      </div>
+    </details>
+  </div>
+
   <div class="card notes">
     <h2 class="section-title" style="padding:0">Method</h2>
     <ul>
       <li><b>Winner of year Y</b>: highest calendar-year <i>price</i> return among stocks in the S&amp;P 500 at the <i>end</i> of year Y (the convention used by S&amp;P Dow Jones Indices and year-end press lists), requiring a full year of trading. So mid-year additions count (Tesla 2020, Palantir 2024) but SanDisk 2025 (spun off in February) does not.</li>
       <li><b>Strategy A</b>: on Jan 1 of each year put 100% in the previous year&rsquo;s winner, hold 12 months, rotate.</li>
       <li><b>Strategy B</b>: two overlapping sleeves, each starting at $50. Each Jan 1, the sleeve whose two-year hold just ended sells and buys the previous year&rsquo;s winner, holding it 24 months. At any time the portfolio holds the last two winners, without rebalancing between sleeves. (If the same stock wins twice, both sleeves hold it.)</li>
+      <li><b>Strategy C</b>: on Jan 1 put 20% in each of the previous year&rsquo;s top 5, hold 12 months, and rebalance to equal weight each year. The earliest start with complete, sourced top-5 lists every year is <span class="cstart"></span>, using the 2008 list (no full top-5 list could be found for 1997, 1998, 2001, 2002 or 2004&ndash;2007). On the chart, C starts at the S&amp;P 500&rsquo;s value on that date. Its stats card uses $100 invested at its own start, and the &ldquo;since&rdquo; lines compare all four lines over the same window.</li>
+      <li><b>Acquired names inside a holding year</b> (UST 2009, El Paso 2012, old Allergan 2015, Cablevision 2016, Warner Bros. Discovery 2026): valued at the actual deal consideration, with cash held at 0% for the rest of the year. Sources and the arithmetic are in <a href="data/momentum_top5.csv">momentum_top5.csv</a>.</li>
       <li><b>Benchmark</b>: S&amp;P 500 <b>Total Return</b> index (^SP500TR, dividends reinvested). Strategy returns are also total returns (dividend-adjusted closes). No costs, taxes or slippage.</li>
+      <li><b>Why 1999 and not 1998?</b> Strategy B needs two winners from earlier years. On Jan 1 1998 that means the 1997 and 1996 winners, and 1996 is unverified. Strategy A (1997 winner Dell, +248% in 1998 per S&amp;P DJI) and the S&amp;P 500 could both start in 1998, but B could not without an assumption for its second half. The start date hasn&rsquo;t been changed yet.</li>
       <li><b>Window</b>: the backtest starts <span class="startyr"></span>-01-01, the first date both sleeves of Strategy B can be filled from verified winners (the 1996 winner could not be verified). It runs to the latest close; the last year is year-to-date. The chart uses year-end points, so max drawdown is measured on <i>year-end values</i>; intra-year drawdowns were deeper.</li>
-      <li><b>Delisted / acquired names</b> (Dell, Dynegy, Providian, Avaya, Family Dollar, XL Capital, Cabot Oil &amp; Gas): none was acquired or delisted inside its holding window. Their returns come from Exa&rsquo;s per-ticker total-return pages (linked in the data file), with S&amp;P DJI figures for the winning year where available.</li>
+      <li><b>Delisted / acquired names</b> (Dell, Reebok, Providian, Avaya, Family Dollar, XL Capital, Cabot Oil &amp; Gas): for Strategies A and B, none was acquired or delisted inside its holding window. Their returns come from Exa&rsquo;s per-ticker total-return pages (linked in the data file), with S&amp;P DJI figures for the winning year where available.</li>
     </ul>
     <h2 class="section-title" style="padding:0">Caveats</h2>
     <ul>
       <li><b>Hindsight and survivorship</b>: membership comes from a point-in-time constituent list, but Yahoo has no prices for most delisted pre-2010 members, and ticker reuse corrupts some symbols (for example Yahoo&rsquo;s &ldquo;EP&rdquo; is no longer El Paso). Pre-2010 winners therefore rely on published lists, and a few years are flagged.</li>
       <li><b>Sensitive to definitions</b>: with Jan-1 membership instead of year-end, several winners change (2024 would be Vistra, not Palantir; 2020 NVIDIA, not Tesla). Price and total-return rankings can also differ.</li>
-      <li><b>Very concentrated</b>: one or two stocks, with drawdowns near &minus;98% in 2000–02. The result depends mostly on the start date. Since 2012 it looks much better than over the full period, which matches what the other 30-year backtest found.</li>
+      <li><b>Very concentrated</b>: A and B hold one or two stocks, with year-end drawdowns of about &minus;85% to &minus;97% in 2000–02. The result depends mostly on the start date. Since 2012 it looks much better than over the full period, which matches what the other 30-year backtest found.</li>
       <li>This is not investment advice.</li>
     </ul>
     <h2 class="section-title" style="padding:0">Data</h2>
     <ul>
-      <li>Data: <a href="data/momentum_winners.csv">momentum_winners.csv</a> (has a source column) · <a href="data/momentum.json">momentum.json</a> · rebuilt with <a href="https://github.com/AllenFulmer/sp500-forward-pe/blob/main/scripts/build_momentum.py">scripts/build_momentum.py</a>.</li>
+      <li>Data: <a href="data/momentum_winners.csv">momentum_winners.csv</a>, <a href="data/momentum_top5.csv">momentum_top5.csv</a> (both have source columns) · <a href="data/momentum.json">momentum.json</a> · rebuilt with <a href="https://github.com/AllenFulmer/sp500-forward-pe/blob/main/scripts/build_momentum.py">scripts/build_momentum.py</a>.</li>
       <li>Constituents: <a href="https://github.com/fja05680/sp500">fja05680/sp500</a> historical components. Prices: <a href="https://finance.yahoo.com/">Yahoo Finance</a> via yfinance; delisted names: <a href="https://exa.ai/library/markets">Exa markets library</a>.</li>
       <li>Winner cross-checks: <a href="https://www.visualcapitalist.com/top-sp-500-stocks-by-annual-returns/">S&amp;P DJI top single-year returns 1980–2022 (Visual Capitalist)</a>, CNBC, Reuters, The Fiscal Times, Barron&rsquo;s, Motley Fool and others; the URLs for each year are in the CSV.</li>
     </ul>
@@ -330,7 +350,7 @@
     const dark = document.documentElement.getAttribute("data-theme") !== "light";
     return { green: v("--green", "#5f8a31"), line: v("--line", "#3a3a3a"), grid: v("--grid", "#d9d9d9"),
       tick: v("--tick", "#333"), tipBg: v("--tip-bg", "#fff"), tipInk: v("--tip-ink", "#111"), tipBorder: v("--tip-border", "#ccc"),
-      a: dark ? "#f0a35e" : "#c46a12", b: dark ? "#7fb0ff" : "#2f6fd6" };
+      a: dark ? "#f0a35e" : "#c46a12", b: dark ? "#7fb0ff" : "#2f6fd6", c: dark ? "#d68cff" : "#8a3fc0" };
   }
   let C = themeColors(), chart = null, DATA = null;
   let scale = "logarithmic";
@@ -347,11 +367,13 @@
       { key: "sp500", label: "S&P 500 (total return)", color: C.line },
       { key: "a", label: "Strategy A (1-yr hold)", color: C.a },
       { key: "b", label: "Strategy B (2-yr overlapping)", color: C.b },
+      { key: "c", label: "Strategy C (top 5, equal weight)", color: C.c },
     ];
   }
   function draw() {
     const S = DATA.series, labels = S.labels.map(l => l.slice(0, 4) === l.slice(0, 4) && l.endsWith("-01-01") ? "Start " + l.slice(0, 4) : (l.endsWith("-12-31") ? l.slice(0, 4) : l + "*"));
-    const ds = series().map(s => ({ label: s.label, data: S[s.key], borderColor: s.color, backgroundColor: s.color,
+    const cData = cOnChart();
+    const ds = series().map(s => ({ label: s.label, data: s.key === "c" ? cData : S[s.key], spanGaps: false, borderColor: s.color, backgroundColor: s.color,
       borderWidth: 2.2, pointRadius: 2, pointHoverRadius: 4, tension: 0 }));
     if (chart) chart.destroy();
     chart = new Chart($("chart"), {
@@ -365,17 +387,28 @@
             grid: { color: C.grid } } } }
     });
   }
+  // Strategy C plotted from its start, scaled to the S&P 500's value on that date.
+  function cOnChart() {
+    const S = DATA.series, c = DATA.c, i0 = S.labels.indexOf(c.labels[0].replace("-01-01", "") - 1 + "-12-31");
+    return S.labels.map((l, i) => {
+      if (i0 < 0 || i < i0) return null;
+      const j = i - i0; return j < c.values.length ? S.sp500[i0] * c.values[j] / 100 : null;
+    });
+  }
   function renderStats() {
     const st = DATA.stats, S = DATA.series;
-    $("stats").innerHTML = series().map(s => `<div class="stat"><h3><span class="sw" style="background:${s.color}"></span>${esc(s.label)}</h3>
+    $("stats").innerHTML = series().map(s => `<div class="stat"><h3><span class="sw" style="background:${s.color}"></span>${esc(s.label)}${s.key === "c" ? " · from " + DATA.c.start : ""}</h3>
       <dl><dt>Ending value of $100</dt><dd>${money(st[s.key].ending)}</dd><dt>CAGR</dt><dd>${pct(st[s.key].cagr, 2)}</dd>
       <dt>Max drawdown (year-end)</dt><dd class="neg">${pct(st[s.key].max_drawdown)}</dd></dl></div>`).join("");
-    const i = S.labels.indexOf("2011-12-31");
-    if (i > 0) {
-      const n = S.labels.length - 1, yrs = (new Date(DATA.last_close) - new Date("2012-01-01")) / (365.25 * 864e5);
-      const f = (k) => { const m = S[k][n] / S[k][i]; return `${money(100 * m)} (${pct(Math.pow(m, 1 / yrs) - 1, 1)}/yr)`; };
-      $("since2012").textContent = `Since Jan 1, 2012 (the window in the original post), $100 became: S&P 500 ${f("sp500")}, Strategy A ${f("a")}, Strategy B ${f("b")}.`;
-    }
+    const cv = cOnChart(), n = S.labels.length - 1;
+    const since = (y, id, lead) => {
+      const i = S.labels.indexOf((y - 1) + "-12-31"); if (i < 0) return;
+      const yrs = (new Date(DATA.last_close) - new Date(y + "-01-01")) / (365.25 * 864e5);
+      const f = (arr) => { const m = arr[n] / arr[i]; return `${money(100 * m)} (${pct(Math.pow(m, 1 / yrs) - 1, 1)}/yr)`; };
+      $(id).textContent = `${lead}, $100 became: S&P 500 ${f(S.sp500)}, Strategy A ${f(S.a)}, Strategy B ${f(S.b)}, Strategy C ${cv[i] == null ? "n/a" : f(cv)}.`;
+    };
+    since(DATA.c.start, "since2009", `Since Jan 1, ${DATA.c.start} (Strategy C's first verified year, same window for all four)`);
+    since(2012, "since2012", "Since Jan 1, 2012 (the window in the original post)");
   }
   function renderTable() {
     $("lastclose").textContent = DATA.last_close;
@@ -387,6 +420,18 @@
       if (!w.ticker) return `<tr class="flag"><td>${w.year}</td><td colspan="5">Not verified, left blank</td><td><span class="tag ${k}" title="${tip}">${lab}</span></td></tr>`;
       return `<tr class="${flag ? "flag" : ""}"><td>${w.year}${w.status === "ytd" ? " YTD" : ""}</td><td><b>${esc(w.ticker)}</b></td><td class="co">${esc(w.company)}</td>
         ${p(w.return, w.status === "ytd")}${p(w.next_year, w.next_year_partial)}${p(w.two_year, w.two_year_partial)}
+        <td><span class="tag ${k}" title="${tip}" tabindex="0">${lab}</span></td></tr>`;
+    }).join("");
+  }
+  function renderTop5() {
+    const T = { "verified": ["verified", ""], "verified-list": ["listed, not used", "warn"], "probable": ["probable", "warn"], "partial": ["partial", "err"], "unverified": ["unverified", "err"] };
+    $("t5-count").textContent = DATA.top5.length;
+    $("t5-body").innerHTML = DATA.top5.slice().reverse().map(r => {
+      const [lab, k] = T[r.status] || [r.status, "warn"];
+      const list = r.names.map(nm => `<b>${esc(nm.ticker)}</b> <span class="${cls(nm.ret)}">${pct(nm.ret, 0)}</span>${nm.next != null ? ` → <span class="${cls(nm.next)}">${pct(nm.next, 0)}</span>` : ""}`).join(" · ");
+      const tip = esc((r.note || "") + (r.sources ? " Sources: " + r.sources.replace(/yahoo/g, "Yahoo Finance") : ""));
+      return `<tr class="${k ? "flag" : ""}"><td>${r.year}</td><td class="list">${list}${r.names.length < 5 ? " · <i>rest unverified</i>" : ""}</td>
+        <td class="num ${cls(r.portfolio_next)}">${pct(r.portfolio_next)}${r.next_partial && r.portfolio_next != null ? "*" : ""}</td>
         <td><span class="tag ${k}" title="${tip}" tabindex="0">${lab}</span></td></tr>`;
     }).join("");
   }
@@ -418,7 +463,8 @@
     DATA = d;
     document.querySelectorAll(".startyr").forEach(e => e.textContent = d.start);
     $("status").innerHTML = `<span class="pill">Data through ${esc(d.last_close)}</span><span>Backtest ${d.start}-01-01 → ${esc(d.last_close)} (last year partial) · built ${esc(d.generated)}</span>`;
-    draw(); renderStats(); renderTable();
+    document.querySelectorAll(".cstart").forEach(e => e.textContent = d.c.start);
+    draw(); renderStats(); renderTable(); renderTop5();
     $("foot").innerHTML = `Past performance is hypothetical and backtested. Sources are linked above and in the CSV.`;
   }).catch(e => {
     $("status").innerHTML = `<span class="pill err">Could not load data</span>`;
