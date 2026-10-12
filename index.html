@@ -220,10 +220,22 @@
     .inset { font-size: 12.5px; }
     .inset th, .inset td { padding: 7px 6px; }
   }
+  /* Top tab navigation (shared with momentum.html) */
+  .topnav { display: flex; gap: 4px; margin: 0 0 12px; border-bottom: 1px solid var(--card-border); overflow-x: auto; }
+  .topnav a { display: inline-flex; align-items: center; min-height: 40px; padding: 0 14px; color: var(--muted);
+    text-decoration: none; font-size: 14px; font-weight: 600; border-bottom: 2px solid transparent; margin-bottom: -1px; white-space: nowrap; }
+  .topnav a:hover { color: var(--ink); }
+  .topnav a[aria-current="page"] { color: var(--ink); border-bottom-color: var(--green); }
+  .topnav a:focus-visible { outline: 2px solid var(--focus); outline-offset: -2px; }
+  @media (max-width: 700px) { .topnav a { min-height: 44px; flex: 1 1 0; justify-content: center; } }
 </style>
 </head>
 <body>
 <div class="page">
+  <nav class="topnav" aria-label="Pages">
+    <a href="./" aria-current="page">Forward P/E &amp; macro</a>
+    <a href="momentum.html">S&amp;P Momentum</a>
+  </nav>
   <div class="card">
     <div class="header">
       <div class="titles">

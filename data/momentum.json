@@ -1,0 +1,946 @@
+{
+ "generated": "2026-10-12",
+ "last_close": "2026-10-09",
+ "start": 1999,
+ "winners": [
+  {
+   "year": 1996,
+   "ticker": "",
+   "company": "",
+   "status": "unverified",
+   "note": "No reliable year-end 1996 list found. StatMuse (current-member screen) names Jabil, which was not an S&P 500 member in 1996; Yahoo has no data for most 1996 members (many delisted, tickers reused). Left blank on purpose.",
+   "sources": ""
+  },
+  {
+   "year": 1997,
+   "ticker": "DELL",
+   "company": "Dell Computer",
+   "status": "single-source",
+   "note": "S&P DJI top-50 list: +216% (price). Old Dell (taken private 2013) not on Yahoo; no second source found.",
+   "sources": "https://www.visualcapitalist.com/top-sp-500-stocks-by-annual-returns/",
+   "return": 2.16,
+   "return_src": "S&P DJI via Visual Capitalist",
+   "next_year": 2.48,
+   "next_year_partial": false,
+   "two_year": 3.8500759999999996,
+   "two_year_partial": false,
+   "fwd_src": "https://exa.ai/library/markets/stock/DELL?date=1999-12-31&view=return&from=1999-01-01&basis=total_return; https://www.visualcapitalist.com/top-sp-500-stocks-by-annual-returns/"
+  },
+  {
+   "year": 1998,
+   "ticker": "DELL",
+   "company": "Dell Computer",
+   "status": "single-source",
+   "note": "S&P DJI top-50 list: +248% (price; no dividends, so = total return).",
+   "sources": "https://www.visualcapitalist.com/top-sp-500-stocks-by-annual-returns/",
+   "return": 2.48,
+   "return_src": "S&P DJI via Visual Capitalist",
+   "next_year": 0.3937,
+   "next_year_partial": false,
+   "two_year": -0.5234939700000001,
+   "two_year_partial": false,
+   "fwd_src": "https://exa.ai/library/markets/stock/DELL?date=1999-12-31&view=return&from=1999-01-01&basis=total_return; https://exa.ai/library/markets/stock/DELL?date=2000-12-31&view=return&from=2000-01-01&basis=total_return"
+  },
+  {
+   "year": 1999,
+   "ticker": "QCOM",
+   "company": "Qualcomm",
+   "status": "verified",
+   "note": "",
+   "sources": "https://www.visualcapitalist.com/top-sp-500-stocks-by-annual-returns/ | yahoo",
+   "return": 26.19421189361034,
+   "return_src": "Yahoo Finance close (split-adj.)",
+   "next_year": -0.5333570289313806,
+   "next_year_partial": false,
+   "two_year": -0.7132718526195828,
+   "two_year_partial": false,
+   "fwd_src": "Yahoo Finance adj. close"
+  },
+  {
+   "year": 2000,
+   "ticker": "DYN",
+   "company": "Dynegy",
+   "status": "uncertain",
+   "note": "S&P DJI lists Dynegy +361% (price) as 2000's top gainer, but Exa's total-return index shows +224%, which would put it below Reebok (+234%, also on the S&P DJI list). Dynegy merged with Illinova in Feb 2000, which likely explains the discrepancy. S&P DJI ranking kept; treat as uncertain.",
+   "sources": "https://www.visualcapitalist.com/top-sp-500-stocks-by-annual-returns/ | https://exa.ai/library/markets/stock/DYN?date=2000-12-31&view=return&from=2000-01-01&basis=total_return",
+   "return": 3.61,
+   "return_src": "S&P DJI via Visual Capitalist",
+   "next_year": -0.5412,
+   "next_year_partial": false,
+   "two_year": -0.9784364,
+   "two_year_partial": false,
+   "fwd_src": "https://exa.ai/library/markets/stock/DYN?date=2001-12-31&view=return&from=2001-01-01&basis=total_return; https://exa.ai/library/markets/stock/DYN?date=2002-12-31&view=return&from=2002-01-01&basis=total_return"
+  },
+  {
+   "year": 2001,
+   "ticker": "NVDA",
+   "company": "NVIDIA",
+   "status": "verified",
+   "note": "Joined the index Nov 2001 (year-end member).",
+   "sources": "https://www.visualcapitalist.com/top-sp-500-stocks-by-annual-returns/ | yahoo",
+   "return": 3.0835612426806964,
+   "return_src": "Yahoo Finance close (split-adj.)",
+   "next_year": -0.8279516155161741,
+   "next_year_partial": false,
+   "two_year": -0.6532143762167744,
+   "two_year_partial": false,
+   "fwd_src": "Yahoo Finance adj. close"
+  },
+  {
+   "year": 2002,
+   "ticker": "PVN",
+   "company": "Providian Financial",
+   "status": "verified",
+   "note": "Acquired by Washington Mutual Oct 2005 (after the holding window).",
+   "sources": "https://www.iese.edu/media/research/pdfs/DI-0501-E.pdf | https://exa.ai/library/markets/stock/PVN?date=2002-12-31&view=return&from=2002-01-01&basis=total_return",
+   "return": 0.8282,
+   "return_src": "Exa total return (no dividends paid)",
+   "next_year": 0.7935,
+   "next_year_partial": false,
+   "two_year": 1.53762315,
+   "two_year_partial": false,
+   "fwd_src": "https://exa.ai/library/markets/stock/PVN?date=2003-12-31&view=return&from=2003-01-01&basis=total_return; https://exa.ai/library/markets/stock/PVN?date=2004-12-31&view=return&from=2004-01-01&basis=total_return"
+  },
+  {
+   "year": 2003,
+   "ticker": "AV",
+   "company": "Avaya",
+   "status": "verified",
+   "note": "Taken private Oct 2007 (after the holding window).",
+   "sources": "https://www.visualcapitalist.com/top-sp-500-stocks-by-annual-returns/ | https://exa.ai/library/markets/stock/AV?date=2003-12-31&view=return&from=2003-01-01&basis=total_return",
+   "return": 4.2816,
+   "return_src": "Exa total return (no dividends paid)",
+   "next_year": 0.3292,
+   "next_year_partial": false,
+   "two_year": -0.1754972399999999,
+   "two_year_partial": false,
+   "fwd_src": "https://exa.ai/library/markets/stock/AV?date=2004-12-31&view=return&from=2004-01-01&basis=total_return; https://exa.ai/library/markets/stock/AV?date=2005-12-31&view=return&from=2005-01-01&basis=total_return"
+  },
+  {
+   "year": 2004,
+   "ticker": "ADSK",
+   "company": "Autodesk",
+   "status": "probable",
+   "note": "Yahoo coverage of 2004 members is incomplete (delisted names missing); no contemporaneous full-index list found.",
+   "sources": "yahoo | https://www.statmuse.com/money/ask/best-performing-tech-stocks-in-the-s-and-p-500-in-the-year-2004",
+   "return": 2.087876393875719,
+   "return_src": "Yahoo Finance close (split-adj.)",
+   "next_year": 0.13233597871598546,
+   "next_year_partial": false,
+   "two_year": 0.0666894493211816,
+   "two_year_partial": false,
+   "fwd_src": "Yahoo Finance adj. close"
+  },
+  {
+   "year": 2005,
+   "ticker": "VLO",
+   "company": "Valero Energy",
+   "status": "verified",
+   "note": "",
+   "sources": "yahoo | https://money.cnn.com/2005/12/21/markets/sp_winners/",
+   "return": 1.273127870737924,
+   "return_src": "Yahoo Finance close (split-adj.)",
+   "next_year": -0.003314814171999858,
+   "next_year_partial": false,
+   "two_year": 0.37450786592395136,
+   "two_year_partial": false,
+   "fwd_src": "Yahoo Finance adj. close"
+  },
+  {
+   "year": 2006,
+   "ticker": "ATI",
+   "company": "Allegheny Technologies",
+   "status": "probable",
+   "note": "StatMuse ranks ICE first, but ICE joined the S&P 500 only in 2007; ATI is next (+151%). Yahoo coverage of 2006 members incomplete.",
+   "sources": "yahoo | https://www.statmuse.com/money/ask/20-best-performing-stocks-in-the-s-and-p-2006",
+   "return": 1.5133036503098491,
+   "return_src": "Yahoo Finance close (split-adj.)",
+   "next_year": -0.04179718638068686,
+   "next_year_partial": false,
+   "two_year": -0.7123192292069456,
+   "two_year_partial": false,
+   "fwd_src": "Yahoo Finance adj. close"
+  },
+  {
+   "year": 2007,
+   "ticker": "NOV",
+   "company": "National Oilwell Varco",
+   "status": "verified",
+   "note": "",
+   "sources": "yahoo | https://www.reuters.com/article/business/factbox-sp-500s-best-and-worst-performers-for-2007-idUSN31600240/",
+   "return": 1.4014382867791713,
+   "return_src": "Yahoo Finance close (split-adj.)",
+   "next_year": -0.6673020611428364,
+   "next_year_partial": false,
+   "two_year": -0.3841644402859272,
+   "two_year_partial": false,
+   "fwd_src": "Yahoo Finance adj. close"
+  },
+  {
+   "year": 2008,
+   "ticker": "FDO",
+   "company": "Family Dollar Stores",
+   "status": "verified",
+   "note": "Acquired by Dollar Tree Jul 2015 (after the holding window).",
+   "sources": "https://www.cnbc.com/2008/12/31/best-stock-of-2008.html | https://exa.ai/library/markets/stock/FDO?date=2008-12-31&view=return&from=2008-01-01&basis=total_return",
+   "return": 0.3863,
+   "return_src": "Exa total return",
+   "next_year": 0.0874,
+   "next_year_partial": false,
+   "two_year": 0.9719998999999997,
+   "two_year_partial": false,
+   "fwd_src": "https://exa.ai/library/markets/stock/FDO?date=2009-12-31&view=return&from=2009-01-01&basis=total_return; https://exa.ai/library/markets/stock/FDO?date=2010-12-31&view=return&from=2010-01-01&basis=total_return"
+  },
+  {
+   "year": 2009,
+   "ticker": "XL",
+   "company": "XL Capital",
+   "status": "verified",
+   "note": "Acquired by AXA 2018 (after the holding window).",
+   "sources": "https://www.visualcapitalist.com/top-sp-500-stocks-by-annual-returns/ | https://exa.ai/library/markets/stock/XL?date=2009-12-31&view=return&from=2009-01-01&basis=total_return",
+   "return": 3.95,
+   "return_src": "S&P DJI via Visual Capitalist",
+   "next_year": 0.2155,
+   "next_year_partial": false,
+   "two_year": 0.12518834999999995,
+   "two_year_partial": false,
+   "fwd_src": "https://exa.ai/library/markets/stock/XL?date=2010-12-31&view=return&from=2010-01-01&basis=total_return; https://exa.ai/library/markets/stock/XL?date=2011-12-31&view=return&from=2011-01-01&basis=total_return"
+  },
+  {
+   "year": 2010,
+   "ticker": "NFLX",
+   "company": "Netflix",
+   "status": "verified",
+   "note": "",
+   "sources": "https://www.visualcapitalist.com/top-sp-500-stocks-by-annual-returns/ | yahoo",
+   "return": 2.1893265424936055,
+   "return_src": "Yahoo Finance close (split-adj.)",
+   "next_year": -0.6056346526872955,
+   "next_year_partial": false,
+   "two_year": -0.4730223202535253,
+   "two_year_partial": false,
+   "fwd_src": "Yahoo Finance adj. close"
+  },
+  {
+   "year": 2011,
+   "ticker": "COG",
+   "company": "Cabot Oil & Gas",
+   "status": "verified",
+   "note": "Now Coterra (CTRA); no longer on Yahoo, Exa total-return index used.",
+   "sources": "https://www.cnbc.com/2011/12/28/The-Best-Investments-of-2011.html | https://www.thetimes-tribune.com/2012/01/07/cabot-tops-sp-500/ | https://exa.ai/library/markets/stock/COG?date=2011-12-31&view=return&from=2011-01-01&basis=total_return",
+   "return": 1.0096,
+   "return_src": "Exa total return",
+   "next_year": 0.3133,
+   "next_year_partial": false,
+   "two_year": 1.05045529,
+   "two_year_partial": false,
+   "fwd_src": "https://exa.ai/library/markets/stock/COG?date=2012-12-31&view=return&from=2012-01-01&basis=total_return; https://exa.ai/library/markets/stock/COG?date=2013-12-31&view=return&from=2013-01-01&basis=total_return"
+  },
+  {
+   "year": 2012,
+   "ticker": "PHM",
+   "company": "PulteGroup",
+   "status": "verified",
+   "note": "",
+   "sources": "yahoo | https://www.thefiscaltimes.com/2013/01/01/2012-Stock-Market-Winners-and-Losers",
+   "return": 1.8779714757671884,
+   "return_src": "Yahoo Finance close (split-adj.)",
+   "next_year": 0.131403912357833,
+   "next_year_partial": false,
+   "two_year": 0.20571913824564536,
+   "two_year_partial": false,
+   "fwd_src": "Yahoo Finance adj. close"
+  },
+  {
+   "year": 2013,
+   "ticker": "NFLX",
+   "company": "Netflix",
+   "status": "verified",
+   "note": "",
+   "sources": "https://www.visualcapitalist.com/top-sp-500-stocks-by-annual-returns/ | yahoo",
+   "return": 2.976348016430466,
+   "return_src": "Yahoo Finance close (split-adj.)",
+   "next_year": -0.07214046628685822,
+   "next_year_partial": false,
+   "two_year": 1.174701997802381,
+   "two_year_partial": false,
+   "fwd_src": "Yahoo Finance adj. close"
+  },
+  {
+   "year": 2014,
+   "ticker": "LUV",
+   "company": "Southwest Airlines",
+   "status": "verified",
+   "note": "",
+   "sources": "yahoo | press",
+   "return": 1.2462844666702977,
+   "return_src": "Yahoo Finance close (split-adj.)",
+   "next_year": 0.024380974566615254,
+   "next_year_partial": false,
+   "two_year": 0.1964330803542198,
+   "two_year_partial": false,
+   "fwd_src": "Yahoo Finance adj. close"
+  },
+  {
+   "year": 2015,
+   "ticker": "NFLX",
+   "company": "Netflix",
+   "status": "verified",
+   "note": "",
+   "sources": "yahoo | press",
+   "return": 1.3437836426593366,
+   "return_src": "Yahoo Finance close (split-adj.)",
+   "next_year": 0.0823570914250018,
+   "next_year_partial": false,
+   "two_year": 0.6782653966127967,
+   "two_year_partial": false,
+   "fwd_src": "Yahoo Finance adj. close"
+  },
+  {
+   "year": 2016,
+   "ticker": "NVDA",
+   "company": "NVIDIA",
+   "status": "verified",
+   "note": "",
+   "sources": "https://www.visualcapitalist.com/top-sp-500-stocks-by-annual-returns/ | yahoo",
+   "return": 2.2384708052254756,
+   "return_src": "Yahoo Finance close (split-adj.)",
+   "next_year": 0.8198790559608458,
+   "next_year_partial": false,
+   "two_year": 0.25907893944961513,
+   "two_year_partial": false,
+   "fwd_src": "Yahoo Finance adj. close"
+  },
+  {
+   "year": 2017,
+   "ticker": "NRG",
+   "company": "NRG Energy",
+   "status": "verified",
+   "note": "Align Technology (+131%, joined Jun 2017) was a close second.",
+   "sources": "yahoo | https://talkmarkets.com/content/stocks--equities/best-and-worst-performing-sp-500-stocks-in-2017?post=161048",
+   "return": 1.3230015506152912,
+   "return_src": "Yahoo Finance close (split-adj.)",
+   "next_year": 0.3958956280062531,
+   "next_year_partial": false,
+   "two_year": 0.4055055111134487,
+   "two_year_partial": false,
+   "fwd_src": "Yahoo Finance adj. close"
+  },
+  {
+   "year": 2018,
+   "ticker": "AMD",
+   "company": "Advanced Micro Devices",
+   "status": "verified",
+   "note": "",
+   "sources": "yahoo | press",
+   "return": 0.795719801943733,
+   "return_src": "Yahoo Finance close (split-adj.)",
+   "next_year": 1.4842905138021374,
+   "next_year_partial": false,
+   "two_year": 3.9680392000459577,
+   "two_year_partial": false,
+   "fwd_src": "Yahoo Finance adj. close"
+  },
+  {
+   "year": 2019,
+   "ticker": "AMD",
+   "company": "Advanced Micro Devices",
+   "status": "verified",
+   "note": "",
+   "sources": "yahoo | press",
+   "return": 1.4842905138021374,
+   "return_src": "Yahoo Finance close (split-adj.)",
+   "next_year": 0.9997818984714926,
+   "next_year_partial": false,
+   "two_year": 2.1378105534521765,
+   "two_year_partial": false,
+   "fwd_src": "Yahoo Finance adj. close"
+  },
+  {
+   "year": 2020,
+   "ticker": "TSLA",
+   "company": "Tesla",
+   "status": "verified",
+   "note": "Joined the index Dec 21, 2020 (year-end member).",
+   "sources": "https://www.visualcapitalist.com/top-sp-500-stocks-by-annual-returns/ | yahoo",
+   "return": 7.434369946079432,
+   "return_src": "Yahoo Finance close (split-adj.)",
+   "next_year": 0.4975555924013577,
+   "next_year_partial": false,
+   "two_year": -0.47632744786513603,
+   "two_year_partial": false,
+   "fwd_src": "Yahoo Finance adj. close"
+  },
+  {
+   "year": 2021,
+   "ticker": "DVN",
+   "company": "Devon Energy",
+   "status": "verified",
+   "note": "",
+   "sources": "yahoo | press",
+   "return": 1.7862111364908175,
+   "return_src": "Yahoo Finance close (split-adj.)",
+   "next_year": 0.5086408372327487,
+   "next_year_partial": false,
+   "two_year": 0.17934973892463235,
+   "two_year_partial": false,
+   "fwd_src": "Yahoo Finance adj. close"
+  },
+  {
+   "year": 2022,
+   "ticker": "OXY",
+   "company": "Occidental Petroleum",
+   "status": "verified",
+   "note": "",
+   "sources": "yahoo | press",
+   "return": 1.172818288229922,
+   "return_src": "Yahoo Finance close (split-adj.)",
+   "next_year": -0.04077785657874844,
+   "next_year_partial": false,
+   "two_year": -0.19339010230121423,
+   "two_year_partial": false,
+   "fwd_src": "Yahoo Finance adj. close"
+  },
+  {
+   "year": 2023,
+   "ticker": "NVDA",
+   "company": "NVIDIA",
+   "status": "verified",
+   "note": "",
+   "sources": "yahoo | press",
+   "return": 2.3886682820093332,
+   "return_src": "Yahoo Finance close (split-adj.)",
+   "next_year": 1.712492900391645,
+   "next_year_partial": false,
+   "two_year": 2.7681012974283195,
+   "two_year_partial": false,
+   "fwd_src": "Yahoo Finance adj. close"
+  },
+  {
+   "year": 2024,
+   "ticker": "PLTR",
+   "company": "Palantir",
+   "status": "verified",
+   "note": "Joined the index Sep 2024 (year-end member). Using Jan-1 members instead would give Vistra/NVIDIA.",
+   "sources": "yahoo | https://www.fool.com/investing/2024/11/23/the-top-sp-500-stock-of-2024-so-far-isnt-nvidia-he/",
+   "return": 3.4047755921584306,
+   "return_src": "Yahoo Finance close (split-adj.)",
+   "next_year": 1.350257919544839,
+   "next_year_partial": false,
+   "two_year": 1.7641149100043125,
+   "two_year_partial": true,
+   "fwd_src": "Yahoo Finance adj. close"
+  },
+  {
+   "year": 2025,
+   "ticker": "WDC",
+   "company": "Western Digital",
+   "status": "verified",
+   "note": "SanDisk (spun off Feb 2025, added Nov 2025) rose more from its debut but has no full-year 2025 return.",
+   "sources": "yahoo | https://www.barrons.com/articles/western-digital-stock-best-sp500-2025-trade-desk-worst-f1bfdea5 | https://rubiewealth.com/sp-500-top-25-annual-performers-2025/",
+   "return": 2.822123239486686,
+   "return_src": "Yahoo Finance close (split-adj.)",
+   "next_year": 1.3085934964626467,
+   "next_year_partial": true,
+   "two_year": 1.3085934964626467,
+   "two_year_partial": true,
+   "fwd_src": "Yahoo Finance adj. close"
+  },
+  {
+   "year": 2026,
+   "ticker": "MRNA",
+   "company": "Moderna",
+   "status": "ytd",
+   "note": "Year to date only. The +663% claim checks out against Yahoo closes (Dec 31, 2025 to the latest close).",
+   "sources": "yahoo | https://topstocksytd.com/best-stocks-2026-so-far/",
+   "return": 6.629705043957304,
+   "return_src": "Yahoo Finance close (split-adj.)",
+   "next_year": null,
+   "next_year_partial": false,
+   "two_year": null,
+   "two_year_partial": false,
+   "fwd_src": ""
+  }
+ ],
+ "steps": [
+  {
+   "year": 1999,
+   "partial": false,
+   "sp500": 0.21041192124216845,
+   "a_ticker": "DELL",
+   "a": 0.3937,
+   "b_holdings": [
+    "DELL",
+    "DELL"
+   ],
+   "b": 0.39369999999999994
+  },
+  {
+   "year": 2000,
+   "partial": false,
+   "sp500": -0.0910408761621635,
+   "a_ticker": "QCOM",
+   "a": -0.5333570289313806,
+   "b_holdings": [
+    "DELL",
+    "QCOM"
+   ],
+   "b": -0.5957285144656903
+  },
+  {
+   "year": 2001,
+   "partial": false,
+   "sp500": -0.11886011811927333,
+   "a_ticker": "DYN",
+   "a": -0.5412,
+   "b_holdings": [
+    "DYN",
+    "QCOM"
+   ],
+   "b": -0.45136884092364404
+  },
+  {
+   "year": 2002,
+   "partial": false,
+   "sp500": -0.2210033052133339,
+   "a_ticker": "NVDA",
+   "a": -0.8279516155161741,
+   "b_holdings": [
+    "DYN",
+    "NVDA"
+   ],
+   "b": -0.8721714405683345
+  },
+  {
+   "year": 2003,
+   "partial": false,
+   "sp500": 0.2868423795879569,
+   "a_ticker": "PVN",
+   "a": 0.7935,
+   "b_holdings": [
+    "PVN",
+    "NVDA"
+   ],
+   "b": 0.9867474194758241
+  },
+  {
+   "year": 2004,
+   "partial": false,
+   "sp500": 0.10882109862232192,
+   "a_ticker": "AV",
+   "a": 0.3292,
+   "b_holdings": [
+    "PVN",
+    "AV"
+   ],
+   "b": 0.3392588525794926
+  },
+  {
+   "year": 2005,
+   "partial": false,
+   "sp500": 0.04911777398782813,
+   "a_ticker": "ADSK",
+   "a": 0.13233597871598546,
+   "b_holdings": [
+    "ADSK",
+    "AV"
+   ],
+   "b": -0.316206492300499
+  },
+  {
+   "year": 2006,
+   "partial": false,
+   "sp500": 0.15794461193725273,
+   "a_ticker": "VLO",
+   "a": -0.003314814171999858,
+   "b_holdings": [
+    "ADSK",
+    "VLO"
+   ],
+   "b": -0.014538764239951152
+  },
+  {
+   "year": 2007,
+   "partial": false,
+   "sp500": 0.0549373111819591,
+   "a_ticker": "ATI",
+   "a": -0.04179718638068686,
+   "b_holdings": [
+    "ATI",
+    "VLO"
+   ],
+   "b": 0.2964646311678858
+  },
+  {
+   "year": 2008,
+   "partial": false,
+   "sp500": -0.3699761113271859,
+   "a_ticker": "NOV",
+   "a": -0.6673020611428364,
+   "b_holdings": [
+    "ATI",
+    "NOV"
+   ],
+   "b": -0.6720124876423216
+  },
+  {
+   "year": 2009,
+   "partial": false,
+   "sp500": 0.2646423382978744,
+   "a_ticker": "FDO",
+   "a": 0.0874,
+   "b_holdings": [
+    "FDO",
+    "NOV"
+   ],
+   "b": 0.7496250286711208
+  },
+  {
+   "year": 2010,
+   "partial": false,
+   "sp500": 0.15063403486394566,
+   "a_ticker": "XL",
+   "a": 0.2155,
+   "b_holdings": [
+    "FDO",
+    "XL"
+   ],
+   "b": 0.26485608511665637
+  },
+  {
+   "year": 2011,
+   "partial": false,
+   "sp500": 0.02111815385723914,
+   "a_ticker": "NFLX",
+   "a": -0.6056346526872955,
+   "b_holdings": [
+    "NFLX",
+    "XL"
+   ],
+   "b": -0.13717588438888473
+  },
+  {
+   "year": 2012,
+   "partial": false,
+   "sp500": 0.16003224238602698,
+   "a_ticker": "COG",
+   "a": 0.3133,
+   "b_holdings": [
+    "NFLX",
+    "COG"
+   ],
+   "b": 0.3145422532532438
+  },
+  {
+   "year": 2013,
+   "partial": false,
+   "sp500": 0.3238848466970672,
+   "a_ticker": "PHM",
+   "a": 0.131403912357833,
+   "b_holdings": [
+    "PHM",
+    "COG"
+   ],
+   "b": 0.5376639524734075
+  },
+  {
+   "year": 2014,
+   "partial": false,
+   "sp500": 0.13688358376181653,
+   "a_ticker": "NFLX",
+   "a": -0.07214046628685822,
+   "b_holdings": [
+    "PHM",
+    "NFLX"
+   ],
+   "b": -0.06656483330542229
+  },
+  {
+   "year": 2015,
+   "partial": false,
+   "sp500": 0.013837640885860925,
+   "a_ticker": "LUV",
+   "a": 0.024380974566615254,
+   "b_holdings": [
+    "LUV",
+    "NFLX"
+   ],
+   "b": 1.282845490301718
+  },
+  {
+   "year": 2016,
+   "partial": false,
+   "sp500": 0.1195991330631534,
+   "a_ticker": "NFLX",
+   "a": 0.0823570914250018,
+   "b_holdings": [
+    "LUV",
+    "NFLX"
+   ],
+   "b": 0.08413116225861295
+  },
+  {
+   "year": 2017,
+   "partial": false,
+   "sp500": 0.218315915558408,
+   "a_ticker": "NVDA",
+   "a": 0.8198790559608458,
+   "b_holdings": [
+    "NVDA",
+    "NFLX"
+   ],
+   "b": 0.5565784728452707
+  },
+  {
+   "year": 2018,
+   "partial": false,
+   "sp500": -0.043842333247031684,
+   "a_ticker": "NRG",
+   "a": 0.3958956280062531,
+   "b_holdings": [
+    "NVDA",
+    "NRG"
+   ],
+   "b": 0.3775168856336426
+  },
+  {
+   "year": 2019,
+   "partial": false,
+   "sp500": 0.31486361792387174,
+   "a_ticker": "AMD",
+   "a": 1.4842905138021374,
+   "b_holdings": [
+    "AMD",
+    "NRG"
+   ],
+   "b": 0.02625426357698135
+  },
+  {
+   "year": 2020,
+   "partial": false,
+   "sp500": 0.18398831564768447,
+   "a_ticker": "AMD",
+   "a": 0.9997818984714926,
+   "b_holdings": [
+    "AMD",
+    "AMD"
+   ],
+   "b": 0.9997818984714926
+  },
+  {
+   "year": 2021,
+   "partial": false,
+   "sp500": 0.2870536925932794,
+   "a_ticker": "TSLA",
+   "a": 0.4975555924013577,
+   "b_holdings": [
+    "TSLA",
+    "AMD"
+   ],
+   "b": 0.5668064856852151
+  },
+  {
+   "year": 2022,
+   "partial": false,
+   "sp500": -0.1811088888630299,
+   "a_ticker": "DVN",
+   "a": 0.5086408372327487,
+   "b_holdings": [
+    "TSLA",
+    "DVN"
+   ],
+   "b": 0.47348407033955575
+  },
+  {
+   "year": 2023,
+   "partial": false,
+   "sp500": 0.2628765952467029,
+   "a_ticker": "OXY",
+   "a": -0.04077785657874844,
+   "b_holdings": [
+    "OXY",
+    "DVN"
+   ],
+   "b": -0.21699227172232216
+  },
+  {
+   "year": 2024,
+   "partial": false,
+   "sp500": 0.250196819160305,
+   "a_ticker": "NVDA",
+   "a": 1.712492900391645,
+   "b_holdings": [
+    "OXY",
+    "NVDA"
+   ],
+   "b": 1.6959870483317023
+  },
+  {
+   "year": 2025,
+   "partial": false,
+   "sp500": 0.17879972203280303,
+   "a_ticker": "PLTR",
+   "a": 1.350257919544839,
+   "b_holdings": [
+    "PLTR",
+    "NVDA"
+   ],
+   "b": 0.39180914192066263
+  },
+  {
+   "year": 2026,
+   "partial": true,
+   "sp500": 0.15142655071709465,
+   "a_ticker": "WDC",
+   "a": 1.3085934964626467,
+   "b_holdings": [
+    "PLTR",
+    "WDC"
+   ],
+   "b": 1.303332978745948
+  }
+ ],
+ "series": {
+  "labels": [
+   "1999-01-01",
+   "1999-12-31",
+   "2000-12-31",
+   "2001-12-31",
+   "2002-12-31",
+   "2003-12-31",
+   "2004-12-31",
+   "2005-12-31",
+   "2006-12-31",
+   "2007-12-31",
+   "2008-12-31",
+   "2009-12-31",
+   "2010-12-31",
+   "2011-12-31",
+   "2012-12-31",
+   "2013-12-31",
+   "2014-12-31",
+   "2015-12-31",
+   "2016-12-31",
+   "2017-12-31",
+   "2018-12-31",
+   "2019-12-31",
+   "2020-12-31",
+   "2021-12-31",
+   "2022-12-31",
+   "2023-12-31",
+   "2024-12-31",
+   "2025-12-31",
+   "2026-10-09"
+  ],
+  "sp500": [
+   100.0,
+   121.04119212421685,
+   110.02149594151538,
+   96.94432793824771,
+   75.51931104220962,
+   97.1814499264001,
+   107.75684207310113,
+   113.0496182876898,
+   130.90519637779352,
+   138.09677588653582,
+   87.00426775721341,
+   110.02928061837673,
+   126.60343511110015,
+   129.27706593263136,
+   149.9655646829166,
+   198.53713861008217,
+   225.71361365284673,
+   228.83695758162477,
+   256.2056593211967,
+   312.13943240714934,
+   298.4545113920158,
+   392.4269786346073,
+   464.62895744829854,
+   598.0024153695983,
+   489.6988623846023,
+   618.4292320244502,
+   773.1582587527179,
+   911.3987405050698,
+   1049.4087081076568
+  ],
+  "a": [
+   100.0,
+   139.37,
+   65.03603087783348,
+   29.83853096675,
+   5.133671048199949,
+   9.207239024946608,
+   12.238262111959031,
+   13.857824506327892,
+   13.81188839326123,
+   13.234590319818844,
+   4.4031209210226985,
+   4.787953689520082,
+   5.819757709611659,
+   2.2951107704267915,
+   3.014168974801505,
+   3.4102425705980215,
+   3.164226081403786,
+   3.2413729970175127,
+   3.508323049275416,
+   6.38472363892102,
+   8.912407813598028,
+   22.141010186457628,
+   44.27719138475089,
+   66.30755557405891,
+   100.03428615610524,
+   95.9551023822741,
+   260.27753396827194,
+   611.719335488532,
+   1412.211279569277
+  ],
+  "b": [
+   100.0,
+   139.37,
+   56.34331693891674,
+   30.91169927840437,
+   3.951397988343283,
+   7.8504297566629795,
+   10.513757548164367,
+   7.189239152961418,
+   7.084716499851886,
+   9.18508436390951,
+   3.0125929713140893,
+   5.270908063809831,
+   6.666940138600318,
+   5.752396728920066,
+   7.561768557641172,
+   11.627458928031663,
+   10.853479062721592,
+   24.7768157324181,
+   26.86131803705392,
+   41.81174940872852,
+   57.59639082840601,
+   59.10854165429781,
+   118.20419164531297,
+   185.20309410505448,
+   272.89380894139543,
+   213.6779614002447,
+   576.0730164489811,
+   801.7836907075041,
+   1846.7748166272352
+  ]
+ },
+ "stats": {
+  "sp500": {
+   "ending": 1049.4087081076568,
+   "cagr": 0.08833920692003905,
+   "max_drawdown": -0.3760858620368761
+  },
+  "a": {
+   "ending": 1412.211279569277,
+   "cagr": 0.10003866907903403,
+   "max_drawdown": -0.9835322467501845
+  },
+  "b": {
+   "ending": 1846.7748166272352,
+   "cagr": 0.11071755830406627,
+   "max_drawdown": -0.9783842077110275
+  }
+ }
+}

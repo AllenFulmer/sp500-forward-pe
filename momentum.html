@@ -1,0 +1,430 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+<title>S&amp;P Momentum — buy last year's best S&amp;P 500 stock</title>
+<script>
+  // Set theme before first paint to avoid a flash. Default is dark for first-time
+  // visitors (OS preference intentionally ignored); a saved choice is respected.
+  (function () {
+    var t = "dark";
+    try { var s = localStorage.getItem("theme"); if (s === "light" || s === "dark") t = s; } catch (e) {}
+    document.documentElement.setAttribute("data-theme", t);
+  })();
+</script>
+<meta name="color-scheme" content="dark light" />
+<link rel="icon" href="data:," />
+<meta name="theme-color" content="#0e1013" />
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+<style>
+  /* Light theme (original palette) */
+  :root, [data-theme="light"] {
+    color-scheme: light;
+    --page-bg: #f2f2f2;
+    --bg: #ffffff;
+    --ink: #1a1a1a;
+    --muted: #555;
+    --footer-ink: #666;
+    --link: #444;
+    --card-border: #c8c8c8;
+    --rule: #e5e5e5;
+    --grid: #d9d9d9;
+    --green: #5f8a31;
+    --line: #3a3a3a;
+    --tick: #333;
+    --axis: #888;
+    --badge: #1a1a1a;
+    --badge-ink: #fff;
+    --pill-bg: #eef5e4;
+    --pill-warn-bg: #f7f0df; --pill-warn-ink: #8a6d1f;
+    --pill-err-bg: #f6e4e4;  --pill-err-ink: #8a2f2f;
+    --inset-bg: rgba(255,255,255,0.94);
+    --inset-border: #222;
+    --inset-head-bg: #f7f7f7;
+    --inset-desc: #444;
+    --msg-ink: #8a2f2f; --msg-bg: #fff; --msg-border: #d9b3b3;
+    --tip-bg: rgba(255,255,255,0.97);
+    --tip-ink: #1a1a1a;
+    --tip-border: #c8c8c8;
+    --btn-bg: #ffffff;
+    --btn-border: #bdbdbd;
+    --btn-hover: #f0f0f0;
+    --focus: #2f6fd6;
+    --shadow: 0 1px 2px rgba(0,0,0,.04);
+  }
+  /* Dark theme (default) */
+  [data-theme="dark"] {
+    color-scheme: dark;
+    --page-bg: #0e1013;
+    --bg: #171a1f;
+    --ink: #e9ebee;
+    --muted: #a7adb6;
+    --footer-ink: #9aa0a8;
+    --link: #c8cdd4;
+    --card-border: #2b3038;
+    --rule: #2b3038;
+    --grid: #2a2f37;
+    --green: #8cc152;
+    --line: #e4e7eb;
+    --tick: #b9bec6;
+    --axis: #5b626c;
+    --badge: #e9ebee;
+    --badge-ink: #111317;
+    --pill-bg: rgba(140,193,82,0.14);
+    --pill-warn-bg: rgba(224,180,70,0.15); --pill-warn-ink: #e3c169;
+    --pill-err-bg: rgba(230,100,100,0.15);  --pill-err-ink: #f09a9a;
+    --inset-bg: rgba(23,26,31,0.94);
+    --inset-border: #5b626c;
+    --inset-head-bg: #20242b;
+    --inset-desc: #b9bec6;
+    --msg-ink: #f09a9a; --msg-bg: #171a1f; --msg-border: #6b3a3a;
+    --tip-bg: rgba(32,36,43,0.97);
+    --tip-ink: #e9ebee;
+    --tip-border: #3a404a;
+    --btn-bg: #20242b;
+    --btn-border: #3a404a;
+    --btn-hover: #2a2f37;
+    --focus: #7fb0ff;
+    --shadow: 0 1px 2px rgba(0,0,0,.4);
+  }
+  * { box-sizing: border-box; }
+  html { -webkit-text-size-adjust: 100%; text-size-adjust: 100%; }
+  html, body { margin: 0; padding: 0; background: var(--page-bg); color: var(--ink);
+    font-family: "Helvetica Neue", Helvetica, Arial, sans-serif; }
+  .page { max-width: 1100px; margin: 24px auto; padding: 0 16px 40px; }
+  .card {
+    background: var(--bg); border: 1px solid var(--card-border); border-radius: 2px;
+    padding: 18px 22px 14px; box-shadow: var(--shadow);
+  }
+  .header { display: flex; justify-content: space-between; align-items: flex-start; gap: 12px; }
+  .header .titles { min-width: 0; }
+  h1 { font-size: 22px; font-weight: 700; margin: 0 0 4px; letter-spacing: -0.2px; }
+  h2 { font-size: 15px; font-weight: 700; margin: 0; color: var(--ink); }
+  .subtitle-row { display: flex; align-items: center; flex-wrap: wrap; gap: 6px 12px; }
+  .seg { display: inline-flex; border: 1px solid var(--btn-border); border-radius: 7px; overflow: hidden;
+    background: var(--btn-bg); flex-shrink: 0; }
+  .seg button { appearance: none; -webkit-appearance: none; border: 0; margin: 0; background: transparent;
+    color: var(--muted); font: 600 12px/1 "Helvetica Neue", Helvetica, Arial, sans-serif; letter-spacing: 0.2px;
+    height: 28px; min-width: 52px; padding: 0 12px; cursor: pointer; -webkit-tap-highlight-color: transparent; }
+  .seg button + button { border-left: 1px solid var(--btn-border); }
+  .seg button:hover { background: var(--btn-hover); color: var(--ink); }
+  .seg button[aria-pressed="true"] { background: var(--ink); color: var(--bg); }
+  .seg button:focus-visible { outline: 2px solid var(--focus); outline-offset: -2px; position: relative; }
+  .header-actions { display: flex; align-items: center; gap: 10px; flex-shrink: 0; }
+  .badges { display: flex; gap: 6px; flex-shrink: 0; }
+  .badge {
+    background: var(--badge); color: var(--badge-ink); font-size: 11px; font-weight: 700;
+    padding: 4px 9px; border-radius: 3px; letter-spacing: 0.3px;
+  }
+  .theme-toggle {
+    display: inline-flex; align-items: center; justify-content: center;
+    width: 44px; height: 44px; padding: 0; margin: -6px 0 0;
+    background: var(--btn-bg); color: var(--ink); border: 1px solid var(--btn-border);
+    border-radius: 8px; cursor: pointer; flex-shrink: 0;
+    transition: background-color .15s ease, border-color .15s ease;
+    -webkit-tap-highlight-color: transparent;
+  }
+  .theme-toggle:hover { background: var(--btn-hover); }
+  .theme-toggle:focus-visible { outline: 2px solid var(--focus); outline-offset: 2px; }
+  .theme-toggle svg { width: 20px; height: 20px; display: block; }
+  /* Show the icon of the theme you will switch TO */
+  [data-theme="dark"] .theme-toggle .icon-moon { display: none; }
+  [data-theme="light"] .theme-toggle .icon-sun { display: none; }
+  .status {
+    margin: 10px 0 6px; font-size: 12px; color: var(--muted);
+    display: flex; flex-wrap: wrap; gap: 8px 16px; align-items: center;
+  }
+  .status .pill {
+    display: inline-block; padding: 2px 8px; border-radius: 999px;
+    background: var(--pill-bg); color: var(--green); font-weight: 600; font-size: 11px;
+  }
+  .status .pill.warn { background: var(--pill-warn-bg); color: var(--pill-warn-ink); }
+  .status .pill.err { background: var(--pill-err-bg); color: var(--pill-err-ink); }
+  .chart-block { position: relative; width: 100%; margin-top: 4px; }
+  .chart-wrap { position: relative; width: 100%; height: clamp(380px, 52vw, 520px); }
+  canvas { width: 100% !important; height: 100% !important; display: block; }
+  .chart-msg { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center;
+    text-align: center; padding: 24px; color: var(--msg-ink); font-size: 15px; background: var(--msg-bg);
+    border: 1px dashed var(--msg-border); }
+  /* Inset valuation table overlay */
+  .inset {
+    position: absolute; left: 29%; top: 30px; z-index: 2;
+    background: var(--inset-bg); border: 1px solid var(--inset-border);
+    font-size: 11.5px; line-height: 1.35; min-width: 310px;
+    box-shadow: 0 1px 0 rgba(0,0,0,.04);
+  }
+  .inset table { border-collapse: collapse; width: 100%; }
+  .inset th, .inset td { padding: 5px 10px; text-align: left; border-bottom: 1px solid var(--rule); white-space: nowrap; }
+  .inset tr:last-child td { border-bottom: none; }
+  .inset th { font-weight: 700; background: var(--inset-head-bg); border-bottom: 1px solid var(--inset-border); }
+  .inset td.num, .inset th.num { text-align: right; font-variant-numeric: tabular-nums; }
+  .inset td.desc { color: var(--inset-desc); }
+  footer {
+    margin-top: 12px; font-size: 11px; color: var(--footer-ink); line-height: 1.45;
+    border-top: 1px solid var(--rule); padding-top: 10px;
+  }
+  footer a { color: var(--link); }
+  /* Indicator charts below the main chart */
+  .macro { margin-top: 20px; }
+  .section-title { font-size: 17px; margin: 0 0 10px; padding: 0 2px; }
+  .macro-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px; }
+  .mini { padding: 14px 18px 12px; min-width: 0; display: flex; flex-direction: column; }
+  .mini-head { display: flex; justify-content: space-between; align-items: baseline; gap: 4px 12px; flex-wrap: wrap; }
+  .mini h3 { font-size: 15px; font-weight: 700; margin: 0; color: var(--ink); }
+  .mini-title-row { display: flex; align-items: center; flex-wrap: wrap; gap: 6px 10px; }
+  .mini-latest { display: flex; align-items: baseline; gap: 8px; white-space: nowrap; }
+  .mini-value { font-size: 20px; font-weight: 700; color: var(--green); font-variant-numeric: tabular-nums; }
+  .mini-date { font-size: 12px; color: var(--muted); }
+  .mini-def { margin: 4px 0 6px; font-size: 12px; color: var(--muted); line-height: 1.4; }
+  .mini-chart { position: relative; width: 100%; height: 230px; margin-top: auto; }
+  .mini-chart .chart-msg { font-size: 13px; padding: 12px; }
+  .mini-source { margin: 8px 0 0; font-size: 11px; color: var(--footer-ink); line-height: 1.45;
+    border-top: 1px solid var(--rule); padding-top: 7px; }
+  .mini-source a { color: var(--link); }
+  @media (max-width: 700px) {
+    .page { margin: 12px auto; padding: 0 10px 24px; }
+    .card { padding: 14px 14px 12px; }
+    h1 { font-size: 19px; line-height: 1.25; }
+    h2 { font-size: 15px; line-height: 1.3; }
+    .header { flex-wrap: wrap; }
+    .header .titles { flex: 1 1 200px; }
+    .seg button { height: 40px; min-width: 64px; font-size: 13px; }
+    .status { font-size: 13px; }
+    .status .pill { font-size: 12px; padding: 3px 9px; line-height: 1.4; }
+    /* Table moves out of the chart overlay and scrolls within its own box if needed */
+    .inset {
+      position: static; min-width: 0; max-width: 100%; width: 100%;
+      font-size: 13px; margin: 6px 0 10px;
+      overflow-x: auto; -webkit-overflow-scrolling: touch;
+    }
+    .inset th, .inset td { padding: 7px 8px; }
+    .inset th { white-space: normal; vertical-align: bottom; }
+    .inset td.desc { white-space: normal; min-width: 7em; }
+    .chart-wrap { height: clamp(300px, 92vw, 420px); }
+    footer { font-size: 13px; line-height: 1.75; }
+    footer a { padding: 6px 0; }
+    .macro { margin-top: 16px; }
+    .macro-grid { grid-template-columns: minmax(0, 1fr); gap: 12px; }
+    .mini { padding: 14px 14px 12px; }
+    .mini h3 { font-size: 16px; }
+    .mini-def { font-size: 13px; }
+    .mini-chart { height: 220px; }
+    .mini-source { font-size: 12.5px; line-height: 1.7; }
+    .mini-source a { padding: 6px 0; }
+  }
+  @media (max-width: 400px) {
+    .card { padding: 12px 10px 10px; }
+    .mini { padding: 12px 10px 10px; }
+    .inset { font-size: 12.5px; }
+    .inset th, .inset td { padding: 7px 6px; }
+  }
+  /* Top tab navigation (shared with momentum.html) */
+  .topnav { display: flex; gap: 4px; margin: 0 0 12px; border-bottom: 1px solid var(--card-border); overflow-x: auto; }
+  .topnav a { display: inline-flex; align-items: center; min-height: 40px; padding: 0 14px; color: var(--muted);
+    text-decoration: none; font-size: 14px; font-weight: 600; border-bottom: 2px solid transparent; margin-bottom: -1px; white-space: nowrap; }
+  .topnav a:hover { color: var(--ink); }
+  .topnav a[aria-current="page"] { color: var(--ink); border-bottom-color: var(--green); }
+  .topnav a:focus-visible { outline: 2px solid var(--focus); outline-offset: -2px; }
+  @media (max-width: 700px) { .topnav a { min-height: 44px; flex: 1 1 0; justify-content: center; } }
+  .mom-stats { display: grid; grid-template-columns: repeat(3, minmax(0,1fr)); gap: 12px; margin: 14px 0 6px; }
+  .stat { border: 1px solid var(--card-border); border-radius: 6px; padding: 10px 12px; background: var(--btn-bg); }
+  .stat h3 { margin: 0 0 6px; font-size: 13px; display: flex; align-items: center; gap: 8px; }
+  .stat .sw { width: 14px; height: 3px; border-radius: 2px; display: inline-block; }
+  .stat dl { margin: 0; display: grid; grid-template-columns: auto auto; gap: 2px 10px; font-size: 12.5px; }
+  .stat dt { color: var(--muted); } .stat dd { margin: 0; text-align: right; font-weight: 700; font-variant-numeric: tabular-nums; }
+  .tbl-wrap { overflow-x: auto; -webkit-overflow-scrolling: touch; margin-top: 8px; }
+  table.wins { border-collapse: collapse; width: 100%; font-size: 13px; }
+  .wins th, .wins td { padding: 6px 8px; border-bottom: 1px solid var(--rule); text-align: left; white-space: nowrap; }
+  .wins th { background: var(--inset-head-bg); font-weight: 700; position: sticky; top: 0; }
+  .wins td.num, .wins th.num { text-align: right; font-variant-numeric: tabular-nums; }
+  .wins td.co { white-space: normal; min-width: 9em; }
+  .wins tr.flag td { background: var(--pill-warn-bg); }
+  .pos { color: var(--green); } .neg { color: var(--pill-err-ink); }
+  .tag { display: inline-block; font-size: 10.5px; font-weight: 700; padding: 1px 6px; border-radius: 999px;
+    background: var(--pill-bg); color: var(--green); }
+  .tag.warn { background: var(--pill-warn-bg); color: var(--pill-warn-ink); }
+  .tag.err { background: var(--pill-err-bg); color: var(--pill-err-ink); }
+  .notes { font-size: 13.5px; line-height: 1.55; }
+  .notes li { margin: 4px 0; } .notes a { color: var(--link); }
+  .card + .card { margin-top: 16px; }
+  .muted { color: var(--muted); font-size: 12.5px; }
+  @media (max-width: 700px) { .mom-stats { grid-template-columns: minmax(0,1fr); } .wins { font-size: 12.5px; } }
+</style>
+</head>
+<body>
+<div class="page">
+  <nav class="topnav" aria-label="Pages">
+    <a href="./">Forward P/E &amp; macro</a>
+    <a href="momentum.html" aria-current="page">S&amp;P Momentum</a>
+  </nav>
+  <div class="card">
+    <div class="header">
+      <div class="titles">
+        <h1>S&amp;P Momentum: buy last year&rsquo;s best S&amp;P 500 stock</h1>
+        <div class="subtitle-row">
+          <h2>Growth of $100, total return</h2>
+          <div class="seg" id="scale-seg" role="group" aria-label="Y-axis scale">
+            <button type="button" data-scale="logarithmic" aria-pressed="true">Log</button>
+            <button type="button" data-scale="linear" aria-pressed="false">Linear</button>
+          </div>
+        </div>
+      </div>
+      <div class="header-actions">
+        <button type="button" class="theme-toggle" id="theme-toggle" aria-label="Switch to light mode" title="Switch to light mode">
+          <svg class="icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><circle cx="12" cy="12" r="4.5"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41"/></svg>
+          <svg class="icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+        </button>
+      </div>
+    </div>
+    <div class="status" id="status">Loading…</div>
+    <div class="chart-block"><div class="chart-wrap"><canvas id="chart" role="img" aria-label="Growth of $100: S&amp;P 500 vs Strategy A vs Strategy B"></canvas></div></div>
+    <div class="mom-stats" id="stats"></div>
+    <p class="muted" id="since2012"></p>
+  </div>
+
+  <div class="card">
+    <h2 class="section-title" style="padding:0">Best-performing S&amp;P 500 stock by calendar year</h2>
+    <p class="muted">&ldquo;Return&rdquo; = price return in the winning year. &ldquo;Next year&rdquo; = total return the following calendar year (what Strategy A earned). &ldquo;2-yr fwd&rdquo; = compounded total return over the next two calendar years. <span class="tag warn">flag</span> rows are uncertain, single-source or unverified; hover/tap a status for details. * = partial period to <span id="lastclose"></span>.</p>
+    <div class="tbl-wrap">
+      <table class="wins">
+        <thead><tr><th>Year</th><th>Ticker</th><th>Company</th><th class="num">Return</th><th class="num">Next year</th><th class="num">2-yr fwd</th><th>Status</th></tr></thead>
+        <tbody id="wins-body"></tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="card notes">
+    <h2 class="section-title" style="padding:0">Method</h2>
+    <ul>
+      <li><b>Winner of year Y</b>: highest calendar-year <i>price</i> return among stocks in the S&amp;P 500 at the <i>end</i> of year Y (the convention used by S&amp;P Dow Jones Indices and year-end press lists), requiring a full year of trading. So mid-year additions count (Tesla 2020, Palantir 2024) but SanDisk 2025 (spun off in February) does not.</li>
+      <li><b>Strategy A</b>: on Jan 1 of each year put 100% in the previous year&rsquo;s winner, hold 12 months, rotate.</li>
+      <li><b>Strategy B</b>: two overlapping sleeves, each starting at $50. Each Jan 1, the sleeve whose two-year hold just ended sells and buys the previous year&rsquo;s winner, holding it 24 months. At any time the portfolio holds the last two winners, without rebalancing between sleeves. (If the same stock wins twice, both sleeves hold it.)</li>
+      <li><b>Benchmark</b>: S&amp;P 500 <b>Total Return</b> index (^SP500TR, dividends reinvested). Strategy returns are also total returns (dividend-adjusted closes). No costs, taxes or slippage.</li>
+      <li><b>Window</b>: the backtest starts <span class="startyr"></span>-01-01, the first date both sleeves of Strategy B can be filled from verified winners (the 1996 winner could not be verified). It runs to the latest close; the last year is year-to-date. The chart uses year-end points, so max drawdown is measured on <i>year-end values</i>; intra-year drawdowns were deeper.</li>
+      <li><b>Delisted / acquired names</b> (Dell, Dynegy, Providian, Avaya, Family Dollar, XL Capital, Cabot Oil &amp; Gas): none was acquired or delisted inside its holding window. Their returns come from Exa&rsquo;s per-ticker total-return pages (linked in the data file), with S&amp;P DJI figures for the winning year where available.</li>
+    </ul>
+    <h2 class="section-title" style="padding:0">Caveats</h2>
+    <ul>
+      <li><b>Hindsight and survivorship</b>: membership comes from a point-in-time constituent list, but Yahoo has no prices for most delisted pre-2010 members, and ticker reuse corrupts some symbols (for example Yahoo&rsquo;s &ldquo;EP&rdquo; is no longer El Paso). Pre-2010 winners therefore rely on published lists, and a few years are flagged.</li>
+      <li><b>Sensitive to definitions</b>: with Jan-1 membership instead of year-end, several winners change (2024 would be Vistra, not Palantir; 2020 NVIDIA, not Tesla). Price and total-return rankings can also differ.</li>
+      <li><b>Very concentrated</b>: one or two stocks, with drawdowns near &minus;98% in 2000–02. The result depends mostly on the start date. Since 2012 it looks much better than over the full period, which matches what the other 30-year backtest found.</li>
+      <li>This is not investment advice.</li>
+    </ul>
+    <h2 class="section-title" style="padding:0">Data</h2>
+    <ul>
+      <li>Data: <a href="data/momentum_winners.csv">momentum_winners.csv</a> (has a source column) · <a href="data/momentum.json">momentum.json</a> · rebuilt with <a href="https://github.com/AllenFulmer/sp500-forward-pe/blob/main/scripts/build_momentum.py">scripts/build_momentum.py</a>.</li>
+      <li>Constituents: <a href="https://github.com/fja05680/sp500">fja05680/sp500</a> historical components. Prices: <a href="https://finance.yahoo.com/">Yahoo Finance</a> via yfinance; delisted names: <a href="https://exa.ai/library/markets">Exa markets library</a>.</li>
+      <li>Winner cross-checks: <a href="https://www.visualcapitalist.com/top-sp-500-stocks-by-annual-returns/">S&amp;P DJI top single-year returns 1980–2022 (Visual Capitalist)</a>, CNBC, Reuters, The Fiscal Times, Barron&rsquo;s, Motley Fool and others; the URLs for each year are in the CSV.</li>
+    </ul>
+  </div>
+  <footer id="foot"></footer>
+</div>
+<script>
+(function () {
+  "use strict";
+  const $ = (id) => document.getElementById(id);
+  function themeColors() {
+    const cs = getComputedStyle(document.documentElement);
+    const v = (n, fb) => (cs.getPropertyValue(n) || "").trim() || fb;
+    const dark = document.documentElement.getAttribute("data-theme") !== "light";
+    return { green: v("--green", "#5f8a31"), line: v("--line", "#3a3a3a"), grid: v("--grid", "#d9d9d9"),
+      tick: v("--tick", "#333"), tipBg: v("--tip-bg", "#fff"), tipInk: v("--tip-ink", "#111"), tipBorder: v("--tip-border", "#ccc"),
+      a: dark ? "#f0a35e" : "#c46a12", b: dark ? "#7fb0ff" : "#2f6fd6" };
+  }
+  let C = themeColors(), chart = null, DATA = null;
+  let scale = "logarithmic";
+  try { const s = localStorage.getItem("momScale"); if (s === "linear" || s === "logarithmic") scale = s; } catch (e) {}
+  const pct = (x, d = 1) => x == null ? "—" : (x >= 0 ? "+" : "") + (x * 100).toLocaleString("en-US", { maximumFractionDigits: d, minimumFractionDigits: d }) + "%";
+  const cls = (x) => x == null ? "" : (x >= 0 ? "pos" : "neg");
+  const money = (x) => "$" + x.toLocaleString("en-US", { maximumFractionDigits: 0 });
+  const esc = (s) => String(s).replace(/[&<>"]/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"})[c]);
+  const STATUS = { verified: ["verified", ""], probable: ["probable", "warn"], "single-source": ["single source", "warn"],
+    uncertain: ["uncertain", "err"], unverified: ["unverified", "err"], ytd: ["YTD", ""] };
+
+  function series() {
+    return [
+      { key: "sp500", label: "S&P 500 (total return)", color: C.line },
+      { key: "a", label: "Strategy A (1-yr hold)", color: C.a },
+      { key: "b", label: "Strategy B (2-yr overlapping)", color: C.b },
+    ];
+  }
+  function draw() {
+    const S = DATA.series, labels = S.labels.map(l => l.slice(0, 4) === l.slice(0, 4) && l.endsWith("-01-01") ? "Start " + l.slice(0, 4) : (l.endsWith("-12-31") ? l.slice(0, 4) : l + "*"));
+    const ds = series().map(s => ({ label: s.label, data: S[s.key], borderColor: s.color, backgroundColor: s.color,
+      borderWidth: 2.2, pointRadius: 2, pointHoverRadius: 4, tension: 0 }));
+    if (chart) chart.destroy();
+    chart = new Chart($("chart"), {
+      type: "line", data: { labels, datasets: ds },
+      options: { responsive: true, maintainAspectRatio: false, animation: false, interaction: { mode: "index", intersect: false },
+        plugins: { legend: { labels: { color: C.tick, boxWidth: 14, boxHeight: 3 } },
+          tooltip: { backgroundColor: C.tipBg, titleColor: C.tipInk, bodyColor: C.tipInk, borderColor: C.tipBorder, borderWidth: 1,
+            callbacks: { label: (c) => c.dataset.label + ": " + money(c.parsed.y) } } },
+        scales: { x: { ticks: { color: C.tick, maxRotation: 0, autoSkipPadding: 8 }, grid: { color: C.grid } },
+          y: { type: scale, ticks: { color: C.tick, callback: (v) => { const s = String(v); return (scale === "linear" || /^[125]/.test(s)) ? money(v) : ""; } },
+            grid: { color: C.grid } } } }
+    });
+  }
+  function renderStats() {
+    const st = DATA.stats, S = DATA.series;
+    $("stats").innerHTML = series().map(s => `<div class="stat"><h3><span class="sw" style="background:${s.color}"></span>${esc(s.label)}</h3>
+      <dl><dt>Ending value of $100</dt><dd>${money(st[s.key].ending)}</dd><dt>CAGR</dt><dd>${pct(st[s.key].cagr, 2)}</dd>
+      <dt>Max drawdown (year-end)</dt><dd class="neg">${pct(st[s.key].max_drawdown)}</dd></dl></div>`).join("");
+    const i = S.labels.indexOf("2011-12-31");
+    if (i > 0) {
+      const n = S.labels.length - 1, yrs = (new Date(DATA.last_close) - new Date("2012-01-01")) / (365.25 * 864e5);
+      const f = (k) => { const m = S[k][n] / S[k][i]; return `${money(100 * m)} (${pct(Math.pow(m, 1 / yrs) - 1, 1)}/yr)`; };
+      $("since2012").textContent = `Since Jan 1, 2012 (the window in the original post), $100 became: S&P 500 ${f("sp500")}, Strategy A ${f("a")}, Strategy B ${f("b")}.`;
+    }
+  }
+  function renderTable() {
+    $("lastclose").textContent = DATA.last_close;
+    $("wins-body").innerHTML = DATA.winners.slice().reverse().map(w => {
+      const [lab, k] = STATUS[w.status] || [w.status, "warn"];
+      const flag = ["uncertain", "unverified", "single-source", "probable"].includes(w.status);
+      const tip = esc((w.note || "") + (w.sources ? " Sources: " + w.sources.replace(/yahoo/g, "Yahoo Finance") : ""));
+      const p = (v, part) => `<td class="num ${cls(v)}">${pct(v)}${part && v != null ? "*" : ""}</td>`;
+      if (!w.ticker) return `<tr class="flag"><td>${w.year}</td><td colspan="5">Not verified, left blank</td><td><span class="tag ${k}" title="${tip}">${lab}</span></td></tr>`;
+      return `<tr class="${flag ? "flag" : ""}"><td>${w.year}${w.status === "ytd" ? " YTD" : ""}</td><td><b>${esc(w.ticker)}</b></td><td class="co">${esc(w.company)}</td>
+        ${p(w.return, w.status === "ytd")}${p(w.next_year, w.next_year_partial)}${p(w.two_year, w.two_year_partial)}
+        <td><span class="tag ${k}" title="${tip}" tabindex="0">${lab}</span></td></tr>`;
+    }).join("");
+  }
+  function setScale(s) {
+    scale = s; try { localStorage.setItem("momScale", s); } catch (e) {}
+    document.querySelectorAll("#scale-seg button").forEach(b => b.setAttribute("aria-pressed", b.dataset.scale === s ? "true" : "false"));
+    if (DATA) draw();
+  }
+  document.querySelectorAll("#scale-seg button").forEach(b => b.addEventListener("click", () => setScale(b.dataset.scale)));
+  setScale(scale);
+
+  const toggle = $("theme-toggle");
+  const cur = () => document.documentElement.getAttribute("data-theme") === "light" ? "light" : "dark";
+  function syncToggle() {
+    const label = "Switch to " + (cur() === "dark" ? "light" : "dark") + " mode";
+    toggle.setAttribute("aria-label", label); toggle.setAttribute("title", label);
+    const meta = document.querySelector('meta[name="theme-color"]');
+    if (meta) meta.setAttribute("content", cur() === "dark" ? "#0e1013" : "#f2f2f2");
+  }
+  toggle.addEventListener("click", () => {
+    const t = cur() === "dark" ? "light" : "dark";
+    document.documentElement.setAttribute("data-theme", t);
+    try { localStorage.setItem("theme", t); } catch (e) {}
+    syncToggle(); C = themeColors(); if (DATA) { draw(); renderStats(); }
+  });
+  syncToggle();
+
+  fetch("data/momentum.json", { cache: "no-cache" }).then(r => { if (!r.ok) throw new Error("HTTP " + r.status); return r.json(); }).then(d => {
+    DATA = d;
+    document.querySelectorAll(".startyr").forEach(e => e.textContent = d.start);
+    $("status").innerHTML = `<span class="pill">Data through ${esc(d.last_close)}</span><span>Backtest ${d.start}-01-01 → ${esc(d.last_close)} (last year partial) · built ${esc(d.generated)}</span>`;
+    draw(); renderStats(); renderTable();
+    $("foot").innerHTML = `Past performance is hypothetical and backtested. Sources are linked above and in the CSV.`;
+  }).catch(e => {
+    $("status").innerHTML = `<span class="pill err">Could not load data</span>`;
+    console.warn("momentum.json load failed:", e);
+  });
+})();
+</script>
+</body>
+</html>
