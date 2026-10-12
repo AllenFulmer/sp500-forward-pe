@@ -271,6 +271,7 @@
   <nav class="topnav" aria-label="Pages">
     <a href="./">Valuation &amp; Macro</a>
     <a href="momentum.html" aria-current="page">Momentum</a>
+    <a href="crypto.html">Crypto Momentum</a>
   </nav>
   <div class="card">
     <div class="header">
@@ -303,8 +304,8 @@
       <label class="tax-toggle"><input type="checkbox" id="tax-on"> Apply 20% capital gains tax</label>
     </div>
     <p class="c-note" id="c-note"></p>
-    <p class="c-note" id="tax-note" hidden>Tax assumptions: a flat 20% on realized gains, with no state tax. A gain is the sale value minus that position's cost basis. Strategy A sells every Jan 1, even when it buys the same stock back. Each Strategy B half sells when its 2-year hold ends. Strategy C sells all five every Jan 1, and gains and losses net within the year. Net losses carry forward to offset later gains. Tax is paid from the portfolio. Cash from a buyout during the year is taxed in that year. Dividends are left in the total returns and not taxed. At a start after 1999, positions count as bought on Jan 1 of the start year. Lines and stats show positions still open at the end before selling (the S&amp;P 500 is never sold). The "if sold at end" row shows each value after a final sale and tax.</p>
-    <div class="chart-block"><div class="chart-wrap"><canvas id="chart" role="img" aria-label="Growth of $100: S&amp;P 500 vs Strategies A, B and C"></canvas></div></div>
+    <p class="c-note" id="tax-note" hidden>Tax assumptions: a flat 20% on realized gains, with no state tax. A gain is the sale value minus that position's cost basis. Strategy A sells every Jan 1, even when it buys the same stock back. Strategy B sells all five every Jan 1, and gains and losses net within the year. Net losses carry forward to offset later gains. Tax is paid from the portfolio. Cash from a buyout during the year is taxed in that year. Dividends are left in the total returns and not taxed. At a start after 1999, positions count as bought on Jan 1 of the start year. Lines and stats show positions still open at the end before selling (the S&amp;P 500 is never sold). The "if sold at end" row shows each value after a final sale and tax.</p>
+    <div class="chart-block"><div class="chart-wrap"><canvas id="chart" role="img" aria-label="Growth of $100: S&amp;P 500 vs Strategies A and B"></canvas></div></div>
     <div class="mom-stats" id="stats"></div>
     <p class="muted" id="since2009"></p>
     <p class="muted" id="since2012"></p>
@@ -312,18 +313,18 @@
 
   <div class="card">
     <h2 class="section-title" style="padding:0">Best-performing S&amp;P 500 stock by calendar year</h2>
-    <p class="muted">&ldquo;Return&rdquo; = price return in the winning year. &ldquo;Next year&rdquo; = total return the following calendar year (what Strategy A earned). &ldquo;2-yr fwd&rdquo; = compounded total return over the next two calendar years. <span class="tag warn">flag</span> rows are uncertain, single-source or unverified; hover/tap a status for details. * = partial period to <span id="lastclose"></span>.</p>
+    <p class="muted">&ldquo;Return&rdquo; = price return in the winning year. &ldquo;Next year&rdquo; = total return the following calendar year (what Strategy A earned). <span class="tag warn">flag</span> rows are uncertain, single-source or unverified; hover/tap a status for details. * = partial period to <span id="lastclose"></span>.</p>
     <div class="tbl-wrap">
       <table class="wins">
-        <thead><tr><th>Year</th><th>Ticker</th><th>Company</th><th class="num">Return</th><th class="num">Next year</th><th class="num">2-yr fwd</th><th>Status</th></tr></thead>
+        <thead><tr><th>Year</th><th>Ticker</th><th>Company</th><th class="num">Return</th><th class="num">Next year</th><th>Status</th></tr></thead>
         <tbody id="wins-body"></tbody>
       </table>
     </div>
   </div>
 
   <div class="card">
-    <h2 class="section-title" style="padding:0">Strategy C: each year&rsquo;s top 5 S&amp;P 500 stocks</h2>
-    <p class="muted">Same winner rule (year-end members, full year, price return). &ldquo;Next yr&rdquo; = total return of each stock the following year. &ldquo;Portfolio&rdquo; = equal-weight (20% each) next-year return, which is what Strategy C earned. Years with incomplete or unverifiable top-5 lists are flagged and not used. Strategy C starts <span class="cstart"></span>-01-01, the first year after which every top-5 list is complete.</p>
+    <h2 class="section-title" style="padding:0">Strategy B: each year&rsquo;s top 5 S&amp;P 500 stocks</h2>
+    <p class="muted">Same winner rule (year-end members, full year, price return). &ldquo;Next yr&rdquo; = total return of each stock the following year. &ldquo;Portfolio&rdquo; = equal-weight (20% each) next-year return, which is what Strategy B earned. Years with incomplete or unverifiable top-5 lists are flagged and not used. Strategy B starts <span class="cstart"></span>-01-01, the first year after which every top-5 list is complete.</p>
     <details class="t5" id="t5-details"><summary>Show top 5 by year (<span id="t5-count"></span> years)</summary>
       <div class="tbl-wrap">
         <table class="wins">
@@ -339,19 +340,18 @@
     <ul>
       <li><b>Winner of year Y</b>: highest calendar-year <i>price</i> return among stocks in the S&amp;P 500 at the <i>end</i> of year Y (the convention used by S&amp;P Dow Jones Indices and year-end press lists), requiring a full year of trading. So mid-year additions count (Tesla 2020, Palantir 2024) but SanDisk 2025 (spun off in February) does not.</li>
       <li><b>Strategy A</b>: on Jan 1 of each year put 100% in the previous year&rsquo;s winner, hold 12 months, rotate.</li>
-      <li><b>Strategy B</b>: two overlapping sleeves, each starting at $50. Each Jan 1, the sleeve whose two-year hold just ended sells and buys the previous year&rsquo;s winner, holding it 24 months. At any time the portfolio holds the last two winners, without rebalancing between sleeves. (If the same stock wins twice, both sleeves hold it.)</li>
-      <li><b>Strategy C</b>: on Jan 1 put 20% in each of the previous year&rsquo;s top 5, hold 12 months, and rebalance to equal weight each year. The earliest start with complete, sourced top-5 lists every year is <span class="cstart"></span>, using the 2008 list (no full top-5 list could be found for 1997, 1998, 2001, 2002 or 2004&ndash;2007). On the chart, C starts at the S&amp;P 500&rsquo;s value on that date. Its stats card uses $100 invested at its own start, and the &ldquo;since&rdquo; lines compare all four lines over the same window.</li>
+      <li><b>Strategy B</b>: on Jan 1 put 20% in each of the previous year&rsquo;s top 5, hold 12 months, and rebalance to equal weight each year. The earliest start with complete, sourced top-5 lists every year is <span class="cstart"></span>, using the 2008 list (no full top-5 list could be found for 1997, 1998, 2001, 2002 or 2004&ndash;2007). On the chart, B starts at the S&amp;P 500&rsquo;s value on that date. Its stats card uses $100 invested at its own start, and the &ldquo;since&rdquo; lines compare all three lines over the same window.</li>
       <li><b>Acquired names inside a holding year</b> (UST 2009, El Paso 2012, old Allergan 2015, Cablevision 2016, Warner Bros. Discovery 2026): valued at the actual deal consideration, with cash held at 0% for the rest of the year. Sources and the arithmetic are in <a href="data/momentum_top5.csv">momentum_top5.csv</a>.</li>
       <li><b>Benchmark</b>: S&amp;P 500 <b>Total Return</b> index (^SP500TR, dividends reinvested). Strategy returns are also total returns (dividend-adjusted closes). No costs, taxes or slippage.</li>
-      <li><b>Why 1999 and not 1998?</b> Strategy B needs two winners from earlier years. On Jan 1 1998 that means the 1997 and 1996 winners, and 1996 is unverified. Strategy A (1997 winner Dell, +248% in 1998 per S&amp;P DJI) and the S&amp;P 500 could both start in 1998, but B could not without an assumption for its second half. The start date hasn&rsquo;t been changed yet.</li>
-      <li><b>Window</b>: the backtest starts <span class="startyr"></span>-01-01, the first date both sleeves of Strategy B can be filled from verified winners (the 1996 winner could not be verified). It runs to the latest close; the last year is year-to-date. The chart uses year-end points, so max drawdown is measured on <i>year-end values</i>; intra-year drawdowns were deeper.</li>
+      <li><b>Why 1999 and not 1998?</b> Strategy A (1997 winner Dell, +248% in 1998 per S&amp;P DJI) and the S&amp;P 500 could both start in 1998. The page keeps its original 1999 start so earlier results stay comparable.</li>
+      <li><b>Window</b>: the backtest starts <span class="startyr"></span>-01-01, kept from the original version of this page. It runs to the latest close; the last year is year-to-date. The chart uses year-end points, so max drawdown is measured on <i>year-end values</i>; intra-year drawdowns were deeper.</li>
       <li><b>Delisted / acquired names</b> (Dell, Reebok, Providian, Avaya, Family Dollar, XL Capital, Cabot Oil &amp; Gas): for Strategies A and B, none was acquired or delisted inside its holding window. Their returns come from Exa&rsquo;s per-ticker total-return pages (linked in the data file), with S&amp;P DJI figures for the winning year where available.</li>
     </ul>
     <h2 class="section-title" style="padding:0">Caveats</h2>
     <ul>
       <li><b>Hindsight and survivorship</b>: membership comes from a point-in-time constituent list, but Yahoo has no prices for most delisted pre-2010 members, and ticker reuse corrupts some symbols (for example Yahoo&rsquo;s &ldquo;EP&rdquo; is no longer El Paso). Pre-2010 winners therefore rely on published lists, and a few years are flagged.</li>
       <li><b>Sensitive to definitions</b>: with Jan-1 membership instead of year-end, several winners change (2024 would be Vistra, not Palantir; 2020 NVIDIA, not Tesla). Price and total-return rankings can also differ.</li>
-      <li><b>Very concentrated</b>: A and B hold one or two stocks, with year-end drawdowns of about &minus;85% to &minus;97% in 2000–02. The result depends mostly on the start date. Since 2012 it looks much better than over the full period, which matches what the other 30-year backtest found.</li>
+      <li><b>Very concentrated</b>: A holds one stock and B five. A&rsquo;s year-end drawdown reached about &minus;97% in 2000–02. The result depends mostly on the start date. Since 2012 it looks much better than over the full period, which matches what the other 30-year backtest found.</li>
       <li>This is not investment advice.</li>
     </ul>
     <h2 class="section-title" style="padding:0">Data</h2>
@@ -373,7 +373,7 @@
     const dark = document.documentElement.getAttribute("data-theme") !== "light";
     return { green: v("--green", "#5f8a31"), line: v("--line", "#3a3a3a"), grid: v("--grid", "#d9d9d9"),
       tick: v("--tick", "#333"), tipBg: v("--tip-bg", "#fff"), tipInk: v("--tip-ink", "#111"), tipBorder: v("--tip-border", "#ccc"),
-      a: dark ? "#f0a35e" : "#c46a12", b: dark ? "#7fb0ff" : "#2f6fd6", c: dark ? "#d68cff" : "#8a3fc0" };
+      a: dark ? "#f0a35e" : "#c46a12", b: dark ? "#d68cff" : "#8a3fc0" };
   }
   let C = themeColors(), chart = null, DATA = null;
   let scale = "logarithmic";
@@ -389,29 +389,28 @@
     return [
       { key: "sp500", label: "S&P 500 (total return)", color: C.line },
       { key: "a", label: "Strategy A (1-yr hold)", color: C.a },
-      { key: "b", label: "Strategy B (2-yr overlapping)", color: C.b },
-      { key: "c", label: "Strategy C (top 5, equal weight)", color: C.c },
+      { key: "b", label: "Strategy B (top 5, equal weight)", color: C.b },
     ];
   }
   let startYear = 1999;
-  // Every line rebased to $100 on Jan 1 of startYear. C is plotted from its own first year:
+  // Every line rebased to $100 on Jan 1 of startYear. B is plotted from its own first year:
   // if startYear is earlier, it starts at the S&P 500's (rebased) value on that date.
   function windowData() {
-    const S = DATA.series, cv = cOnChart();
+    const S = DATA.series, cv = bOnChart();
     const i0 = startYear <= DATA.start ? 0 : S.labels.indexOf((startYear - 1) + "-12-31");
     const reb = (arr, base) => arr.slice(i0).map(v => v == null ? null : 100 * v / base);
     const out = { i0, labels: S.labels.slice(i0) };
-    ["sp500", "a", "b"].forEach(k => out[k] = reb(S[k], S[k][i0]));
-    out.c = startYear >= DATA.c.start ? reb(cv, cv[i0]) : reb(cv, S.sp500[i0]);
+    ["sp500", "a"].forEach(k => out[k] = reb(S[k], S[k][i0]));
+    out.b = startYear >= DATA.b.start ? reb(cv, cv[i0]) : reb(cv, S.sp500[i0]);
     const T = simulate(startYear, taxOn);
     out.liq = T.liq;
     out.liq.sp500 = taxOn ? out.sp500[out.sp500.length - 1] - Math.max(0, out.sp500[out.sp500.length - 1] - 100) * 0.2 : null;
     if (taxOn) {
-      out.a = T.a; out.b = T.b;
-      const cStart = Math.max(startYear, DATA.c.start), k = cStart - startYear; // index of C's first point in the window
-      const base = startYear >= DATA.c.start ? 100 : out.sp500[k];
-      out.c = out.sp500.map((_, i) => i < k ? null : base * T.c[i - k] / 100);
-      if (startYear < DATA.c.start) out.liq.c = out.liq.c * base / 100;
+      out.a = T.a;
+      const bStart = Math.max(startYear, DATA.b.start), k = bStart - startYear; // index of B's first point in the window
+      const base = startYear >= DATA.b.start ? 100 : out.sp500[k];
+      out.b = out.sp500.map((_, i) => i < k ? null : base * T.b[i - k] / 100);
+      if (startYear < DATA.b.start) out.liq.b = out.liq.b * base / 100;
     }
     return out;
   }
@@ -433,26 +432,11 @@
     { const tx = taxer(on); let v = 100, basis = 100; const arr = [v];
       steps.forEach(s => { v *= 1 + s.a; if (!s.partial) { v -= tx(v - basis); basis = v; } arr.push(v); });
       out.a = arr; out.liq.a = v - tx(v - basis); }
-    // Strategy B: half weights at `from` come from the untaxed path since 1999; basis = value at `from`.
-    { let w = { 0: 50, 1: 50 };
-      DATA.steps.filter(s => s.year < from).forEach(s => s.b_parts.forEach(p => w[p.k] *= 1 + p.r));
-      const tot = w[0] + w[1]; let sv = { 0: 100 * w[0] / tot, 1: 100 * w[1] / tot }; const basis = { ...sv };
-      const tx = taxer(on); const arr = [100];
-      steps.forEach(s => {
-        let g = 0;
-        s.b_parts.forEach(p => { sv[p.k] *= 1 + p.r; if (p.sell && !s.partial) g += sv[p.k] - basis[p.k]; });
-        const t = tx(g);
-        if (t > 0) { const sold = s.b_parts.filter(p => p.sell && !s.partial), gs = sold.map(p => Math.max(0, sv[p.k] - basis[p.k])), gsum = gs.reduce((x, y) => x + y, 0) || 1;
-          sold.forEach((p, i) => sv[p.k] -= t * (gs[i] / gsum)); }
-        s.b_parts.forEach(p => { if (p.sell && !s.partial) basis[p.k] = sv[p.k]; });
-        arr.push(sv[0] + sv[1]);
-      });
-      out.b = arr; out.liq.b = sv[0] + sv[1] - tx(sv[0] + sv[1] - basis[0] - basis[1]); }
-    // Strategy C (from max(from, C start)): all five sold yearly, gains/losses net within the year.
+    // Strategy B (from max(from, B start)): all five sold yearly, gains/losses net within the year.
     { const tx = taxer(on); let v = 100, basis = 100; const arr = [v];
-      DATA.c.steps.filter(s => s.year >= Math.max(from, DATA.c.start)).forEach(s => {
-        v *= 1 + s.c; if (!s.partial) { v -= tx(v - basis); basis = v; } arr.push(v); });
-      out.c = arr; out.liq.c = v - tx(v - basis); }
+      DATA.b.steps.filter(s => s.year >= Math.max(from, DATA.b.start)).forEach(s => {
+        v *= 1 + s.b; if (!s.partial) { v -= tx(v - basis); basis = v; } arr.push(v); });
+      out.b = arr; out.liq.b = v - tx(v - basis); }
     return out;
   }
   window.__momSim = simulate;
@@ -474,9 +458,9 @@
     });
   }
   function redraw() { if (chart) { chart.destroy(); chart = null; } draw(); }
-  // Strategy C plotted from its start, scaled to the S&P 500's value on that date.
-  function cOnChart() {
-    const S = DATA.series, c = DATA.c, i0 = S.labels.indexOf(c.labels[0].replace("-01-01", "") - 1 + "-12-31");
+  // Strategy B plotted from its start, scaled to the S&P 500's value on that date.
+  function bOnChart() {
+    const S = DATA.series, c = DATA.b, i0 = S.labels.indexOf(c.labels[0].replace("-01-01", "") - 1 + "-12-31");
     return S.labels.map((l, i) => {
       if (i0 < 0 || i < i0) return null;
       const j = i - i0; return j < c.values.length ? S.sp500[i0] * c.values[j] / 100 : null;
@@ -488,25 +472,25 @@
     const m = v[v.length - 1] / v[0];
     return { ending: 100 * m, cagr: Math.pow(m, 1 / yrs) - 1, max_drawdown: mdd };
   }
-  function liqOf(W, k) { const v = W.liq[k]; return k === "c" && startYear < DATA.c.start ? v * 100 / W.c.find(x => x != null) : v; }
+  function liqOf(W, k) { const v = W.liq[k]; return k === "b" && startYear < DATA.b.start ? v * 100 / W.b.find(x => x != null) : v; }
   function renderStats() {
-    const W = windowData(), cFrom = Math.max(startYear, DATA.c.start);
-    const st = { sp500: winStats(W.sp500, startYear), a: winStats(W.a, startYear), b: winStats(W.b, startYear), c: winStats(W.c, cFrom) };
+    const W = windowData(), cFrom = Math.max(startYear, DATA.b.start);
+    const st = { sp500: winStats(W.sp500, startYear), a: winStats(W.a, startYear), b: winStats(W.b, cFrom) };
     window.__momStats = st;
-    $("stats").innerHTML = series().map(s => `<div class="stat" data-key="${s.key}"><h3><span class="sw" style="background:${s.color}"></span>${esc(s.label)} · from ${s.key === "c" ? cFrom : startYear}</h3>
+    $("stats").innerHTML = series().map(s => `<div class="stat" data-key="${s.key}"><h3><span class="sw" style="background:${s.color}"></span>${esc(s.label)} · from ${s.key === "b" ? cFrom : startYear}</h3>
       <dl><dt>Ending value of $100</dt><dd class="ev">${money(st[s.key].ending)}</dd><dt>CAGR</dt><dd>${pct(st[s.key].cagr, 2)}</dd>
       <dt>Max drawdown (year-end)</dt><dd class="neg">${pct(st[s.key].max_drawdown)}</dd>${taxOn ? `<dt>If sold at end, after tax</dt><dd class="liq">${money(liqOf(W, s.key))}</dd>` : ""}</dl></div>`).join("");
-    $("c-note").textContent = startYear < DATA.c.start
-      ? `Every line is rebased to $100 on Jan 1, ${startYear}. Strategy C only exists from ${DATA.c.start}, so its line starts on Jan 1, ${DATA.c.start} at the S&P 500's value on that date. Its stats cover ${DATA.c.start} onward ($100 invested then).`
-      : `Every line, including Strategy C, is rebased to $100 on Jan 1, ${startYear}. Stats cover Jan 1, ${startYear} to ${DATA.last_close}.`;
-    const S = DATA.series, cv = cOnChart(), n = S.labels.length - 1;
+    $("c-note").textContent = startYear < DATA.b.start
+      ? `Every line is rebased to $100 on Jan 1, ${startYear}. Strategy B only exists from ${DATA.b.start}, so its line starts on Jan 1, ${DATA.b.start} at the S&P 500's value on that date. Its stats cover ${DATA.b.start} onward ($100 invested then).`
+      : `Every line, including Strategy B, is rebased to $100 on Jan 1, ${startYear}. Stats cover Jan 1, ${startYear} to ${DATA.last_close}.`;
+    const S = DATA.series, cv = bOnChart(), n = S.labels.length - 1;
     const since = (y, id, lead) => {
       const i = S.labels.indexOf((y - 1) + "-12-31"); if (i < 0) return;
       const yrs = (new Date(DATA.last_close) - new Date(y + "-01-01")) / (365.25 * 864e5);
       const f = (arr) => { const m = arr[n] / arr[i]; return `${money(100 * m)} (${pct(Math.pow(m, 1 / yrs) - 1, 1)}/yr)`; };
-      $(id).textContent = `${lead}, $100 became: S&P 500 ${f(S.sp500)}, Strategy A ${f(S.a)}, Strategy B ${f(S.b)}, Strategy C ${cv[i] == null ? "n/a" : f(cv)}.`;
+      $(id).textContent = `${lead}, $100 became: S&P 500 ${f(S.sp500)}, Strategy A ${f(S.a)}, Strategy B ${cv[i] == null ? "n/a" : f(cv)}.`;
     };
-    since(DATA.c.start, "since2009", `Since Jan 1, ${DATA.c.start} (Strategy C's first verified year, same window for all four)`);
+    since(DATA.b.start, "since2009", `Since Jan 1, ${DATA.b.start} (Strategy B's first verified year, same window for all three)`);
     since(2012, "since2012", "Since Jan 1, 2012 (the window in the original post)");
   }
   function setStart(y) {
@@ -526,9 +510,9 @@
       const flag = ["uncertain", "unverified", "single-source", "probable"].includes(w.status);
       const tip = esc((w.note || "") + (w.sources ? " Sources: " + w.sources.replace(/yahoo/g, "Yahoo Finance") : ""));
       const p = (v, part) => `<td class="num ${cls(v)}">${pct(v)}${part && v != null ? "*" : ""}</td>`;
-      if (!w.ticker) return `<tr class="flag"><td>${w.year}</td><td colspan="5">Not verified, left blank</td><td><span class="tag ${k}" title="${tip}">${lab}</span></td></tr>`;
+      if (!w.ticker) return `<tr class="flag"><td>${w.year}</td><td colspan="4">Not verified, left blank</td><td><span class="tag ${k}" title="${tip}">${lab}</span></td></tr>`;
       return `<tr class="${flag ? "flag" : ""}"><td>${w.year}${w.status === "ytd" ? " YTD" : ""}</td><td><b>${esc(w.ticker)}</b></td><td class="co">${esc(w.company)}</td>
-        ${p(w.return, w.status === "ytd")}${p(w.next_year, w.next_year_partial)}${p(w.two_year, w.two_year_partial)}
+        ${p(w.return, w.status === "ytd")}${p(w.next_year, w.next_year_partial)}
         <td><span class="tag ${k}" title="${tip}" tabindex="0">${lab}</span></td></tr>`;
     }).join("");
   }
@@ -572,7 +556,7 @@
     DATA = d;
     document.querySelectorAll(".startyr").forEach(e => e.textContent = d.start);
     $("status").innerHTML = `<span class="pill">Data through ${esc(d.last_close)}</span><span>Backtest ${d.start}-01-01 → ${esc(d.last_close)} (last year partial) · built ${esc(d.generated)}</span>`;
-    document.querySelectorAll(".cstart").forEach(e => e.textContent = d.c.start);
+    document.querySelectorAll(".cstart").forEach(e => e.textContent = d.b.start);
     draw(); renderStats(); renderTable(); renderTop5();
     $("foot").innerHTML = `Past performance is hypothetical and backtested. Sources are linked above and in the CSV.`;
   }).catch(e => {

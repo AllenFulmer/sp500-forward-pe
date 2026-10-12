@@ -1,0 +1,494 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+<title>Crypto Momentum — buy last year's best top-100 coin</title>
+<script>
+  // Set theme before first paint to avoid a flash. Default is dark for first-time
+  // visitors (OS preference intentionally ignored); a saved choice is respected.
+  (function () {
+    var t = "dark";
+    try { var s = localStorage.getItem("theme"); if (s === "light" || s === "dark") t = s; } catch (e) {}
+    document.documentElement.setAttribute("data-theme", t);
+  })();
+</script>
+<meta name="color-scheme" content="dark light" />
+<link rel="icon" href="data:," />
+<meta name="theme-color" content="#0e1013" />
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+<style>
+  /* Light theme (original palette) */
+  :root, [data-theme="light"] {
+    color-scheme: light;
+    --page-bg: #f2f2f2;
+    --bg: #ffffff;
+    --ink: #1a1a1a;
+    --muted: #555;
+    --footer-ink: #666;
+    --link: #444;
+    --card-border: #c8c8c8;
+    --rule: #e5e5e5;
+    --grid: #d9d9d9;
+    --green: #5f8a31;
+    --line: #3a3a3a;
+    --tick: #333;
+    --axis: #888;
+    --badge: #1a1a1a;
+    --badge-ink: #fff;
+    --pill-bg: #eef5e4;
+    --pill-warn-bg: #f7f0df; --pill-warn-ink: #8a6d1f;
+    --pill-err-bg: #f6e4e4;  --pill-err-ink: #8a2f2f;
+    --inset-bg: rgba(255,255,255,0.94);
+    --inset-border: #222;
+    --inset-head-bg: #f7f7f7;
+    --inset-desc: #444;
+    --msg-ink: #8a2f2f; --msg-bg: #fff; --msg-border: #d9b3b3;
+    --tip-bg: rgba(255,255,255,0.97);
+    --tip-ink: #1a1a1a;
+    --tip-border: #c8c8c8;
+    --btn-bg: #ffffff;
+    --btn-border: #bdbdbd;
+    --btn-hover: #f0f0f0;
+    --focus: #2f6fd6;
+    --shadow: 0 1px 2px rgba(0,0,0,.04);
+  }
+  /* Dark theme (default) */
+  [data-theme="dark"] {
+    color-scheme: dark;
+    --page-bg: #0e1013;
+    --bg: #171a1f;
+    --ink: #e9ebee;
+    --muted: #a7adb6;
+    --footer-ink: #9aa0a8;
+    --link: #c8cdd4;
+    --card-border: #2b3038;
+    --rule: #2b3038;
+    --grid: #2a2f37;
+    --green: #8cc152;
+    --line: #e4e7eb;
+    --tick: #b9bec6;
+    --axis: #5b626c;
+    --badge: #e9ebee;
+    --badge-ink: #111317;
+    --pill-bg: rgba(140,193,82,0.14);
+    --pill-warn-bg: rgba(224,180,70,0.15); --pill-warn-ink: #e3c169;
+    --pill-err-bg: rgba(230,100,100,0.15);  --pill-err-ink: #f09a9a;
+    --inset-bg: rgba(23,26,31,0.94);
+    --inset-border: #5b626c;
+    --inset-head-bg: #20242b;
+    --inset-desc: #b9bec6;
+    --msg-ink: #f09a9a; --msg-bg: #171a1f; --msg-border: #6b3a3a;
+    --tip-bg: rgba(32,36,43,0.97);
+    --tip-ink: #e9ebee;
+    --tip-border: #3a404a;
+    --btn-bg: #20242b;
+    --btn-border: #3a404a;
+    --btn-hover: #2a2f37;
+    --focus: #7fb0ff;
+    --shadow: 0 1px 2px rgba(0,0,0,.4);
+  }
+  * { box-sizing: border-box; }
+  html { -webkit-text-size-adjust: 100%; text-size-adjust: 100%; }
+  html, body { margin: 0; padding: 0; background: var(--page-bg); color: var(--ink);
+    font-family: "Helvetica Neue", Helvetica, Arial, sans-serif; }
+  .page { max-width: 1100px; margin: 24px auto; padding: 0 16px 40px; }
+  .card {
+    background: var(--bg); border: 1px solid var(--card-border); border-radius: 2px;
+    padding: 18px 22px 14px; box-shadow: var(--shadow);
+  }
+  .header { display: flex; justify-content: space-between; align-items: flex-start; gap: 12px; }
+  .header .titles { min-width: 0; }
+  h1 { font-size: 22px; font-weight: 700; margin: 0 0 4px; letter-spacing: -0.2px; }
+  h2 { font-size: 15px; font-weight: 700; margin: 0; color: var(--ink); }
+  .subtitle-row { display: flex; align-items: center; flex-wrap: wrap; gap: 6px 12px; }
+  .seg { display: inline-flex; border: 1px solid var(--btn-border); border-radius: 7px; overflow: hidden;
+    background: var(--btn-bg); flex-shrink: 0; }
+  .seg button { appearance: none; -webkit-appearance: none; border: 0; margin: 0; background: transparent;
+    color: var(--muted); font: 600 12px/1 "Helvetica Neue", Helvetica, Arial, sans-serif; letter-spacing: 0.2px;
+    height: 28px; min-width: 52px; padding: 0 12px; cursor: pointer; -webkit-tap-highlight-color: transparent; }
+  .seg button + button { border-left: 1px solid var(--btn-border); }
+  .seg button:hover { background: var(--btn-hover); color: var(--ink); }
+  .seg button[aria-pressed="true"] { background: var(--ink); color: var(--bg); }
+  .seg button:focus-visible { outline: 2px solid var(--focus); outline-offset: -2px; position: relative; }
+  .header-actions { display: flex; align-items: center; gap: 10px; flex-shrink: 0; }
+  .badges { display: flex; gap: 6px; flex-shrink: 0; }
+  .badge {
+    background: var(--badge); color: var(--badge-ink); font-size: 11px; font-weight: 700;
+    padding: 4px 9px; border-radius: 3px; letter-spacing: 0.3px;
+  }
+  .theme-toggle {
+    display: inline-flex; align-items: center; justify-content: center;
+    width: 44px; height: 44px; padding: 0; margin: -6px 0 0;
+    background: var(--btn-bg); color: var(--ink); border: 1px solid var(--btn-border);
+    border-radius: 8px; cursor: pointer; flex-shrink: 0;
+    transition: background-color .15s ease, border-color .15s ease;
+    -webkit-tap-highlight-color: transparent;
+  }
+  .theme-toggle:hover { background: var(--btn-hover); }
+  .theme-toggle:focus-visible { outline: 2px solid var(--focus); outline-offset: 2px; }
+  .theme-toggle svg { width: 20px; height: 20px; display: block; }
+  /* Show the icon of the theme you will switch TO */
+  [data-theme="dark"] .theme-toggle .icon-moon { display: none; }
+  [data-theme="light"] .theme-toggle .icon-sun { display: none; }
+  .status {
+    margin: 10px 0 6px; font-size: 12px; color: var(--muted);
+    display: flex; flex-wrap: wrap; gap: 8px 16px; align-items: center;
+  }
+  .status .pill {
+    display: inline-block; padding: 2px 8px; border-radius: 999px;
+    background: var(--pill-bg); color: var(--green); font-weight: 600; font-size: 11px;
+  }
+  .status .pill.warn { background: var(--pill-warn-bg); color: var(--pill-warn-ink); }
+  .status .pill.err { background: var(--pill-err-bg); color: var(--pill-err-ink); }
+  .range-row { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 14px; margin: 8px 0 6px; font-size: 13px; }
+  .range-row label { font-weight: 700; white-space: nowrap; }
+  .range-row output { font-weight: 700; font-variant-numeric: tabular-nums; min-width: 3.2em; color: var(--green); font-size: 15px; }
+  .range-wrap { flex: 1 1 260px; display: flex; align-items: center; gap: 8px; min-width: 0; }
+  .range-wrap span { color: var(--muted); font-size: 11.5px; font-variant-numeric: tabular-nums; }
+  #start-range { flex: 1; min-width: 0; height: 32px; accent-color: var(--green); cursor: pointer; touch-action: pan-y; }
+  #start-range:focus-visible { outline: 2px solid var(--focus); outline-offset: 2px; }
+  .tax-toggle { display: inline-flex; align-items: center; gap: 8px; font-weight: 700; cursor: pointer; min-height: 32px; }
+  .tax-toggle input { width: 18px; height: 18px; accent-color: var(--green); }
+  .c-note { font-size: 12px; color: var(--muted); margin: 2px 0 0; }
+  @media (max-width: 700px) { #start-range { height: 44px; } .range-row .seg button { height: 36px; } }
+  .chart-block { position: relative; width: 100%; margin-top: 4px; }
+  .chart-wrap { position: relative; width: 100%; height: clamp(380px, 52vw, 520px); }
+  canvas { width: 100% !important; height: 100% !important; display: block; }
+  .chart-msg { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center;
+    text-align: center; padding: 24px; color: var(--msg-ink); font-size: 15px; background: var(--msg-bg);
+    border: 1px dashed var(--msg-border); }
+  /* Inset valuation table overlay */
+  .inset {
+    position: absolute; left: 29%; top: 30px; z-index: 2;
+    background: var(--inset-bg); border: 1px solid var(--inset-border);
+    font-size: 11.5px; line-height: 1.35; min-width: 310px;
+    box-shadow: 0 1px 0 rgba(0,0,0,.04);
+  }
+  .inset table { border-collapse: collapse; width: 100%; }
+  .inset th, .inset td { padding: 5px 10px; text-align: left; border-bottom: 1px solid var(--rule); white-space: nowrap; }
+  .inset tr:last-child td { border-bottom: none; }
+  .inset th { font-weight: 700; background: var(--inset-head-bg); border-bottom: 1px solid var(--inset-border); }
+  .inset td.num, .inset th.num { text-align: right; font-variant-numeric: tabular-nums; }
+  .inset td.desc { color: var(--inset-desc); }
+  footer {
+    margin-top: 12px; font-size: 11px; color: var(--footer-ink); line-height: 1.45;
+    border-top: 1px solid var(--rule); padding-top: 10px;
+  }
+  footer a { color: var(--link); }
+  /* Indicator charts below the main chart */
+  .macro { margin-top: 20px; }
+  .section-title { font-size: 17px; margin: 0 0 10px; padding: 0 2px; }
+  .macro-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px; }
+  .mini { padding: 14px 18px 12px; min-width: 0; display: flex; flex-direction: column; }
+  .mini-head { display: flex; justify-content: space-between; align-items: baseline; gap: 4px 12px; flex-wrap: wrap; }
+  .mini h3 { font-size: 15px; font-weight: 700; margin: 0; color: var(--ink); }
+  .mini-title-row { display: flex; align-items: center; flex-wrap: wrap; gap: 6px 10px; }
+  .mini-latest { display: flex; align-items: baseline; gap: 8px; white-space: nowrap; }
+  .mini-value { font-size: 20px; font-weight: 700; color: var(--green); font-variant-numeric: tabular-nums; }
+  .mini-date { font-size: 12px; color: var(--muted); }
+  .mini-def { margin: 4px 0 6px; font-size: 12px; color: var(--muted); line-height: 1.4; }
+  .mini-chart { position: relative; width: 100%; height: 230px; margin-top: auto; }
+  .mini-chart .chart-msg { font-size: 13px; padding: 12px; }
+  .mini-source { margin: 8px 0 0; font-size: 11px; color: var(--footer-ink); line-height: 1.45;
+    border-top: 1px solid var(--rule); padding-top: 7px; }
+  .mini-source a { color: var(--link); }
+  @media (max-width: 700px) {
+    .page { margin: 12px auto; padding: 0 10px 24px; }
+    .card { padding: 14px 14px 12px; }
+    h1 { font-size: 19px; line-height: 1.25; }
+    h2 { font-size: 15px; line-height: 1.3; }
+    .header { flex-wrap: wrap; }
+    .header .titles { flex: 1 1 200px; }
+    .seg button { height: 40px; min-width: 64px; font-size: 13px; }
+    .status { font-size: 13px; }
+    .status .pill { font-size: 12px; padding: 3px 9px; line-height: 1.4; }
+    /* Table moves out of the chart overlay and scrolls within its own box if needed */
+    .inset {
+      position: static; min-width: 0; max-width: 100%; width: 100%;
+      font-size: 13px; margin: 6px 0 10px;
+      overflow-x: auto; -webkit-overflow-scrolling: touch;
+    }
+    .inset th, .inset td { padding: 7px 8px; }
+    .inset th { white-space: normal; vertical-align: bottom; }
+    .inset td.desc { white-space: normal; min-width: 7em; }
+    .chart-wrap { height: clamp(300px, 92vw, 420px); }
+    footer { font-size: 13px; line-height: 1.75; }
+    footer a { padding: 6px 0; }
+    .macro { margin-top: 16px; }
+    .macro-grid { grid-template-columns: minmax(0, 1fr); gap: 12px; }
+    .mini { padding: 14px 14px 12px; }
+    .mini h3 { font-size: 16px; }
+    .mini-def { font-size: 13px; }
+    .mini-chart { height: 220px; }
+    .mini-source { font-size: 12.5px; line-height: 1.7; }
+    .mini-source a { padding: 6px 0; }
+  }
+  @media (max-width: 400px) {
+    .card { padding: 12px 10px 10px; }
+    .mini { padding: 12px 10px 10px; }
+    .inset { font-size: 12.5px; }
+    .inset th, .inset td { padding: 7px 6px; }
+  }
+  /* Top tab navigation (shared with momentum.html) */
+  .topnav { display: flex; gap: 4px; margin: 0 0 12px; border-bottom: 1px solid var(--card-border); overflow-x: auto; }
+  .topnav a { display: inline-flex; align-items: center; min-height: 40px; padding: 0 14px; color: var(--muted);
+    text-decoration: none; font-size: 14px; font-weight: 600; border-bottom: 2px solid transparent; margin-bottom: -1px; white-space: nowrap; }
+  .topnav a:hover { color: var(--ink); }
+  .topnav a[aria-current="page"] { color: var(--ink); border-bottom-color: var(--green); }
+  .topnav a:focus-visible { outline: 2px solid var(--focus); outline-offset: -2px; }
+  @media (max-width: 700px) { .topnav a { min-height: 44px; flex: 1 1 0; justify-content: center; } }
+  .mom-stats { display: grid; grid-template-columns: repeat(4, minmax(0,1fr)); gap: 12px; margin: 14px 0 6px; }
+  .stat { border: 1px solid var(--card-border); border-radius: 6px; padding: 10px 12px; background: var(--btn-bg); }
+  .stat h3 { margin: 0 0 6px; font-size: 13px; display: flex; align-items: center; gap: 8px; }
+  .stat .sw { width: 14px; height: 3px; border-radius: 2px; display: inline-block; }
+  .stat dl { margin: 0; display: grid; grid-template-columns: auto auto; gap: 2px 10px; font-size: 12.5px; }
+  .stat dt { color: var(--muted); } .stat dd { margin: 0; text-align: right; font-weight: 700; font-variant-numeric: tabular-nums; }
+  .tbl-wrap { overflow-x: auto; -webkit-overflow-scrolling: touch; margin-top: 8px; }
+  table.wins { border-collapse: collapse; width: 100%; font-size: 13px; }
+  .wins th, .wins td { padding: 6px 8px; border-bottom: 1px solid var(--rule); text-align: left; white-space: nowrap; }
+  .wins th { background: var(--inset-head-bg); font-weight: 700; position: sticky; top: 0; }
+  .wins td.num, .wins th.num { text-align: right; font-variant-numeric: tabular-nums; }
+  .wins td.co { white-space: normal; min-width: 9em; }
+  .wins tr.flag td { background: var(--pill-warn-bg); }
+  .pos { color: var(--green); } .neg { color: var(--pill-err-ink); }
+  .tag { display: inline-block; font-size: 10.5px; font-weight: 700; padding: 1px 6px; border-radius: 999px;
+    background: var(--pill-bg); color: var(--green); }
+  .tag.warn { background: var(--pill-warn-bg); color: var(--pill-warn-ink); }
+  .tag.err { background: var(--pill-err-bg); color: var(--pill-err-ink); }
+  .notes { font-size: 13.5px; line-height: 1.55; }
+  .notes li { margin: 4px 0; } .notes a { color: var(--link); }
+  .card + .card { margin-top: 16px; }
+  .muted { color: var(--muted); font-size: 12.5px; }
+  details.t5 summary { cursor: pointer; font-weight: 700; padding: 6px 0; }
+  .wins td.list { white-space: normal; min-width: 18em; }
+  @media (max-width: 1000px) and (min-width: 701px) { .mom-stats { grid-template-columns: repeat(2, minmax(0,1fr)); } }
+  @media (max-width: 700px) { .mom-stats { grid-template-columns: minmax(0,1fr); } .wins { font-size: 12.5px; } }
+</style>
+</head>
+<body>
+<div class="page">
+  <nav class="topnav" aria-label="Pages">
+    <a href="./">Valuation &amp; Macro</a>
+    <a href="momentum.html">Momentum</a>
+    <a href="crypto.html" aria-current="page">Crypto Momentum</a>
+  </nav>
+  <div class="card">
+    <div class="header">
+      <div class="titles">
+        <h1>Crypto Momentum: buy last year&rsquo;s best top-100 coin</h1>
+        <div class="subtitle-row">
+          <h2>Growth of $100 (USD, Dec 31 UTC closes)</h2>
+          <div class="seg" id="scale-seg" role="group" aria-label="Y-axis scale">
+            <button type="button" data-scale="logarithmic" aria-pressed="true">Log</button>
+            <button type="button" data-scale="linear" aria-pressed="false">Linear</button>
+          </div>
+        </div>
+      </div>
+      <div class="header-actions">
+        <button type="button" class="theme-toggle" id="theme-toggle" aria-label="Switch to light mode" title="Switch to light mode">
+          <svg class="icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><circle cx="12" cy="12" r="4.5"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41"/></svg>
+          <svg class="icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+        </button>
+      </div>
+    </div>
+    <div class="status" id="status">Loading…</div>
+    <div class="range-row">
+      <label for="start-range">Start year</label><output id="start-out" for="start-range">2016</output>
+      <div class="range-wrap"><span>2016</span><input type="range" id="start-range" min="2016" max="2025" step="1" value="2016" aria-describedby="c-note"><span>2025</span></div>
+      <div class="seg" id="preset-seg" role="group" aria-label="Start year presets">
+        <button type="button" data-y="2016" aria-pressed="true">2016</button><button type="button" data-y="2018" aria-pressed="false">2018</button><button type="button" data-y="2021" aria-pressed="false">2021</button>
+      </div>
+    </div>
+    <div class="range-row">
+      <label class="tax-toggle"><input type="checkbox" id="tax-on"> Apply 20% capital gains tax</label>
+    </div>
+    <p class="c-note" id="c-note"></p>
+    <p class="c-note" id="tax-note" hidden>Tax assumptions: a flat 20% on realized gains, the same simple rule as the S&amp;P page (in practice US crypto held exactly a year is often short-term and taxed higher). Strategy A sells every Jan 1, even when it buys the same coin back. Strategy B sells all five every Jan 1, and gains and losses net within the year. Net losses carry forward to offset later gains. Tax is paid from the portfolio. At a start after 2016, positions count as bought on Jan 1 of the start year. Lines and stats show open positions before selling (Bitcoin and the S&amp;P 500 are never sold). The "if sold at end" row shows each value after a final sale and tax.</p>
+    <div class="chart-block"><div class="chart-wrap"><canvas id="chart" role="img" aria-label="Growth of $100: Bitcoin vs Strategies A and B, with the S&amp;P 500 for reference"></canvas></div></div>
+    <div class="mom-stats" id="stats"></div>
+  </div>
+
+  <div class="card">
+    <h2 class="section-title" style="padding:0">Best-performing top-100 coin by calendar year</h2>
+    <p class="muted">&ldquo;Return&rdquo; = Dec 31 to Dec 31 (UTC close) price change in the winning year. &ldquo;Next year&rdquo; = the following calendar year, which is what Strategy A earned. <span class="tag warn">flag</span> rows have a caveat or a single source; hover/tap a status for details. * = partial period to <span id="lastclose"></span>.</p>
+    <div class="tbl-wrap">
+      <table class="wins">
+        <thead><tr><th>Year</th><th>Coin</th><th>Name</th><th class="num">Return</th><th class="num">Next year</th><th>Status</th></tr></thead>
+        <tbody id="wins-body"></tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="card">
+    <h2 class="section-title" style="padding:0">Strategy B: each year&rsquo;s top 5 coins</h2>
+    <p class="muted">Same rules as the winner. &ldquo;Portfolio next yr&rdquo; = equal-weight (20% each) next-year return, which is what Strategy B earned. A &dagger; marks a coin that was dropped from CoinMarketCap&rsquo;s listings during the holding year; it is valued at its last listed price.</p>
+    <details class="t5" id="t5-details" open><summary>Top 5 by year (<span id="t5-count"></span> years)</summary>
+      <div class="tbl-wrap">
+        <table class="wins">
+          <thead><tr><th>Year</th><th>Top 5 (return → next-yr return)</th><th class="num">Portfolio next yr</th></tr></thead>
+          <tbody id="t5-body"></tbody>
+        </table>
+      </div>
+    </details>
+  </div>
+
+  <div class="card notes">
+    <h2 class="section-title" style="padding:0">Method</h2>
+    <ul>
+      <li><b>Universe for year Y</b>: the top 100 coins by market cap in CoinMarketCap&rsquo;s Dec 31, Y snapshot, after removing stablecoins, wrapped/bridged tokens, liquid-staking receipts and gold-pegged tokens. A coin also needs a price in the Dec 31, Y&minus;1 snapshot (a full year of history).</li>
+      <li><b>Volume screen</b>: a coin whose Dec 31 trading volume was under 0.1% of its market cap is not used, because its price was not backed by trading (zero-volume tokens, or Bitcoin Classic&rsquo;s +37 million% in 2023). Each excluded case is listed in the status tooltip and the CSV.</li>
+      <li><b>Prices</b>: snapshots are taken at the end of the UTC day, so prices are Dec 31 UTC closes in USD. The last point is the latest full UTC day.</li>
+      <li><b>Strategy A</b>: on Jan 1 put 100% in last year&rsquo;s #1 coin, hold 12 months, rotate. <b>Strategy B</b>: 20% in each of last year&rsquo;s top 5, rebalanced every Jan 1.</li>
+      <li><b>Dead coins</b>: a holding that leaves later snapshots is valued from CoinMarketCap&rsquo;s daily history, or from the last weekly snapshot that still listed it. Triggers (TRIG, a 2017 top-5 coin) was dropped in Oct 2018 after falling 98%, and is valued there. Most picks did not die but fell 90&ndash;98% the next year anyway (Verge 2018, GALA 2022, MANTRA 2025).</li>
+      <li><b>Benchmarks</b>: Bitcoin buy-and-hold from the same snapshots. The S&amp;P 500 total return index (from the Momentum tab&rsquo;s data) is shown for reference. No fees, slippage or exchange risk. Many early coins could only be bought on small exchanges.</li>
+      <li><b>2015 is the first winner year</b>: CoinMarketCap&rsquo;s first Dec 31 snapshot is 2013, but before 2015 the top 100 held few coins with a full year of history and liquid markets. So backtests start Jan 1, 2016, using 2015&rsquo;s winner.</li>
+    </ul>
+    <h2 class="section-title" style="padding:0">Caveats</h2>
+    <ul>
+      <li><b>Selection at year-end</b>: like the S&amp;P page, the winner is picked from the year-end top 100, so it includes coins that only reached the top 100 because they went up. That is the point of the strategy, but it also selects small, thin tokens.</li>
+      <li><b>Single source</b>: year-by-year prices come from CoinMarketCap. Winners were cross-checked against CoinLore&rsquo;s yearly lists and press roundups where possible, and the status column says which ones were.</li>
+      <li><b>Extremely concentrated</b>: Strategy A lost about 99.99% of its peak value. A $100 stake was worth about $<span id="a-peak"></span> at its best and well under $1 later. Results swing wildly with the start year; try the slider.</li>
+      <li>This is not investment advice.</li>
+    </ul>
+    <h2 class="section-title" style="padding:0">Data</h2>
+    <ul>
+      <li><a href="data/crypto_winners.csv">crypto_winners.csv</a>, <a href="data/crypto_top5.csv">crypto_top5.csv</a> (both with source and valuation columns) · <a href="data/crypto.json">crypto.json</a> · rebuilt with <a href="https://github.com/AllenFulmer/sp500-forward-pe/blob/main/scripts/build_crypto.py">scripts/build_crypto.py</a>.</li>
+      <li>Source: <a href="https://coinmarketcap.com/historical/">CoinMarketCap historical snapshots</a> (e.g. <a href="https://coinmarketcap.com/historical/20251231/">Dec 31, 2025</a>). Cross-checks: <a href="https://www.coinlore.com/top-crypto-coins/2021">CoinLore yearly rankings</a>, <a href="https://cryptopotato.com/the-top-100-crypto-assets-6-best-performers-in-2024/">CryptoPotato 2024</a>, <a href="https://www.coindesk.com/markets/2021/12/31/here-are-the-top-10-cryptocurrencies-of-2021">CoinDesk 2021</a>.</li>
+    </ul>
+  </div>
+  <footer id="foot"></footer>
+</div>
+<script>
+(function () {
+  "use strict";
+  const $ = (id) => document.getElementById(id);
+  function themeColors() {
+    const cs = getComputedStyle(document.documentElement);
+    const v = (n, fb) => (cs.getPropertyValue(n) || "").trim() || fb;
+    const dark = document.documentElement.getAttribute("data-theme") !== "light";
+    return { line: v("--line", "#3a3a3a"), grid: v("--grid", "#d9d9d9"), tick: v("--tick", "#333"),
+      tipBg: v("--tip-bg", "#fff"), tipInk: v("--tip-ink", "#111"), tipBorder: v("--tip-border", "#ccc"),
+      btc: dark ? "#f7c948" : "#b7860b", a: dark ? "#f0a35e" : "#c46a12", b: dark ? "#d68cff" : "#8a3fc0", sp: dark ? "#8a9099" : "#8a8f96" };
+  }
+  let C = themeColors(), chart = null, DATA = null, startYear = 2016, taxOn = false;
+  let scale = "logarithmic";
+  try { const s = localStorage.getItem("cryptoScale"); if (s === "linear" || s === "logarithmic") scale = s; } catch (e) {}
+  const pct = (x, d = 1) => x == null ? "—" : (x >= 0 ? "+" : "") + (x * 100).toLocaleString("en-US", { maximumFractionDigits: d, minimumFractionDigits: d }) + "%";
+  const cls = (x) => x == null ? "" : (x >= 0 ? "pos" : "neg");
+  const money = (x) => "$" + (x < 10 ? x.toLocaleString("en-US", { maximumFractionDigits: 2, minimumFractionDigits: 2 }) : x.toLocaleString("en-US", { maximumFractionDigits: 0 }));
+  const esc = (s) => String(s).replace(/[&<>"]/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"})[c]);
+  const STATUS = { verified: ["verified", ""], "single-source": ["single source", "warn"], flag: ["flag", "warn"], unverified: ["unverified", "err"] };
+  const series = () => [
+    { key: "btc", label: "Bitcoin (buy & hold)", color: C.btc },
+    { key: "a", label: "Strategy A (last year's #1)", color: C.a },
+    { key: "b", label: "Strategy B (top 5, equal weight)", color: C.b },
+    { key: "sp500", label: "S&P 500 TR (reference)", color: C.sp, dash: [5, 4] },
+  ];
+  const RATE = 0.2;
+  function taxer(on) { let carry = 0; return (g) => { if (!on) return 0; const n = g + carry; if (n <= 0) { carry = n; return 0; } carry = 0; return RATE * n; }; }
+  // $100 on Jan 1 of `from`; strategies sell yearly, benchmarks are never sold.
+  function simulate(from, on) {
+    const steps = DATA.steps.filter(s => s.year >= from), out = { liq: {} };
+    ["a", "b"].forEach(k => { const tx = taxer(on); let v = 100, basis = 100; const arr = [v];
+      steps.forEach(s => { v *= 1 + s[k]; if (!s.partial) { v -= tx(v - basis); basis = v; } arr.push(v); });
+      out[k] = arr; out.liq[k] = v - tx(v - basis); });
+    ["btc", "sp500"].forEach(k => { let v = 100; const arr = [v]; steps.forEach(s => { v *= 1 + s[k]; arr.push(v); });
+      out[k] = arr; out.liq[k] = on ? v - RATE * Math.max(0, v - 100) : null; });
+    out.labels = [from + "-01-01"].concat(steps.map(s => s.end));
+    return out;
+  }
+  window.__cSim = simulate;
+  function winStats(arr) {
+    const yrs = (new Date(DATA.last_close) - new Date(startYear + "-01-01")) / (365.25 * 864e5);
+    let pk = arr[0], mdd = 0; arr.forEach(x => { pk = Math.max(pk, x); mdd = Math.min(mdd, x / pk - 1); });
+    const m = arr[arr.length - 1] / arr[0];
+    return { ending: 100 * m, cagr: Math.pow(m, 1 / yrs) - 1, max_drawdown: mdd };
+  }
+  function draw() {
+    const W = simulate(startYear, taxOn);
+    const labels = W.labels.map((l, i) => i === 0 ? "Start " + startYear : (l.endsWith("-12-31") ? l.slice(0, 4) : l + "*"));
+    const ds = series().map(s => ({ label: s.label, data: W[s.key], borderColor: s.color, backgroundColor: s.color, borderDash: s.dash || [],
+      borderWidth: s.dash ? 1.6 : 2.2, pointRadius: 2, pointHoverRadius: 4, tension: 0 }));
+    if (chart) { chart.data.labels = labels; chart.data.datasets = ds; chart.options.scales.y.type = scale; chart.update("none"); return; }
+    chart = new Chart($("chart"), { type: "line", data: { labels, datasets: ds },
+      options: { responsive: true, maintainAspectRatio: false, animation: false, interaction: { mode: "index", intersect: false },
+        plugins: { legend: { labels: { color: C.tick, boxWidth: 14, boxHeight: 3 } },
+          tooltip: { backgroundColor: C.tipBg, titleColor: C.tipInk, bodyColor: C.tipInk, borderColor: C.tipBorder, borderWidth: 1,
+            callbacks: { label: (c) => c.dataset.label + ": " + money(c.parsed.y) } } },
+        scales: { x: { ticks: { color: C.tick, maxRotation: 0, autoSkipPadding: 8 }, grid: { color: C.grid } },
+          y: { type: scale, ticks: { color: C.tick, callback: (v) => { const s = String(v); return (scale === "linear" || /^[125]/.test(s)) ? money(v) : ""; } }, grid: { color: C.grid } } } } });
+  }
+  function redraw() { if (chart) { chart.destroy(); chart = null; } draw(); }
+  function renderStats() {
+    const W = simulate(startYear, taxOn), st = {};
+    series().forEach(s => st[s.key] = winStats(W[s.key]));
+    st.liq = W.liq; window.__cStats = st;
+    $("stats").innerHTML = series().map(s => `<div class="stat" data-key="${s.key}"><h3><span class="sw" style="background:${s.color}"></span>${esc(s.label)} · from ${startYear}</h3>
+      <dl><dt>Ending value of $100</dt><dd class="ev">${money(st[s.key].ending)}</dd><dt>CAGR</dt><dd>${pct(st[s.key].cagr, 2)}</dd>
+      <dt>Max drawdown (year-end)</dt><dd class="neg">${pct(st[s.key].max_drawdown)}</dd>${taxOn ? `<dt>If sold at end, after tax</dt><dd class="liq">${money(W.liq[s.key])}</dd>` : ""}</dl></div>`).join("");
+    $("c-note").textContent = `Every line is rebased to $100 on Jan 1, ${startYear}. Stats cover Jan 1, ${startYear} to ${DATA.last_close}` + ".";
+  }
+  function setStart(y) {
+    y = Math.min(2025, Math.max(2016, Math.round(+y) || 2016)); startYear = y;
+    $("start-range").value = y; $("start-out").textContent = y; $("start-range").setAttribute("aria-valuetext", "Start " + y);
+    document.querySelectorAll("#preset-seg button").forEach(b => b.setAttribute("aria-pressed", +b.dataset.y === y ? "true" : "false"));
+    if (DATA) { draw(); renderStats(); }
+  }
+  $("tax-on").addEventListener("change", (e) => { taxOn = e.target.checked; $("tax-note").hidden = !taxOn; if (DATA) { draw(); renderStats(); } });
+  $("start-range").addEventListener("input", (e) => setStart(e.target.value));
+  document.querySelectorAll("#preset-seg button").forEach(b => b.addEventListener("click", () => setStart(b.dataset.y)));
+  function renderTable() {
+    $("lastclose").textContent = DATA.last_close;
+    const nx = {}; DATA.steps.forEach(s => nx[s.year - 1] = s);
+    const row = (year, sym, name, ret, next, nextPart, status, tip, ytd) => { const [lab, k] = STATUS[status] || [status, "warn"];
+      return `<tr class="${k ? "flag" : ""}"><td>${year}${ytd ? " YTD" : ""}</td><td><b>${esc(sym)}</b></td><td class="co">${esc(name)}</td>
+        <td class="num ${cls(ret)}">${pct(ret, 0)}${ytd ? "*" : ""}</td><td class="num ${cls(next)}">${pct(next)}${nextPart && next != null ? "*" : ""}</td>
+        <td><span class="tag ${k}" title="${esc(tip)}" tabindex="0">${lab}</span></td></tr>`; };
+    const y = DATA.ytd;
+    let h = row(y.year, y.symbol, y.name, y.ret, null, false, "unverified", y.note + (y.thin_excluded.length ? " Excluded by volume screen: " + y.thin_excluded.join(", ") + "." : ""), true);
+    h += DATA.winners.slice().reverse().map(w => { const s = nx[w.year];
+      const tip = w.note + (w.thin_excluded ? " Excluded by volume screen: " + w.thin_excluded + "." : "") + " Sources: " + w.source;
+      return row(w.year, w.symbol, w.name, w.ret, s.a, s.partial, w.status, tip, false); }).join("");
+    $("wins-body").innerHTML = h;
+  }
+  function renderTop5() {
+    $("t5-count").textContent = DATA.top5.length;
+    const nx = {}; DATA.steps.forEach(s => nx[s.year - 1] = s);
+    $("t5-body").innerHTML = DATA.top5.slice().reverse().map(t => { const s = nx[t.year];
+      const list = t.names.map((n, i) => { const h = s.holdings[i], dead = /dropped/.test(h.valued);
+        return `<b>${esc(n.symbol)}</b> <span class="${cls(n.ret)}">${pct(n.ret, 0)}</span> → <span class="${cls(h.ret)}" title="${esc(h.valued)}">${pct(h.ret, 0)}${dead ? "&dagger;" : ""}</span>`; }).join(" · ");
+      return `<tr><td>${t.year}</td><td class="list">${list}</td><td class="num ${cls(s.b)}">${pct(s.b)}${s.partial ? "*" : ""}</td></tr>`; }).join("");
+  }
+  function setScale(s) {
+    scale = s; try { localStorage.setItem("cryptoScale", s); } catch (e) {}
+    document.querySelectorAll("#scale-seg button").forEach(b => b.setAttribute("aria-pressed", b.dataset.scale === s ? "true" : "false"));
+    if (DATA) draw();
+  }
+  document.querySelectorAll("#scale-seg button").forEach(b => b.addEventListener("click", () => setScale(b.dataset.scale)));
+  setScale(scale);
+  const toggle = $("theme-toggle");
+  const cur = () => document.documentElement.getAttribute("data-theme") === "light" ? "light" : "dark";
+  function syncToggle() {
+    const label = "Switch to " + (cur() === "dark" ? "light" : "dark") + " mode";
+    toggle.setAttribute("aria-label", label); toggle.setAttribute("title", label);
+    const meta = document.querySelector('meta[name="theme-color"]'); if (meta) meta.setAttribute("content", cur() === "dark" ? "#0e1013" : "#f2f2f2");
+  }
+  toggle.addEventListener("click", () => {
+    const t = cur() === "dark" ? "light" : "dark";
+    document.documentElement.setAttribute("data-theme", t);
+    try { localStorage.setItem("theme", t); } catch (e) {}
+    syncToggle(); C = themeColors(); if (DATA) { redraw(); renderStats(); }
+  });
+  syncToggle();
+  fetch("data/crypto.json", { cache: "no-cache" }).then(r => { if (!r.ok) throw new Error("HTTP " + r.status); return r.json(); }).then(d => {
+    DATA = d;
+    $("status").innerHTML = `<span class="pill">Data through ${esc(d.last_close)}</span><span>Backtest ${d.start}-01-01 → ${esc(d.last_close)} (last year partial) · built ${esc(d.generated)}</span>`;
+    $("a-peak").textContent = Math.round(Math.max(...d.series.a)).toLocaleString("en-US");
+    draw(); renderStats(); renderTable(); renderTop5();
+    $("foot").innerHTML = `Past performance is hypothetical and backtested. Prices: CoinMarketCap historical snapshots.`;
+  }).catch(e => { $("status").innerHTML = `<span class="pill err">Could not load data</span>`; console.warn("crypto.json load failed:", e); });
+})();
+</script>
+</body>
+</html>

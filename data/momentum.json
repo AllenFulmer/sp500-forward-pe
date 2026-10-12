@@ -22,9 +22,7 @@
    "return_src": "S&P DJI via Visual Capitalist",
    "next_year": 2.48,
    "next_year_partial": false,
-   "two_year": 3.8500759999999996,
-   "two_year_partial": false,
-   "fwd_src": "https://exa.ai/library/markets/stock/DELL?date=1999-12-31&view=return&from=1999-01-01&basis=total_return; https://www.visualcapitalist.com/top-sp-500-stocks-by-annual-returns/"
+   "fwd_src": "https://www.visualcapitalist.com/top-sp-500-stocks-by-annual-returns/"
   },
   {
    "year": 1998,
@@ -37,9 +35,7 @@
    "return_src": "S&P DJI via Visual Capitalist",
    "next_year": 0.3937,
    "next_year_partial": false,
-   "two_year": -0.5234939700000001,
-   "two_year_partial": false,
-   "fwd_src": "https://exa.ai/library/markets/stock/DELL?date=1999-12-31&view=return&from=1999-01-01&basis=total_return; https://exa.ai/library/markets/stock/DELL?date=2000-12-31&view=return&from=2000-01-01&basis=total_return"
+   "fwd_src": "https://exa.ai/library/markets/stock/DELL?date=1999-12-31&view=return&from=1999-01-01&basis=total_return"
   },
   {
    "year": 1999,
@@ -50,10 +46,8 @@
    "sources": "https://www.visualcapitalist.com/top-sp-500-stocks-by-annual-returns/ | yahoo",
    "return": 26.19421189361034,
    "return_src": "Yahoo Finance close (split-adj.)",
-   "next_year": -0.533356891623838,
+   "next_year": -0.5333565814971841,
    "next_year_partial": false,
-   "two_year": -0.7132718651582257,
-   "two_year_partial": false,
    "fwd_src": "Yahoo Finance adj. close"
   },
   {
@@ -67,9 +61,7 @@
    "return_src": "NY Post / Exa total return (233.9%)",
    "next_year": -0.0307,
    "next_year_partial": false,
-   "two_year": 0.07534141999999999,
-   "two_year_partial": false,
-   "fwd_src": "https://exa.ai/library/markets/stock/RBK?date=2001-12-31&view=return&from=2001-01-01&basis=total_return; https://exa.ai/library/markets/stock/RBK?date=2002-12-31&view=return&from=2002-01-01&basis=total_return"
+   "fwd_src": "https://exa.ai/library/markets/stock/RBK?date=2001-12-31&view=return&from=2001-01-01&basis=total_return"
   },
   {
    "year": 2001,
@@ -80,10 +72,8 @@
    "sources": "https://www.visualcapitalist.com/top-sp-500-stocks-by-annual-returns/ | yahoo",
    "return": 3.0835612426806964,
    "return_src": "Yahoo Finance close (split-adj.)",
-   "next_year": -0.8279515697971049,
+   "next_year": -0.827951480246048,
    "next_year_partial": false,
-   "two_year": -0.6532143130570676,
-   "two_year_partial": false,
    "fwd_src": "Yahoo Finance adj. close"
   },
   {
@@ -97,9 +87,7 @@
    "return_src": "Exa total return (no dividends paid)",
    "next_year": 0.7935,
    "next_year_partial": false,
-   "two_year": 1.53762315,
-   "two_year_partial": false,
-   "fwd_src": "https://exa.ai/library/markets/stock/PVN?date=2003-12-31&view=return&from=2003-01-01&basis=total_return; https://exa.ai/library/markets/stock/PVN?date=2004-12-31&view=return&from=2004-01-01&basis=total_return"
+   "fwd_src": "https://exa.ai/library/markets/stock/PVN?date=2003-12-31&view=return&from=2003-01-01&basis=total_return"
   },
   {
    "year": 2003,
@@ -112,9 +100,7 @@
    "return_src": "Exa total return (no dividends paid)",
    "next_year": 0.3292,
    "next_year_partial": false,
-   "two_year": -0.1754972399999999,
-   "two_year_partial": false,
-   "fwd_src": "https://exa.ai/library/markets/stock/AV?date=2004-12-31&view=return&from=2004-01-01&basis=total_return; https://exa.ai/library/markets/stock/AV?date=2005-12-31&view=return&from=2005-01-01&basis=total_return"
+   "fwd_src": "https://exa.ai/library/markets/stock/AV?date=2004-12-31&view=return&from=2004-01-01&basis=total_return"
   },
   {
    "year": 2004,
@@ -127,8 +113,6 @@
    "return_src": "Yahoo Finance close (split-adj.)",
    "next_year": 0.13233597871598546,
    "next_year_partial": false,
-   "two_year": 0.0666894493211816,
-   "two_year_partial": false,
    "fwd_src": "Yahoo Finance adj. close"
   },
   {
@@ -140,10 +124,8 @@
    "sources": "yahoo | https://money.cnn.com/2005/12/21/markets/sp_winners/",
    "return": 1.273127870737924,
    "return_src": "Yahoo Finance close (split-adj.)",
-   "next_year": -0.003315470904073692,
+   "next_year": -0.0033144495090697834,
    "next_year_partial": false,
-   "two_year": 0.3745068795162594,
-   "two_year_partial": false,
    "fwd_src": "Yahoo Finance adj. close"
   },
   {
@@ -155,10 +137,8 @@
    "sources": "yahoo | https://www.statmuse.com/money/ask/20-best-performing-stocks-in-the-s-and-p-2006",
    "return": 1.5133036503098491,
    "return_src": "Yahoo Finance close (split-adj.)",
-   "next_year": -0.0417971906029635,
+   "next_year": -0.041796790752388735,
    "next_year_partial": false,
-   "two_year": -0.7123191748914004,
-   "two_year_partial": false,
    "fwd_src": "Yahoo Finance adj. close"
   },
   {
@@ -170,10 +150,8 @@
    "sources": "yahoo | https://www.reuters.com/article/business/factbox-sp-500s-best-and-worst-performers-for-2007-idUSN31600240/",
    "return": 1.4014382867791713,
    "return_src": "Yahoo Finance close (split-adj.)",
-   "next_year": -0.667301948500892,
+   "next_year": -0.6673020611428364,
    "next_year_partial": false,
-   "two_year": -0.3841647901077392,
-   "two_year_partial": false,
    "fwd_src": "Yahoo Finance adj. close"
   },
   {
@@ -187,9 +165,7 @@
    "return_src": "Exa total return",
    "next_year": 0.0874,
    "next_year_partial": false,
-   "two_year": 0.9719998999999997,
-   "two_year_partial": false,
-   "fwd_src": "https://exa.ai/library/markets/stock/FDO?date=2009-12-31&view=return&from=2009-01-01&basis=total_return; https://exa.ai/library/markets/stock/FDO?date=2010-12-31&view=return&from=2010-01-01&basis=total_return"
+   "fwd_src": "https://exa.ai/library/markets/stock/FDO?date=2009-12-31&view=return&from=2009-01-01&basis=total_return"
   },
   {
    "year": 2009,
@@ -202,9 +178,7 @@
    "return_src": "S&P DJI via Visual Capitalist",
    "next_year": 0.2155,
    "next_year_partial": false,
-   "two_year": 0.12518834999999995,
-   "two_year_partial": false,
-   "fwd_src": "https://exa.ai/library/markets/stock/XL?date=2010-12-31&view=return&from=2010-01-01&basis=total_return; https://exa.ai/library/markets/stock/XL?date=2011-12-31&view=return&from=2011-01-01&basis=total_return"
+   "fwd_src": "https://exa.ai/library/markets/stock/XL?date=2010-12-31&view=return&from=2010-01-01&basis=total_return"
   },
   {
    "year": 2010,
@@ -217,8 +191,6 @@
    "return_src": "Yahoo Finance close (split-adj.)",
    "next_year": -0.6056346526872955,
    "next_year_partial": false,
-   "two_year": -0.4730223202535253,
-   "two_year_partial": false,
    "fwd_src": "Yahoo Finance adj. close"
   },
   {
@@ -232,9 +204,7 @@
    "return_src": "Exa total return",
    "next_year": 0.3133,
    "next_year_partial": false,
-   "two_year": 1.05045529,
-   "two_year_partial": false,
-   "fwd_src": "https://exa.ai/library/markets/stock/COG?date=2012-12-31&view=return&from=2012-01-01&basis=total_return; https://exa.ai/library/markets/stock/COG?date=2013-12-31&view=return&from=2013-01-01&basis=total_return"
+   "fwd_src": "https://exa.ai/library/markets/stock/COG?date=2012-12-31&view=return&from=2012-01-01&basis=total_return"
   },
   {
    "year": 2012,
@@ -245,10 +215,8 @@
    "sources": "yahoo | https://www.thefiscaltimes.com/2013/01/01/2012-Stock-Market-Winners-and-Losers",
    "return": 1.8779714757671884,
    "return_src": "Yahoo Finance close (split-adj.)",
-   "next_year": 0.1314044404318535,
+   "next_year": 0.13140384227904311,
    "next_year_partial": false,
-   "two_year": 0.20571956085252818,
-   "two_year_partial": false,
    "fwd_src": "Yahoo Finance adj. close"
   },
   {
@@ -262,8 +230,6 @@
    "return_src": "Yahoo Finance close (split-adj.)",
    "next_year": -0.07214046628685822,
    "next_year_partial": false,
-   "two_year": 1.174701997802381,
-   "two_year_partial": false,
    "fwd_src": "Yahoo Finance adj. close"
   },
   {
@@ -275,10 +241,8 @@
    "sources": "yahoo | press",
    "return": 1.2462844666702977,
    "return_src": "Yahoo Finance close (split-adj.)",
-   "next_year": 0.02438098213260531,
+   "next_year": 0.024380772728274325,
    "next_year_partial": false,
-   "two_year": 0.19643345163556014,
-   "two_year_partial": false,
    "fwd_src": "Yahoo Finance adj. close"
   },
   {
@@ -292,8 +256,6 @@
    "return_src": "Yahoo Finance close (split-adj.)",
    "next_year": 0.0823570914250018,
    "next_year_partial": false,
-   "two_year": 0.6782653966127967,
-   "two_year_partial": false,
    "fwd_src": "Yahoo Finance adj. close"
   },
   {
@@ -305,10 +267,8 @@
    "sources": "https://www.visualcapitalist.com/top-sp-500-stocks-by-annual-returns/ | yahoo",
    "return": 2.2384708052254756,
    "return_src": "Yahoo Finance close (split-adj.)",
-   "next_year": 0.8198788905142722,
+   "next_year": 0.8198790395859124,
    "next_year_partial": false,
-   "two_year": 0.25907873407505,
-   "two_year_partial": false,
    "fwd_src": "Yahoo Finance adj. close"
   },
   {
@@ -320,10 +280,8 @@
    "sources": "yahoo | https://talkmarkets.com/content/stocks--equities/best-and-worst-performing-sp-500-stocks-in-2017?post=161048",
    "return": 1.3230015506152912,
    "return_src": "Yahoo Finance close (split-adj.)",
-   "next_year": 0.39589557867104275,
+   "next_year": 0.39589608399912124,
    "next_year_partial": false,
-   "two_year": 0.40550546256304565,
-   "two_year_partial": false,
    "fwd_src": "Yahoo Finance adj. close"
   },
   {
@@ -337,8 +295,6 @@
    "return_src": "Yahoo Finance close (split-adj.)",
    "next_year": 1.4842905138021374,
    "next_year_partial": false,
-   "two_year": 3.9680392000459577,
-   "two_year_partial": false,
    "fwd_src": "Yahoo Finance adj. close"
   },
   {
@@ -352,8 +308,6 @@
    "return_src": "Yahoo Finance close (split-adj.)",
    "next_year": 0.9997818984714926,
    "next_year_partial": false,
-   "two_year": 2.1378105534521765,
-   "two_year_partial": false,
    "fwd_src": "Yahoo Finance adj. close"
   },
   {
@@ -367,8 +321,6 @@
    "return_src": "Yahoo Finance close (split-adj.)",
    "next_year": 0.4975555924013577,
    "next_year_partial": false,
-   "two_year": -0.47632744786513603,
-   "two_year_partial": false,
    "fwd_src": "Yahoo Finance adj. close"
   },
   {
@@ -380,10 +332,8 @@
    "sources": "yahoo | press",
    "return": 1.7862111364908175,
    "return_src": "Yahoo Finance close (split-adj.)",
-   "next_year": 0.5086406748025287,
+   "next_year": 0.5086402970391797,
    "next_year_partial": false,
-   "two_year": 0.1793498272812506,
-   "two_year_partial": false,
    "fwd_src": "Yahoo Finance adj. close"
   },
   {
@@ -397,8 +347,6 @@
    "return_src": "Yahoo Finance close (split-adj.)",
    "next_year": -0.04077798302313551,
    "next_year_partial": false,
-   "two_year": -0.19339008982019312,
-   "two_year_partial": false,
    "fwd_src": "Yahoo Finance adj. close"
   },
   {
@@ -410,10 +358,8 @@
    "sources": "yahoo | press",
    "return": 2.3886682820093332,
    "return_src": "Yahoo Finance close (split-adj.)",
-   "next_year": 1.7124923818272597,
+   "next_year": 1.71249279030634,
    "next_year_partial": false,
-   "two_year": 2.7681010063288483,
-   "two_year_partial": false,
    "fwd_src": "Yahoo Finance adj. close"
   },
   {
@@ -427,8 +373,6 @@
    "return_src": "Yahoo Finance close (split-adj.)",
    "next_year": 1.350257919544839,
    "next_year_partial": false,
-   "two_year": 1.7641149100043125,
-   "two_year_partial": true,
    "fwd_src": "Yahoo Finance adj. close"
   },
   {
@@ -440,10 +384,8 @@
    "sources": "yahoo | https://www.barrons.com/articles/western-digital-stock-best-sp500-2025-trade-desk-worst-f1bfdea5 | https://rubiewealth.com/sp-500-top-25-annual-performers-2025/",
    "return": 2.822123239486686,
    "return_src": "Yahoo Finance close (split-adj.)",
-   "next_year": 1.3085934964626467,
+   "next_year": 1.3085932917624477,
    "next_year_partial": true,
-   "two_year": 1.3085934964626467,
-   "two_year_partial": true,
    "fwd_src": "Yahoo Finance adj. close"
   },
   {
@@ -457,8 +399,6 @@
    "return_src": "Yahoo Finance close (split-adj.)",
    "next_year": null,
    "next_year_partial": false,
-   "two_year": null,
-   "two_year_partial": false,
    "fwd_src": ""
   }
  ],
@@ -468,784 +408,196 @@
    "partial": false,
    "sp500": 0.21041192124216845,
    "a_ticker": "DELL",
-   "a": 0.3937,
-   "b_holdings": [
-    "DELL",
-    "DELL"
-   ],
-   "b_parts": [
-    {
-     "k": 0,
-     "wy": 1998,
-     "ticker": "DELL",
-     "r": 0.3937,
-     "sell": false
-    },
-    {
-     "k": 1,
-     "wy": 1997,
-     "ticker": "DELL",
-     "r": 0.3937,
-     "sell": true
-    }
-   ],
-   "b": 0.39369999999999994
+   "a": 0.3937
   },
   {
    "year": 2000,
    "partial": false,
    "sp500": -0.0910408761621635,
    "a_ticker": "QCOM",
-   "a": -0.533356891623838,
-   "b_holdings": [
-    "DELL",
-    "QCOM"
-   ],
-   "b_parts": [
-    {
-     "k": 0,
-     "wy": 1998,
-     "ticker": "DELL",
-     "r": -0.6581,
-     "sell": true
-    },
-    {
-     "k": 1,
-     "wy": 1999,
-     "ticker": "QCOM",
-     "r": -0.533356891623838,
-     "sell": false
-    }
-   ],
-   "b": -0.5957284458119191
+   "a": -0.5333565814971841
   },
   {
    "year": 2001,
    "partial": false,
    "sp500": -0.11886011811927333,
    "a_ticker": "RBK",
-   "a": -0.0307,
-   "b_holdings": [
-    "RBK",
-    "QCOM"
-   ],
-   "b_parts": [
-    {
-     "k": 0,
-     "wy": 2000,
-     "ticker": "RBK",
-     "r": -0.0307,
-     "sell": false
-    },
-    {
-     "k": 1,
-     "wy": 1999,
-     "ticker": "QCOM",
-     "r": -0.385551549578137,
-     "sell": true
-    }
-   ],
-   "b": -0.23549925979432362
+   "a": -0.0307
   },
   {
    "year": 2002,
    "partial": false,
    "sp500": -0.2210033052133339,
    "a_ticker": "NVDA",
-   "a": -0.8279515697971049,
-   "b_holdings": [
-    "RBK",
-    "NVDA"
-   ],
-   "b_parts": [
-    {
-     "k": 0,
-     "wy": 2000,
-     "ticker": "RBK",
-     "r": 0.1094,
-     "sell": true
-    },
-    {
-     "k": 1,
-     "wy": 2001,
-     "ticker": "NVDA",
-     "r": -0.8279515697971049,
-     "sell": false
-    }
-   ],
-   "b": -0.32540219783825874
+   "a": -0.827951480246048
   },
   {
    "year": 2003,
    "partial": false,
    "sp500": 0.2868423795879569,
    "a_ticker": "PVN",
-   "a": 0.7935,
-   "b_holdings": [
-    "PVN",
-    "NVDA"
-   ],
-   "b_parts": [
-    {
-     "k": 0,
-     "wy": 2002,
-     "ticker": "PVN",
-     "r": 0.7935,
-     "sell": false
-    },
-    {
-     "k": 1,
-     "wy": 2001,
-     "ticker": "NVDA",
-     "r": 1.0156283119466503,
-     "sell": true
-    }
-   ],
-   "b": 0.819778400564368
+   "a": 0.7935
   },
   {
    "year": 2004,
    "partial": false,
    "sp500": 0.10882109862232192,
    "a_ticker": "AV",
-   "a": 0.3292,
-   "b_holdings": [
-    "PVN",
-    "AV"
-   ],
-   "b_parts": [
-    {
-     "k": 0,
-     "wy": 2002,
-     "ticker": "PVN",
-     "r": 0.4149,
-     "sell": true
-    },
-    {
-     "k": 1,
-     "wy": 2003,
-     "ticker": "AV",
-     "r": 0.3292,
-     "sell": false
-    }
-   ],
-   "b": 0.4036703097299268
+   "a": 0.3292
   },
   {
    "year": 2005,
    "partial": false,
    "sp500": 0.04911777398782813,
    "a_ticker": "ADSK",
-   "a": 0.13233597871598546,
-   "b_holdings": [
-    "ADSK",
-    "AV"
-   ],
-   "b_parts": [
-    {
-     "k": 0,
-     "wy": 2004,
-     "ticker": "ADSK",
-     "r": 0.13233597871598546,
-     "sell": false
-    },
-    {
-     "k": 1,
-     "wy": 2003,
-     "ticker": "AV",
-     "r": -0.3797,
-     "sell": true
-    }
-   ],
-   "b": 0.06880103449154285
+   "a": 0.13233597871598546
   },
   {
    "year": 2006,
    "partial": false,
    "sp500": 0.15794461193725273,
    "a_ticker": "VLO",
-   "a": -0.003315470904073692,
-   "b_holdings": [
-    "ADSK",
-    "VLO"
-   ],
-   "b_parts": [
-    {
-     "k": 0,
-     "wy": 2004,
-     "ticker": "ADSK",
-     "r": -0.057974426873942275,
-     "sell": true
-    },
-    {
-     "k": 1,
-     "wy": 2005,
-     "ticker": "VLO",
-     "r": -0.003315470904073692,
-     "sell": false
-    }
-   ],
-   "b": -0.05403821540364029
+   "a": -0.0033144495090697834
   },
   {
    "year": 2007,
    "partial": false,
    "sp500": 0.0549373111819591,
    "a_ticker": "ATI",
-   "a": -0.0417971906029635,
-   "b_holdings": [
-    "ATI",
-    "VLO"
-   ],
-   "b_parts": [
-    {
-     "k": 0,
-     "wy": 2006,
-     "ticker": "ATI",
-     "r": -0.0417971906029635,
-     "sell": false
-    },
-    {
-     "k": 1,
-     "wy": 2005,
-     "ticker": "VLO",
-     "r": 0.37907917640002764,
-     "sell": true
-    }
-   ],
-   "b": -0.009863011581576764
+   "a": -0.041796790752388735
   },
   {
    "year": 2008,
    "partial": false,
    "sp500": -0.3699761113271859,
    "a_ticker": "NOV",
-   "a": -0.667301948500892,
-   "b_holdings": [
-    "ATI",
-    "NOV"
-   ],
-   "b_parts": [
-    {
-     "k": 0,
-     "wy": 2006,
-     "ticker": "ATI",
-     "r": -0.6997704219948728,
-     "sell": true
-    },
-    {
-     "k": 1,
-     "wy": 2007,
-     "ticker": "NOV",
-     "r": -0.667301948500892,
-     "sell": false
-    }
-   ],
-   "b": -0.696339135329769
+   "a": -0.6673020611428364
   },
   {
    "year": 2009,
    "partial": false,
    "sp500": 0.2646423382978744,
    "a_ticker": "FDO",
-   "a": 0.0874,
-   "b_holdings": [
-    "FDO",
-    "NOV"
-   ],
-   "b_parts": [
-    {
-     "k": 0,
-     "wy": 2008,
-     "ticker": "FDO",
-     "r": 0.0874,
-     "sell": false
-    },
-    {
-     "k": 1,
-     "wy": 2007,
-     "ticker": "NOV",
-     "r": 0.8510334133829813,
-     "sell": true
-    }
-   ],
-   "b": 0.17581816303121633
+   "a": 0.0874
   },
   {
    "year": 2010,
    "partial": false,
    "sp500": 0.15063403486394566,
    "a_ticker": "XL",
-   "a": 0.2155,
-   "b_holdings": [
-    "FDO",
-    "XL"
-   ],
-   "b_parts": [
-    {
-     "k": 0,
-     "wy": 2008,
-     "ticker": "FDO",
-     "r": 0.8135,
-     "sell": true
-    },
-    {
-     "k": 1,
-     "wy": 2009,
-     "ticker": "XL",
-     "r": 0.2155,
-     "sell": false
-    }
-   ],
-   "b": 0.7044986585803656
+   "a": 0.2155
   },
   {
    "year": 2011,
    "partial": false,
    "sp500": 0.02111815385723914,
    "a_ticker": "NFLX",
-   "a": -0.6056346526872955,
-   "b_holdings": [
-    "NFLX",
-    "XL"
-   ],
-   "b_parts": [
-    {
-     "k": 0,
-     "wy": 2010,
-     "ticker": "NFLX",
-     "r": -0.6056346526872955,
-     "sell": false
-    },
-    {
-     "k": 1,
-     "wy": 2009,
-     "ticker": "XL",
-     "r": -0.0743,
-     "sell": true
-    }
-   ],
-   "b": -0.5365697985801863
+   "a": -0.6056346526872955
   },
   {
    "year": 2012,
    "partial": false,
    "sp500": 0.16003224238602698,
    "a_ticker": "COG",
-   "a": 0.3133,
-   "b_holdings": [
-    "NFLX",
-    "COG"
-   ],
-   "b_parts": [
-    {
-     "k": 0,
-     "wy": 2010,
-     "ticker": "NFLX",
-     "r": 0.3362677104807026,
-     "sell": true
-    },
-    {
-     "k": 1,
-     "wy": 2011,
-     "ticker": "COG",
-     "r": 0.3133,
-     "sell": false
-    }
-   ],
-   "b": 0.33030432898025985
+   "a": 0.3133
   },
   {
    "year": 2013,
    "partial": false,
    "sp500": 0.3238848466970672,
    "a_ticker": "PHM",
-   "a": 0.1314044404318535,
-   "b_holdings": [
-    "PHM",
-    "COG"
-   ],
-   "b_parts": [
-    {
-     "k": 0,
-     "wy": 2012,
-     "ticker": "PHM",
-     "r": 0.1314044404318535,
-     "sell": false
-    },
-    {
-     "k": 1,
-     "wy": 2011,
-     "ticker": "COG",
-     "r": 0.5613,
-     "sell": true
-    }
-   ],
-   "b": 0.24159662368716428
+   "a": 0.13140384227904311
   },
   {
    "year": 2014,
    "partial": false,
    "sp500": 0.13688358376181653,
    "a_ticker": "NFLX",
-   "a": -0.07214046628685822,
-   "b_holdings": [
-    "PHM",
-    "NFLX"
-   ],
-   "b_parts": [
-    {
-     "k": 0,
-     "wy": 2012,
-     "ticker": "PHM",
-     "r": 0.06568395682830164,
-     "sell": true
-    },
-    {
-     "k": 1,
-     "wy": 2013,
-     "ticker": "NFLX",
-     "r": -0.07214046628685822,
-     "sell": false
-    }
-   ],
-   "b": 0.021259732986943947
+   "a": -0.07214046628685822
   },
   {
    "year": 2015,
    "partial": false,
    "sp500": 0.013837640885860925,
    "a_ticker": "LUV",
-   "a": 0.02438098213260531,
-   "b_holdings": [
-    "LUV",
-    "NFLX"
-   ],
-   "b_parts": [
-    {
-     "k": 0,
-     "wy": 2014,
-     "ticker": "LUV",
-     "r": 0.02438098213260531,
-     "sell": false
-    },
-    {
-     "k": 1,
-     "wy": 2013,
-     "ticker": "NFLX",
-     "r": 1.3437836426593366,
-     "sell": true
-    }
-   ],
-   "b": 0.41076312505344115
+   "a": 0.024380772728274325
   },
   {
    "year": 2016,
    "partial": false,
    "sp500": 0.1195991330631534,
    "a_ticker": "NFLX",
-   "a": 0.0823570914250018,
-   "b_holdings": [
-    "LUV",
-    "NFLX"
-   ],
-   "b_parts": [
-    {
-     "k": 0,
-     "wy": 2014,
-     "ticker": "LUV",
-     "r": 0.1679575006798426,
-     "sell": true
-    },
-    {
-     "k": 1,
-     "wy": 2015,
-     "ticker": "NFLX",
-     "r": 0.0823570914250018,
-     "sell": false
-    }
-   ],
-   "b": 0.12631095819467641
+   "a": 0.0823570914250018
   },
   {
    "year": 2017,
    "partial": false,
    "sp500": 0.218315915558408,
    "a_ticker": "NVDA",
-   "a": 0.8198788905142722,
-   "b_holdings": [
-    "NVDA",
-    "NFLX"
-   ],
-   "b_parts": [
-    {
-     "k": 0,
-     "wy": 2016,
-     "ticker": "NVDA",
-     "r": 0.8198788905142722,
-     "sell": false
-    },
-    {
-     "k": 1,
-     "wy": 2015,
-     "ticker": "NFLX",
-     "r": 0.5505653447544177,
-     "sell": true
-    }
-   ],
-   "b": 0.6939650223103955
+   "a": 0.8198790395859124
   },
   {
    "year": 2018,
    "partial": false,
    "sp500": -0.043842333247031684,
    "a_ticker": "NRG",
-   "a": 0.39589557867104275,
-   "b_holdings": [
-    "NVDA",
-    "NRG"
-   ],
-   "b_parts": [
-    {
-     "k": 0,
-     "wy": 2016,
-     "ticker": "NVDA",
-     "r": -0.30815245968414307,
-     "sell": true
-    },
-    {
-     "k": 1,
-     "wy": 2017,
-     "ticker": "NRG",
-     "r": 0.39589557867104275,
-     "sell": false
-    }
-   ],
-   "b": -0.006849570799433824
+   "a": 0.39589608399912124
   },
   {
    "year": 2019,
    "partial": false,
    "sp500": 0.31486361792387174,
    "a_ticker": "AMD",
-   "a": 1.4842905138021374,
-   "b_holdings": [
-    "AMD",
-    "NRG"
-   ],
-   "b_parts": [
-    {
-     "k": 0,
-     "wy": 2018,
-     "ticker": "AMD",
-     "r": 1.4842905138021374,
-     "sell": false
-    },
-    {
-     "k": 1,
-     "wy": 2017,
-     "ticker": "NRG",
-     "r": 0.006884385937486748,
-     "sell": true
-    }
-   ],
-   "b": 0.5956240402206892
+   "a": 1.4842905138021374
   },
   {
    "year": 2020,
    "partial": false,
    "sp500": 0.18398831564768447,
    "a_ticker": "AMD",
-   "a": 0.9997818984714926,
-   "b_holdings": [
-    "AMD",
-    "AMD"
-   ],
-   "b_parts": [
-    {
-     "k": 0,
-     "wy": 2018,
-     "ticker": "AMD",
-     "r": 0.9997818984714926,
-     "sell": true
-    },
-    {
-     "k": 1,
-     "wy": 2019,
-     "ticker": "AMD",
-     "r": 0.9997818984714926,
-     "sell": false
-    }
-   ],
-   "b": 0.9997818984714926
+   "a": 0.9997818984714926
   },
   {
    "year": 2021,
    "partial": false,
    "sp500": 0.2870536925932794,
    "a_ticker": "TSLA",
-   "a": 0.4975555924013577,
-   "b_holdings": [
-    "TSLA",
-    "AMD"
-   ],
-   "b_parts": [
-    {
-     "k": 0,
-     "wy": 2020,
-     "ticker": "TSLA",
-     "r": 0.4975555924013577,
-     "sell": false
-    },
-    {
-     "k": 1,
-     "wy": 2019,
-     "ticker": "AMD",
-     "r": 0.5690763857051218,
-     "sell": true
-    }
-   ],
-   "b": 0.5247024933433289
+   "a": 0.4975555924013577
   },
   {
    "year": 2022,
    "partial": false,
    "sp500": -0.1811088888630299,
    "a_ticker": "DVN",
-   "a": 0.5086406748025287,
-   "b_holdings": [
-    "TSLA",
-    "DVN"
-   ],
-   "b_parts": [
-    {
-     "k": 0,
-     "wy": 2020,
-     "ticker": "TSLA",
-     "r": -0.6503151169866452,
-     "sell": true
-    },
-    {
-     "k": 1,
-     "wy": 2021,
-     "ticker": "DVN",
-     "r": 0.5086406748025287,
-     "sell": false
-    }
-   ],
-   "b": -0.19761169085904162
+   "a": 0.5086402970391797
   },
   {
    "year": 2023,
    "partial": false,
    "sp500": 0.2628765952467029,
    "a_ticker": "OXY",
-   "a": -0.04077798302313551,
-   "b_holdings": [
-    "OXY",
-    "DVN"
-   ],
-   "b_parts": [
-    {
-     "k": 0,
-     "wy": 2022,
-     "ticker": "OXY",
-     "r": -0.04077798302313551,
-     "sell": false
-    },
-    {
-     "k": 1,
-     "wy": 2021,
-     "ticker": "DVN",
-     "r": -0.2182698988706374,
-     "sell": true
-    }
-   ],
-   "b": -0.171132687273582
+   "a": -0.04077798302313551
   },
   {
    "year": 2024,
    "partial": false,
    "sp500": 0.250196819160305,
    "a_ticker": "NVDA",
-   "a": 1.7124923818272597,
-   "b_holdings": [
-    "OXY",
-    "NVDA"
-   ],
-   "b_parts": [
-    {
-     "k": 0,
-     "wy": 2022,
-     "ticker": "OXY",
-     "r": -0.159099878960283,
-     "sell": true
-    },
-    {
-     "k": 1,
-     "wy": 2023,
-     "ticker": "NVDA",
-     "r": 1.7124923818272597,
-     "sell": false
-    }
-   ],
-   "b": 1.1372767534296657
+   "a": 1.71249279030634
   },
   {
    "year": 2025,
    "partial": false,
    "sp500": 0.17879972203280303,
    "a_ticker": "PLTR",
-   "a": 1.350257919544839,
-   "b_holdings": [
-    "PLTR",
-    "NVDA"
-   ],
-   "b_parts": [
-    {
-     "k": 0,
-     "wy": 2024,
-     "ticker": "PLTR",
-     "r": 1.350257919544839,
-     "sell": false
-    },
-    {
-     "k": 1,
-     "wy": 2023,
-     "ticker": "NVDA",
-     "r": 0.38916556285053305,
-     "sell": true
-    }
-   ],
-   "b": 0.5053821754649848
+   "a": 1.350257919544839
   },
   {
    "year": 2026,
    "partial": true,
    "sp500": 0.15142655071709465,
    "a_ticker": "WDC",
-   "a": 1.3085934964626467,
-   "b_holdings": [
-    "PLTR",
-    "WDC"
-   ],
-   "b_parts": [
-    {
-     "k": 0,
-     "wy": 2024,
-     "ticker": "PLTR",
-     "r": 0.17609003123351785,
-     "sell": true
-    },
-    {
-     "k": 1,
-     "wy": 2025,
-     "ticker": "WDC",
-     "r": 1.3085934964626467,
-     "sell": false
-    }
-   ],
-   "b": 1.0947916831499018
+   "a": 1.3085932917624477
   }
  ],
  "series": {
@@ -1314,64 +666,33 @@
   "a": [
    100.0,
    139.37,
-   65.0360500143857,
-   63.039443278944056,
-   10.84583725700677,
-   19.452009120441637,
-   25.855610522891023,
-   29.27723804673714,
-   29.180170215841542,
-   27.960521079503096,
-   9.302410882050417,
-   10.115441593141622,
-   12.29531925646364,
-   4.848847848895867,
-   6.367991879954941,
-   7.204774289615007,
-   6.685018512870613,
-   6.848005829789047,
-   7.411987671991929,
-   13.488919901010135,
-   18.82912365086789,
-   46.777013269058564,
-   93.54382440002414,
-   140.08707736486673,
-   211.3410629268466,
-   202.72300065072423,
-   549.8845948862521,
-   1292.3706239671194,
-   2983.5584175098647
-  ],
-  "b": [
-   100.0,
-   139.37,
-   56.34332650719284,
-   43.07451482039903,
-   29.057973027024538,
-   52.879071678761264,
-   74.22478292155782,
-   79.3315247714712,
-   75.0445907475712,
-   74.30442507989322,
-   22.56334596858478,
-   26.53039200861916,
-   45.22101759030261,
-   20.956785290282877,
-   27.878902193173143,
-   34.61435083514846,
-   35.350242691420114,
-   49.87081885074541,
-   56.170049765736195,
-   95.15009960459133,
-   94.4983622607765,
-   150.7838585847785,
-   301.5348309795254,
-   459.7509086243416,
-   368.8987541971047,
-   305.7681190594776,
-   653.5110928057359,
-   983.7839505783982,
-   2060.8224376879825
+   65.03609323673746,
+   63.039485174369624,
+   10.845850110301495,
+   19.452032172825728,
+   25.855641164119955,
+   29.27727274290309,
+   29.180234700633473,
+   27.960594536745504,
+   9.302432171596099,
+   10.115464743393597,
+   12.295347395594916,
+   4.848858945994145,
+   6.36800645377411,
+   7.204786969457772,
+   6.685030277983609,
+   6.84801648187276,
+   7.411999201350274,
+   13.488941987964886,
+   18.829161298291506,
+   46.77710679619592,
+   93.54401143390044,
+   140.08735745849415,
+   211.34143256761635,
+   202.72335521828896,
+   549.88563945632,
+   1292.373078976194,
+   2983.5638205788214
   ]
  },
  "stats": {
@@ -1381,22 +702,17 @@
    "max_drawdown": -0.3760858620368761
   },
   "a": {
-   "ending": 2983.5584175098647,
-   "cagr": 0.13006981269191265,
-   "max_drawdown": -0.9652088121626184
+   "ending": 2983.5638205788214,
+   "cagr": 0.13006988638634165,
+   "max_drawdown": -0.9652087325393259
   },
   "b": {
-   "ending": 2060.8224376879825,
-   "cagr": 0.1151124763704332,
-   "max_drawdown": -0.8496320205906374
-  },
-  "c": {
-   "ending": 8295.684090952955,
-   "cagr": 0.28230363487499077,
-   "max_drawdown": -0.36416577556762686
+   "ending": 8295.677981152867,
+   "cagr": 0.28230358172400205,
+   "max_drawdown": -0.36416587981235393
   }
  },
- "c": {
+ "b": {
   "start": 2009,
   "labels": [
    "2009-01-01",
@@ -1421,24 +737,24 @@
   ],
   "values": [
    100.0,
-   102.11921617452782,
-   125.37050506840471,
-   79.71485785686401,
-   99.23617837654416,
-   140.6764743150295,
-   185.09099612875704,
-   234.53788623791942,
-   351.61256559612923,
-   488.30852421432786,
-   503.68513957909244,
-   622.2493350738611,
-   1018.2825015169254,
-   1659.883513442944,
-   1635.0593267611448,
-   1707.8014543477864,
-   2732.0335919277563,
-   3837.515967167682,
-   8295.684090952955
+   102.11921639509352,
+   125.37048700597262,
+   79.71483330293931,
+   99.23614723937044,
+   140.67641203791604,
+   185.09089113621388,
+   234.5377573099316,
+   351.6123558220766,
+   488.3082275976235,
+   503.68485081796285,
+   622.2489781297646,
+   1018.2818821508329,
+   1659.882520316844,
+   1635.0582230790658,
+   1707.8001611040281,
+   2732.0316233243193,
+   3837.513100904916,
+   8295.677981152867
   ],
   "steps": [
    {
@@ -1453,11 +769,11 @@
     "rets": [
      0.0874,
      0.001729605073508278,
-     -0.02043313434809335,
-     0.030064338000976187,
+     -0.020433039421294485,
+     0.030064254102462495,
      0.0072
     ],
-    "c": 0.021192161745278222,
+    "b": 0.021192163950935258,
     "partial": false
    },
    {
@@ -1473,10 +789,10 @@
      0.2155,
      0.24118742540572513,
      -0.15495867280065767,
-     0.6790004774037981,
+     0.6789995797657951,
      0.15770924243979967
     ],
-    "c": 0.22768769448973303,
+    "b": 0.2276875149621324,
     "partial": false
    },
    {
@@ -1491,11 +807,11 @@
     "rets": [
      -0.6056346526872955,
      -0.184695760903129,
-     -0.1892113989941231,
-     -0.5145889101071568,
-     -0.32669815514642997
+     -0.18921168325985793,
+     -0.5145889637880503,
+     -0.3266983384234371
     ],
-    "c": -0.36416577556762686,
+    "b": -0.364165879812354,
     "partial": false
    },
    {
@@ -1511,10 +827,10 @@
      0.3133,
      0.2010941287165977,
      0.059091612843523045,
-     0.32092933575408233,
+     0.32092929998570074,
      0.3300317224739009
     ],
-    "c": 0.24488935995762082,
+    "b": 0.2448893528039445,
     "partial": false
    },
    {
@@ -1527,13 +843,13 @@
      "BAC"
     ],
     "rets": [
-     0.1314044404318535,
+     0.13140384227904311,
      0.8959,
-     0.570662291928282,
-     0.14489091955901268,
-     0.34510545873407006
+     0.5706618129073624,
+     0.14489051491169214,
+     0.34510602671040647
     ],
-    "c": 0.4175926221306437,
+    "b": 0.4175924393617009,
     "partial": false
    },
    {
@@ -1547,12 +863,12 @@
     ],
     "rets": [
      -0.07214046628685822,
-     0.6096556171027303,
-     0.0007521250747408725,
-     0.8053378899691062,
+     0.6096549678693228,
+     0.0007522772189858529,
+     0.8053375676872474,
      0.235
     ],
-    "c": 0.31572103317194383,
+    "b": 0.31572086929773957,
     "partial": false
    },
    {
@@ -1565,13 +881,13 @@
      "AVGO"
     ],
     "rets": [
-     0.02438098213260531,
+     0.024380772728274325,
      0.4617,
      0.24006916407457113,
      0.1492250341032033,
-     0.4603702406814949
+     0.46037056119926456
     ],
-    "c": 0.2671490841983749,
+    "b": 0.26714910642106265,
     "partial": false
    },
    {
@@ -1587,10 +903,10 @@
      0.0823570914250018,
      0.10945572452950514,
      -0.0596,
-     2.2696018815416457,
+     2.2696015300234103,
      0.09404388714733547
     ],
-    "c": 0.4991717169286976,
+    "b": 0.49917164662505054,
     "partial": false
    },
    {
@@ -1603,13 +919,13 @@
      "AMAT"
     ],
     "rets": [
-     0.8198788905142722,
-     -0.021151699978563143,
-     0.4374528255990999,
-     0.1090504582640901,
-     0.5986130055182968
+     0.8198790395859124,
+     -0.0211523461634322,
+     0.43745269011559085,
+     0.1090509108594464,
+     0.5986131103080601
     ],
-    "c": 0.3887686959834392,
+    "b": 0.3887686809411155,
     "partial": false
    },
    {
@@ -1622,13 +938,13 @@
      "BA"
     ],
     "rets": [
-     0.39589557867104275,
+     0.39589608399912124,
      -0.057428370428097675,
      0.10576542131964195,
-     -0.4018016614755928,
-     0.11501677859636605
+     -0.40180176106772325,
+     0.11501654893671676
     ],
-    "c": 0.03148954933667205,
+    "b": 0.03148958455193181,
     "partial": false
    },
    {
@@ -1644,10 +960,10 @@
      1.4842905138021374,
      -0.4752,
      0.515831223347593,
-     0.018700448910884404,
+     0.01870044682147376,
      -0.366654809240172
     ],
-    "c": 0.23539347536408856,
+    "b": 0.2353934749462064,
     "partial": false
    },
    {
@@ -1661,12 +977,12 @@
     ],
     "rets": [
      0.9997818984714926,
-     0.6418035380948721,
-     0.4794209393716895,
-     0.40471990481924247,
+     0.6418037435590747,
+     0.4794201913400442,
+     0.4047201641925875,
      0.656544427463349
     ],
-    "c": 0.6364541416441292,
+    "b": 0.6364540850053096,
     "partial": false
    },
    {
@@ -1681,11 +997,11 @@
     "rets": [
      0.4975555924013577,
      0.2306222131118718,
-     1.2548206522345704,
-     -0.19479073214006437,
+     1.254820799089266,
+     -0.19479079801945476,
      1.3622
     ],
-    "c": 0.6300815451215471,
+    "b": 0.6300815613166082,
     "partial": false
    },
    {
@@ -1698,13 +1014,13 @@
      "SBNY"
     ],
     "rets": [
-     0.5086406748025287,
+     0.5086402970391797,
      0.6691,
      -0.2927789663014342,
      -0.3198386024239356,
      -0.6399
     ],
-    "c": -0.014955378784568207,
+    "b": -0.014955454337238017,
     "partial": false
    },
    {
@@ -1719,11 +1035,11 @@
     "rets": [
      -0.04077798302313551,
      0.029,
-     0.3046013650527082,
-     -0.0626149750929833,
+     0.30460146350482864,
+     -0.06261550307104702,
      -0.007763488895802584
     ],
-    "c": 0.044488983608157354,
+    "b": 0.044488897702968704,
     "partial": false
    },
    {
@@ -1736,13 +1052,13 @@
      "UBER"
     ],
     "rets": [
-     1.7124923818272597,
-     0.6604887641383443,
+     1.71249279030634,
+     0.6604886491560409,
      0.7898313542821658,
      -0.1438241848238393,
      -0.020302095276850896
     ],
-    "c": 0.5997372440294159,
+    "b": 0.5997373027287713,
     "partial": false
    },
    {
@@ -1756,12 +1072,12 @@
     ],
     "rets": [
      1.350257919544839,
-     0.17656983521339464,
-     0.38916556285053305,
+     0.17656996672099523,
+     0.38916524633559146,
      0.15159630743584684,
      -0.04440371234892815
     ],
-    "c": 0.4046371825391371,
+    "b": 0.4046371455376689,
     "partial": false
    },
    {
@@ -1774,13 +1090,13 @@
      "WBD"
     ],
     "rets": [
-     1.3085934964626467,
+     1.3085932917624477,
      2.6074090478712306,
-     1.8525154653250082,
+     1.8525157824601481,
      -0.03607428723341899,
      0.07622021790423306
     ],
-    "c": 1.1617327880659398,
+    "b": 1.161732810552928,
     "partial": true
    }
   ]
@@ -1823,14 +1139,14 @@
   {
    "year": 1999,
    "status": "verified-list",
-   "note": "Top 5 from S&P DJI's list, which includes each year's top 10 (all 10 of 1999's were above 212%). Not used in Strategy C: the 1998 and 2000 lists are incomplete.",
+   "note": "Top 5 from S&P DJI's list, which includes each year's top 10 (all 10 of 1999's were above 212%). Not used in Strategy B: the 1998 and 2000 lists are incomplete.",
    "sources": "https://www.visualcapitalist.com/top-sp-500-stocks-by-annual-returns/",
    "names": [
     {
      "ticker": "QCOM",
      "company": "Qualcomm",
      "ret": 26.19421189361034,
-     "next": -0.533356891623838,
+     "next": -0.5333565814971841,
      "next_src": "Yahoo Finance adj. close"
     },
     {
@@ -1889,7 +1205,7 @@
      "ticker": "EOG",
      "company": "EOG Resources",
      "ret": 2.110320284697509,
-     "next": -0.28112416559417863,
+     "next": -0.2811243756628322,
      "next_src": "Yahoo Finance adj. close"
     }
    ],
@@ -1906,7 +1222,7 @@
      "ticker": "NVDA",
      "company": "NVIDIA",
      "ret": 3.0835612426806964,
-     "next": -0.8279515697971049,
+     "next": -0.827951480246048,
      "next_src": "Yahoo Finance adj. close"
     }
    ],
@@ -1933,7 +1249,7 @@
   {
    "year": 2003,
    "status": "verified-list",
-   "note": "S&P DJI list (7 names of 212% or more in 2003; Novell and Corning were both about +215%, and Novell ranks higher on the list). Not used in Strategy C: 2002 and 2004 are incomplete.",
+   "note": "S&P DJI list (7 names of 212% or more in 2003; Novell and Corning were both about +215%, and Novell ranks higher on the list). Not used in Strategy B: 2002 and 2004 are incomplete.",
    "sources": "https://www.visualcapitalist.com/top-sp-500-stocks-by-annual-returns/",
    "names": [
     {
@@ -1947,7 +1263,7 @@
      "ticker": "WMB",
      "company": "Williams Cos.",
      "ret": 2.6370371164723445,
-     "next": 0.6688103811752022,
+     "next": 0.6688108970273754,
      "next_src": "Yahoo Finance adj. close"
     },
     {
@@ -2002,7 +1318,7 @@
      "ticker": "VLO",
      "company": "Valero Energy",
      "ret": 1.273127870737924,
-     "next": -0.003315470904073692,
+     "next": -0.0033144495090697834,
      "next_src": "Yahoo Finance adj. close"
     }
    ],
@@ -2019,7 +1335,7 @@
      "ticker": "ATI",
      "company": "Allegheny Technologies",
      "ret": 1.5133036503098491,
-     "next": -0.0417971906029635,
+     "next": -0.041796790752388735,
      "next_src": "Yahoo Finance adj. close"
     }
    ],
@@ -2036,7 +1352,7 @@
      "ticker": "NOV",
      "company": "National Oilwell Varco",
      "ret": 1.4014382867791713,
-     "next": -0.667301948500892,
+     "next": -0.6673020611428364,
      "next_src": "Yahoo Finance adj. close"
     },
     {
@@ -2081,14 +1397,14 @@
      "ticker": "AMGN",
      "company": "Amgen",
      "ret": 0.2435400884526795,
-     "next": -0.02043313434809335,
+     "next": -0.020433039421294485,
      "next_src": "Yahoo Finance adj. close"
     },
     {
      "ticker": "HRB",
      "company": "H&R Block",
      "ret": 0.22347871226335836,
-     "next": 0.030064338000976187,
+     "next": 0.030064254102462495,
      "next_src": "Yahoo Finance adj. close"
     },
     {
@@ -2099,7 +1415,7 @@
      "next_src": "https://exa.ai/library/markets/stock/CELG?date=2009-12-31&view=return&from=2009-01-01&basis=total_return"
     }
    ],
-   "portfolio_next": 0.021192161745278222,
+   "portfolio_next": 0.021192163950935258,
    "next_partial": false
   },
   {
@@ -2133,7 +1449,7 @@
      "ticker": "F",
      "company": "Ford",
      "ret": 3.3668122998168863,
-     "next": 0.6790004774037981,
+     "next": 0.6789995797657951,
      "next_src": "Yahoo Finance adj. close"
     },
     {
@@ -2144,7 +1460,7 @@
      "next_src": "Yahoo Finance adj. close"
     }
    ],
-   "portfolio_next": 0.22768769448973303,
+   "portfolio_next": 0.2276875149621324,
    "next_partial": false
   },
   {
@@ -2171,25 +1487,25 @@
      "ticker": "CMI",
      "company": "Cummins",
      "ret": 1.398822517926415,
-     "next": -0.1892113989941231,
+     "next": -0.18921168325985793,
      "next_src": "Yahoo Finance adj. close"
     },
     {
      "ticker": "AIG",
      "company": "AIG",
      "ret": 0.9219479590287765,
-     "next": -0.5145889101071568,
+     "next": -0.5145889637880503,
      "next_src": "Yahoo Finance adj. close"
     },
     {
      "ticker": "ZION",
      "company": "Zions Bancorp",
      "ret": 0.8885424541169666,
-     "next": -0.32669815514642997,
+     "next": -0.3266983384234371,
      "next_src": "Yahoo Finance adj. close"
     }
    ],
-   "portfolio_next": -0.36416577556762686,
+   "portfolio_next": -0.364165879812354,
    "next_partial": false
   },
   {
@@ -2223,7 +1539,7 @@
      "ticker": "MA",
      "company": "MasterCard",
      "ret": 0.6635581929864787,
-     "next": 0.32092933575408233,
+     "next": 0.32092929998570074,
      "next_src": "Yahoo Finance adj. close"
     },
     {
@@ -2234,7 +1550,7 @@
      "next_src": "Yahoo Finance adj. close"
     }
    ],
-   "portfolio_next": 0.24488935995762082,
+   "portfolio_next": 0.2448893528039445,
    "next_partial": false
   },
   {
@@ -2247,7 +1563,7 @@
      "ticker": "PHM",
      "company": "PulteGroup",
      "ret": 1.8779714757671884,
-     "next": 0.1314044404318535,
+     "next": 0.13140384227904311,
      "next_src": "Yahoo Finance adj. close"
     },
     {
@@ -2261,25 +1577,25 @@
      "ticker": "WHR",
      "company": "Whirlpool",
      "ret": 1.1443624523494473,
-     "next": 0.570662291928282,
+     "next": 0.5706618129073624,
      "next_src": "Yahoo Finance adj. close"
     },
     {
      "ticker": "EXPE",
      "company": "Expedia",
      "ret": 1.1171604981926198,
-     "next": 0.14489091955901268,
+     "next": 0.14489051491169214,
      "next_src": "Yahoo Finance adj. close"
     },
     {
      "ticker": "BAC",
      "company": "Bank of America",
      "ret": 1.0881294561440598,
-     "next": 0.34510545873407006,
+     "next": 0.34510602671040647,
      "next_src": "Yahoo Finance adj. close"
     }
    ],
-   "portfolio_next": 0.4175926221306437,
+   "portfolio_next": 0.4175924393617009,
    "next_partial": false
   },
   {
@@ -2299,21 +1615,21 @@
      "ticker": "MU",
      "company": "Micron",
      "ret": 2.430599286519257,
-     "next": 0.6096556171027303,
+     "next": 0.6096549678693228,
      "next_src": "Yahoo Finance adj. close"
     },
     {
      "ticker": "BBY",
      "company": "Best Buy",
      "ret": 2.365400825680734,
-     "next": 0.0007521250747408725,
+     "next": 0.0007522772189858529,
      "next_src": "Yahoo Finance adj. close"
     },
     {
      "ticker": "DAL",
      "company": "Delta Air Lines",
      "ret": 1.3142375381801146,
-     "next": 0.8053378899691062,
+     "next": 0.8053375676872474,
      "next_src": "Yahoo Finance adj. close"
     },
     {
@@ -2324,7 +1640,7 @@
      "next_src": "https://exa.ai/library/markets/stock/ETFC?date=2014-12-31&view=return&from=2014-01-01&basis=total_return"
     }
    ],
-   "portfolio_next": 0.31572103317194383,
+   "portfolio_next": 0.31572086929773957,
    "next_partial": false
   },
   {
@@ -2337,7 +1653,7 @@
      "ticker": "LUV",
      "company": "Southwest Airlines",
      "ret": 1.2462844666702977,
-     "next": 0.02438098213260531,
+     "next": 0.024380772728274325,
      "next_src": "Yahoo Finance adj. close"
     },
     {
@@ -2365,11 +1681,11 @@
      "ticker": "AVGO",
      "company": "Avago Technologies",
      "ret": 0.9022314319361862,
-     "next": 0.4603702406814949,
+     "next": 0.46037056119926456,
      "next_src": "Yahoo Finance adj. close"
     }
    ],
-   "portfolio_next": 0.2671490841983749,
+   "portfolio_next": 0.26714910642106265,
    "next_partial": false
   },
   {
@@ -2403,7 +1719,7 @@
      "ticker": "NVDA",
      "company": "NVIDIA",
      "ret": 0.6438901823872298,
-     "next": 2.2696018815416457,
+     "next": 2.2696015300234103,
      "next_src": "Yahoo Finance adj. close"
     },
     {
@@ -2414,7 +1730,7 @@
      "next_src": "Altice acquired Cablevision Jun 21 2016 at $34.90 cash (https://altice.net/documents-ir/altice-completes-acquisition-of-cablevision-systems-corporation) vs $31.90 2015 close (Exa). Two 2016 dividends ignored. Deal-based outcome: cash held at 0% after closing."
     }
    ],
-   "portfolio_next": 0.4991717169286976,
+   "portfolio_next": 0.49917164662505054,
    "next_partial": false
   },
   {
@@ -2427,39 +1743,39 @@
      "ticker": "NVDA",
      "company": "NVIDIA",
      "ret": 2.2384708052254756,
-     "next": 0.8198788905142722,
+     "next": 0.8198790395859124,
      "next_src": "Yahoo Finance adj. close"
     },
     {
      "ticker": "OKE",
      "company": "ONEOK",
      "ret": 1.3280616464982207,
-     "next": -0.021151699978563143,
+     "next": -0.0211523461634322,
      "next_src": "Yahoo Finance adj. close"
     },
     {
      "ticker": "FCX",
      "company": "Freeport-McMoRan",
      "ret": 0.9483012729016542,
-     "next": 0.4374528255990999,
+     "next": 0.43745269011559085,
      "next_src": "Yahoo Finance adj. close"
     },
     {
      "ticker": "NEM",
      "company": "Newmont",
      "ret": 0.8938299126341016,
-     "next": 0.1090504582640901,
+     "next": 0.1090509108594464,
      "next_src": "Yahoo Finance adj. close"
     },
     {
      "ticker": "AMAT",
      "company": "Applied Materials",
      "ret": 0.728441367214465,
-     "next": 0.5986130055182968,
+     "next": 0.5986131103080601,
      "next_src": "Yahoo Finance adj. close"
     }
    ],
-   "portfolio_next": 0.3887686959834392,
+   "portfolio_next": 0.3887686809411155,
    "next_partial": false
   },
   {
@@ -2472,7 +1788,7 @@
      "ticker": "NRG",
      "company": "NRG Energy",
      "ret": 1.3230015506152912,
-     "next": 0.39589557867104275,
+     "next": 0.39589608399912124,
      "next_src": "Yahoo Finance adj. close"
     },
     {
@@ -2493,18 +1809,18 @@
      "ticker": "WYNN",
      "company": "Wynn Resorts",
      "ret": 0.9487919567081478,
-     "next": -0.4018016614755928,
+     "next": -0.40180176106772325,
      "next_src": "Yahoo Finance adj. close"
     },
     {
      "ticker": "BA",
      "company": "Boeing",
      "ret": 0.8943346450194676,
-     "next": 0.11501677859636605,
+     "next": 0.11501654893671676,
      "next_src": "Yahoo Finance adj. close"
     }
    ],
-   "portfolio_next": 0.03148954933667205,
+   "portfolio_next": 0.03148958455193181,
    "next_partial": false
   },
   {
@@ -2538,7 +1854,7 @@
      "ticker": "AAP",
      "company": "Advance Auto Parts",
      "ret": 0.5794964676263883,
-     "next": 0.018700448910884404,
+     "next": 0.01870044682147376,
      "next_src": "Yahoo Finance adj. close"
     },
     {
@@ -2549,7 +1865,7 @@
      "next_src": "Yahoo Finance adj. close"
     }
    ],
-   "portfolio_next": 0.23539347536408856,
+   "portfolio_next": 0.2353934749462064,
    "next_partial": false
   },
   {
@@ -2569,21 +1885,21 @@
      "ticker": "LRCX",
      "company": "Lam Research",
      "ret": 1.1473158973247743,
-     "next": 0.6418035380948721,
+     "next": 0.6418037435590747,
      "next_src": "Yahoo Finance adj. close"
     },
     {
      "ticker": "KLAC",
      "company": "KLA",
      "ret": 0.9909485664887021,
-     "next": 0.4794209393716895,
+     "next": 0.4794201913400442,
      "next_src": "Yahoo Finance adj. close"
     },
     {
      "ticker": "TGT",
      "company": "Target",
      "ret": 0.9399306070223219,
-     "next": 0.40471990481924247,
+     "next": 0.4047201641925875,
      "next_src": "Yahoo Finance adj. close"
     },
     {
@@ -2594,7 +1910,7 @@
      "next_src": "Yahoo Finance adj. close"
     }
    ],
-   "portfolio_next": 0.6364541416441292,
+   "portfolio_next": 0.6364540850053096,
    "next_partial": false
   },
   {
@@ -2621,14 +1937,14 @@
      "ticker": "NVDA",
      "company": "NVIDIA",
      "ret": 1.2192945047528485,
-     "next": 1.2548206522345704,
+     "next": 1.254820799089266,
      "next_src": "Yahoo Finance adj. close"
     },
     {
      "ticker": "PYPL",
      "company": "PayPal",
      "ret": 1.1651104826909298,
-     "next": -0.19479073214006437,
+     "next": -0.19479079801945476,
      "next_src": "Yahoo Finance adj. close"
     },
     {
@@ -2639,7 +1955,7 @@
      "next_src": "https://exa.ai/library/markets/stock/BBWI?date=2021-12-31&view=return&from=2021-01-01&basis=total_return"
     }
    ],
-   "portfolio_next": 0.6300815451215471,
+   "portfolio_next": 0.6300815613166082,
    "next_partial": false
   },
   {
@@ -2652,7 +1968,7 @@
      "ticker": "DVN",
      "company": "Devon Energy",
      "ret": 1.7862111364908175,
-     "next": 0.5086406748025287,
+     "next": 0.5086402970391797,
      "next_src": "Yahoo Finance adj. close"
     },
     {
@@ -2684,7 +2000,7 @@
      "next_src": "https://exa.ai/library/markets/stock/SBNY?date=2022-12-31&view=return&from=2022-01-01&basis=total_return"
     }
    ],
-   "portfolio_next": -0.014955378784568207,
+   "portfolio_next": -0.014955454337238017,
    "next_partial": false
   },
   {
@@ -2711,14 +2027,14 @@
      "ticker": "MPC",
      "company": "Marathon Petroleum",
      "ret": 0.8188778924319782,
-     "next": 0.3046013650527082,
+     "next": 0.30460146350482864,
      "next_src": "Yahoo Finance adj. close"
     },
     {
      "ticker": "XOM",
      "company": "Exxon Mobil",
      "ret": 0.802582211590583,
-     "next": -0.0626149750929833,
+     "next": -0.06261550307104702,
      "next_src": "Yahoo Finance adj. close"
     },
     {
@@ -2729,7 +2045,7 @@
      "next_src": "Yahoo Finance adj. close"
     }
    ],
-   "portfolio_next": 0.044488983608157354,
+   "portfolio_next": 0.044488897702968704,
    "next_partial": false
   },
   {
@@ -2742,14 +2058,14 @@
      "ticker": "NVDA",
      "company": "NVIDIA",
      "ret": 2.3886682820093332,
-     "next": 1.7124923818272597,
+     "next": 1.71249279030634,
      "next_src": "Yahoo Finance adj. close"
     },
     {
      "ticker": "META",
      "company": "Meta Platforms",
      "ret": 1.9413329086468418,
-     "next": 0.6604887641383443,
+     "next": 0.6604886491560409,
      "next_src": "Yahoo Finance adj. close"
     },
     {
@@ -2774,7 +2090,7 @@
      "next_src": "Yahoo Finance adj. close"
     }
    ],
-   "portfolio_next": 0.5997372440294159,
+   "portfolio_next": 0.5997373027287713,
    "next_partial": false
   },
   {
@@ -2794,14 +2110,14 @@
      "ticker": "VST",
      "company": "Vistra",
      "ret": 2.5791794776419823,
-     "next": 0.17656983521339464,
+     "next": 0.17656996672099523,
      "next_src": "Yahoo Finance adj. close"
     },
     {
      "ticker": "NVDA",
      "company": "NVIDIA",
      "ret": 1.711723981745346,
-     "next": 0.38916556285053305,
+     "next": 0.38916524633559146,
      "next_src": "Yahoo Finance adj. close"
     },
     {
@@ -2819,7 +2135,7 @@
      "next_src": "Yahoo Finance adj. close"
     }
    ],
-   "portfolio_next": 0.4046371825391371,
+   "portfolio_next": 0.4046371455376689,
    "next_partial": false
   },
   {
@@ -2832,7 +2148,7 @@
      "ticker": "WDC",
      "company": "Western Digital",
      "ret": 2.822123239486686,
-     "next": 1.3085934964626467,
+     "next": 1.3085932917624477,
      "next_src": "Yahoo Finance adj. close"
     },
     {
@@ -2846,7 +2162,7 @@
      "ticker": "STX",
      "company": "Seagate",
      "ret": 2.1907081733084506,
-     "next": 1.8525154653250082,
+     "next": 1.8525157824601481,
      "next_src": "Yahoo Finance adj. close"
     },
     {
@@ -2864,7 +2180,7 @@
      "next_src": "Paramount Skydance acquired WBD Oct 6 2026 for $31.0167 cash per share (https://www.prnewswire.com/news-releases/paramount-completes-acquisition-of-warner-bros-discovery-creating-a-new-global-entertainment-leader-skydance-302899765.html) vs $28.82 2025 close (Exa). Deal-based outcome: cash held at 0% after closing."
     }
    ],
-   "portfolio_next": 1.1617327880659398,
+   "portfolio_next": 1.161732810552928,
    "next_partial": true
   }
  ]

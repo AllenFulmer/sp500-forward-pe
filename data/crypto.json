@@ -1,0 +1,1408 @@
+{
+ "generated": "2026-10-12",
+ "last_close": "2026-10-11",
+ "start": 2016,
+ "first_year": 2015,
+ "rules": {
+  "universe": "Top 100 by market cap at each Dec 31 UTC snapshot (CoinMarketCap), excluding stablecoins, wrapped/bridged, liquid-staking and gold-pegged tokens",
+  "eligibility": "Priced in the prior Dec 31 snapshot",
+  "thin_screen": "24h volume < 0.1% of market cap at year-end: not used"
+ },
+ "sources": [
+  {
+   "name": "CoinMarketCap historical snapshots",
+   "url": "https://coinmarketcap.com/historical/"
+  },
+  {
+   "name": "CoinMarketCap daily history (coins missing from later snapshots)",
+   "url": "https://coinmarketcap.com/currencies/<slug>/historical-data/"
+  },
+  {
+   "name": "S&P 500 total return (^SP500TR via data/momentum.json)",
+   "url": "https://finance.yahoo.com/quote/%5ESP500TR/"
+  }
+ ],
+ "winners": [
+  {
+   "year": 2015,
+   "symbol": "GAME",
+   "name": "GameCredits",
+   "cmc_id": 576,
+   "ret": 27.106483819587428,
+   "p0": 0.00051482,
+   "p1": 0.01446978,
+   "mcap_rank": 45,
+   "universe": 100,
+   "eligible": 52,
+   "thin_excluded": "RBY +6,782%; EMC +1,101%; AC +591%",
+   "status": "flag",
+   "note": "Very thin market: outside BTC, XRP, LTC and ETH the top 100 traded little (GAME's Dec 31 volume was about $6k). Higher raw returns (RBY +6,782%, EMC, AC) fail the volume screen. CMC only.",
+   "source": "https://coinmarketcap.com/historical/20151231/ ; https://coinmarketcap.com/historical/20141231/"
+  },
+  {
+   "year": 2016,
+   "symbol": "XMR",
+   "name": "Monero",
+   "cmc_id": 328,
+   "ret": 28.30227932651685,
+   "p0": 0.47040167,
+   "p1": 13.78384113,
+   "mcap_rank": 5,
+   "universe": 100,
+   "eligible": 55,
+   "thin_excluded": "XEM +2,336%",
+   "status": "verified",
+   "note": "Monero is also #1 on CoinLore's 2016 list ($0.50 to $13.36).",
+   "source": "https://coinmarketcap.com/historical/20161231/ ; https://coinmarketcap.com/historical/20151231/ ; https://www.coinlore.com/top-crypto-coins/2016"
+  },
+  {
+   "year": 2017,
+   "symbol": "XVG",
+   "name": "Verge",
+   "cmc_id": 693,
+   "ret": 11538.666148263348,
+   "p0": 1.929e-05,
+   "p1": 0.22260016,
+   "mcap_rank": 16,
+   "universe": 100,
+   "eligible": 42,
+   "thin_excluded": "",
+   "status": "verified",
+   "note": "Verge's ~11,500x gain matches CoinLore's 2017 #1 ($0.000023 to $0.186). Most of 2017's top 100 were new ICOs without a Dec 2016 price.",
+   "source": "https://coinmarketcap.com/historical/20171231/ ; https://coinmarketcap.com/historical/20161231/ ; https://www.coinlore.com/top-crypto-coins/2017"
+  },
+  {
+   "year": 2018,
+   "symbol": "BNB",
+   "name": "Binance Coin",
+   "cmc_id": 1839,
+   "ret": -0.28612401442267765,
+   "p0": 8.63557816,
+   "p1": 6.16473187,
+   "mcap_rank": 12,
+   "universe": 100,
+   "eligible": 71,
+   "thin_excluded": "MKR -53%",
+   "status": "single-source",
+   "note": "No coin in the year-end top 100 with a full year of history rose in 2018; the best was BNB (-29%). Single Collateral DAI (+1%) is a stablecoin and excluded.",
+   "source": "https://coinmarketcap.com/historical/20181231/ ; https://coinmarketcap.com/historical/20171231/"
+  },
+  {
+   "year": 2019,
+   "symbol": "MOF",
+   "name": "Molecular Future",
+   "cmc_id": 2441,
+   "ret": 35.97340920884426,
+   "p0": 0.04598058,
+   "p1": 1.7000588,
+   "mcap_rank": 62,
+   "universe": 100,
+   "eligible": 72,
+   "thin_excluded": "SNX +3,112%; INO +613%",
+   "status": "flag",
+   "note": "MOF and SEELE were small exchange-driven tokens. CMC's snapshot and daily data agree, but no independent source was found.",
+   "source": "https://coinmarketcap.com/historical/20191231/ ; https://coinmarketcap.com/historical/20181231/"
+  },
+  {
+   "year": 2020,
+   "symbol": "HEX",
+   "name": "HEX",
+   "cmc_id": 5015,
+   "ret": 180.41305172631846,
+   "p0": 7.907e-05,
+   "p1": 0.01434433,
+   "mcap_rank": 14,
+   "universe": 100,
+   "eligible": 64,
+   "thin_excluded": "CRD +86,722%",
+   "status": "flag",
+   "note": "HEX was added to CMC on Dec 17, 2019, so its start price comes from two weeks of trading. HSN (+3.7 million%) and CRD (+86,722%) had zero reported volume and are excluded by the volume screen.",
+   "source": "https://coinmarketcap.com/historical/20201231/ ; https://coinmarketcap.com/historical/20191231/"
+  },
+  {
+   "year": 2021,
+   "symbol": "GALA",
+   "name": "Gala",
+   "cmc_id": 7080,
+   "ret": 312.17421525441364,
+   "p0": 0.00144155,
+   "p1": 0.45145629,
+   "mcap_rank": 44,
+   "universe": 100,
+   "eligible": 87,
+   "thin_excluded": "",
+   "status": "verified",
+   "note": "CoinLore also has GALA as the top full-year gainer among established coins (+38,514% from its Jan 1 price; CMC Dec 31 to Dec 31: +31,217%). CoinDesk/Messari's $5B+ list has SAND #1 (+16,265%).",
+   "source": "https://coinmarketcap.com/historical/20211231/ ; https://coinmarketcap.com/historical/20201231/ ; https://www.coinlore.com/top-crypto-coins/2021"
+  },
+  {
+   "year": 2022,
+   "symbol": "TWT",
+   "name": "Trust Wallet Token",
+   "cmc_id": 5964,
+   "ret": 1.0034369780263241,
+   "p0": 0.71024894,
+   "p1": 1.42293899,
+   "mcap_rank": 50,
+   "universe": 100,
+   "eligible": 88,
+   "thin_excluded": "LEO -4%",
+   "status": "verified",
+   "note": "Trust Wallet Token matches CoinLore ($0.72 to $1.40).",
+   "source": "https://coinmarketcap.com/historical/20221231/ ; https://coinmarketcap.com/historical/20211231/ ; https://www.coinlore.com/top-crypto-coins/2022"
+  },
+  {
+   "year": 2023,
+   "symbol": "BONK",
+   "name": "Bonk",
+   "cmc_id": 23095,
+   "ret": 65.75,
+   "p0": 2e-07,
+   "p1": 1.335e-05,
+   "mcap_rank": 79,
+   "universe": 100,
+   "eligible": 85,
+   "thin_excluded": "BXC +37,238,826%",
+   "status": "flag",
+   "note": "BONK launched Dec 25, 2022, so its start price comes from one week of trading. Bitcoin Classic (BXC, +37 million%) is excluded by the volume screen ($0.7M volume on a $2.6B cap).",
+   "source": "https://coinmarketcap.com/historical/20231231/ ; https://coinmarketcap.com/historical/20221231/"
+  },
+  {
+   "year": 2024,
+   "symbol": "OM",
+   "name": "MANTRA",
+   "cmc_id": 6536,
+   "ret": 64.37880610087655,
+   "p0": 0.05847881,
+   "p1": 3.82327478,
+   "mcap_rank": 33,
+   "universe": 100,
+   "eligible": 84,
+   "thin_excluded": "",
+   "status": "verified",
+   "note": "CryptoPotato/CryptoRank also rank MANTRA as the best top-100 coin with a full year of trading (+8,776% on their dates; Fartcoin launched mid-year).",
+   "source": "https://coinmarketcap.com/historical/20241231/ ; https://coinmarketcap.com/historical/20231231/ ; https://cryptopotato.com/the-top-100-crypto-assets-6-best-performers-in-2024/"
+  },
+  {
+   "year": 2025,
+   "symbol": "AB",
+   "name": "AB",
+   "cmc_id": 3871,
+   "ret": 26.727625261602853,
+   "p0": 0.00016246,
+   "p1": 0.00450463,
+   "mcap_rank": 86,
+   "universe": 100,
+   "eligible": 81,
+   "thin_excluded": "",
+   "status": "single-source",
+   "note": "AB is the rebranded Newton (NEW) project, renamed 1:1 on Feb 18, 2025 (same CMC id 3871), so the return is not distorted by a swap.",
+   "source": "https://coinmarketcap.com/historical/20251231/ ; https://coinmarketcap.com/historical/20241231/ ; https://www.chaincatcher.com/en/article/2168208"
+  }
+ ],
+ "top5": [
+  {
+   "year": 2015,
+   "names": [
+    {
+     "symbol": "GAME",
+     "name": "GameCredits",
+     "id": 576,
+     "ret": 27.106483819587428,
+     "p0": 0.00051482,
+     "p1": 0.01446978
+    },
+    {
+     "symbol": "IOC",
+     "name": "I/O Coin",
+     "id": 495,
+     "ret": 10.73318832585312,
+     "p0": 0.00159532,
+     "p1": 0.01871819
+    },
+    {
+     "symbol": "TIPS",
+     "name": "FedoraCoin",
+     "id": 87,
+     "ret": 5.578947368421053,
+     "p0": 1.9e-07,
+     "p1": 1.25e-06
+    },
+    {
+     "symbol": "NAUT",
+     "name": "NautilusCoin",
+     "id": 321,
+     "ret": 5.210427691166612,
+     "p0": 0.01682616,
+     "p1": 0.10449765
+    },
+    {
+     "symbol": "VTA",
+     "name": "Virtacoin",
+     "id": 520,
+     "ret": 4.7075471698113205,
+     "p0": 3.18e-06,
+     "p1": 1.815e-05
+    }
+   ]
+  },
+  {
+   "year": 2016,
+   "names": [
+    {
+     "symbol": "XMR",
+     "name": "Monero",
+     "id": 328,
+     "ret": 28.30227932651685,
+     "p0": 0.47040167,
+     "p1": 13.78384113
+    },
+    {
+     "symbol": "SIB",
+     "name": "SIBCoin",
+     "id": 1082,
+     "ret": 26.574305638692685,
+     "p0": 0.0033412,
+     "p1": 0.09213127
+    },
+    {
+     "symbol": "POT",
+     "name": "PotCoin",
+     "id": 122,
+     "ret": 24.808272188159613,
+     "p0": 0.00059694,
+     "p1": 0.01540599
+    },
+    {
+     "symbol": "NAV",
+     "name": "NavCoin",
+     "id": 377,
+     "ret": 21.089706540062615,
+     "p0": 0.00174402,
+     "p1": 0.03852489
+    },
+    {
+     "symbol": "SYS",
+     "name": "Syscoin",
+     "id": 541,
+     "ret": 18.561060741497467,
+     "p0": 0.00046986,
+     "p1": 0.00919096
+    }
+   ]
+  },
+  {
+   "year": 2017,
+   "names": [
+    {
+     "symbol": "XVG",
+     "name": "Verge",
+     "id": 693,
+     "ret": 11538.666148263348,
+     "p0": 1.929e-05,
+     "p1": 0.22260016
+    },
+    {
+     "symbol": "PIVX",
+     "name": "PIVX",
+     "id": 1169,
+     "ret": 1418.2624581542543,
+     "p0": 0.00732452,
+     "p1": 10.39541626
+    },
+    {
+     "symbol": "TRIG",
+     "name": "Triggers",
+     "id": 1423,
+     "ret": 989.5524747812182,
+     "p0": 0.00730408,
+     "p1": 7.23507452
+    },
+    {
+     "symbol": "RDD",
+     "name": "ReddCoin",
+     "id": 118,
+     "ret": 694.5156626506024,
+     "p0": 1.66e-05,
+     "p1": 0.01154556
+    },
+    {
+     "symbol": "NEO",
+     "name": "Neo",
+     "id": 1376,
+     "ret": 523.7233740239654,
+     "p0": 0.14476305,
+     "p1": 75.96055603
+    }
+   ]
+  },
+  {
+   "year": 2018,
+   "names": [
+    {
+     "symbol": "BNB",
+     "name": "Binance Coin",
+     "id": 1839,
+     "ret": -0.28612401442267765,
+     "p0": 8.63557816,
+     "p1": 6.16473187
+    },
+    {
+     "symbol": "LINK",
+     "name": "Chainlink",
+     "id": 1975,
+     "ret": -0.518837343107337,
+     "p0": 0.60155219,
+     "p1": 0.28944445
+    },
+    {
+     "symbol": "MANA",
+     "name": "Decentraland",
+     "id": 1966,
+     "ret": -0.5546803468638224,
+     "p0": 0.10199853,
+     "p1": 0.04542195
+    },
+    {
+     "symbol": "TRX",
+     "name": "TRON",
+     "id": 1958,
+     "ret": -0.5793215391900042,
+     "p0": 0.04475159,
+     "p1": 0.01882603
+    },
+    {
+     "symbol": "MGO",
+     "name": "MobileGo",
+     "id": 1715,
+     "ret": -0.6072354285790396,
+     "p0": 1.30488801,
+     "p1": 0.51251378
+    }
+   ]
+  },
+  {
+   "year": 2019,
+   "names": [
+    {
+     "symbol": "MOF",
+     "name": "Molecular Future",
+     "id": 2441,
+     "ret": 35.97340920884426,
+     "p0": 0.04598058,
+     "p1": 1.7000588
+    },
+    {
+     "symbol": "THR",
+     "name": "ThoreCoin",
+     "id": 3144,
+     "ret": 34.65521713480865,
+     "p0": 38.99307694,
+     "p1": 1390.30662505
+    },
+    {
+     "symbol": "SEELE",
+     "name": "Seele",
+     "id": 2830,
+     "ret": 33.553752632106686,
+     "p0": 0.0039892,
+     "p1": 0.13784183
+    },
+    {
+     "symbol": "EKT",
+     "name": "EDUCare",
+     "id": 2453,
+     "ret": 5.682218204203949,
+     "p0": 0.00774843,
+     "p1": 0.0517767
+    },
+    {
+     "symbol": "LINK",
+     "name": "Chainlink",
+     "id": 1975,
+     "ret": 5.113336427767055,
+     "p0": 0.28944445,
+     "p1": 1.7694713
+    }
+   ]
+  },
+  {
+   "year": 2020,
+   "names": [
+    {
+     "symbol": "HEX",
+     "name": "HEX",
+     "id": 5015,
+     "ret": 180.41305172631846,
+     "p0": 7.907e-05,
+     "p1": 0.01434433
+    },
+    {
+     "symbol": "KSM",
+     "name": "Kusama",
+     "id": 5034,
+     "ret": 60.44373393849751,
+     "p0": 1.17114666,
+     "p1": 71.95962378
+    },
+    {
+     "symbol": "CEL",
+     "name": "Celsius",
+     "id": 2700,
+     "ret": 37.58820283131766,
+     "p0": 0.14142885,
+     "p1": 5.45748515
+    },
+    {
+     "symbol": "CHSB",
+     "name": "SwissBorg",
+     "id": 2499,
+     "ret": 25.917702533411205,
+     "p0": 0.00957089,
+     "p1": 0.25762637
+    },
+    {
+     "symbol": "BNANA",
+     "name": "Chimpion",
+     "id": 3742,
+     "ret": 23.486047481842487,
+     "p0": 0.27152948,
+     "p1": 6.64868374
+    }
+   ]
+  },
+  {
+   "year": 2021,
+   "names": [
+    {
+     "symbol": "GALA",
+     "name": "Gala",
+     "id": 7080,
+     "ret": 312.17421525441364,
+     "p0": 0.00144155,
+     "p1": 0.45145629
+    },
+    {
+     "symbol": "AXS",
+     "name": "Axie Infinity",
+     "id": 6783,
+     "ret": 172.31042179438776,
+     "p0": 0.53831987,
+     "p1": 93.29644373
+    },
+    {
+     "symbol": "SAND",
+     "name": "The Sandbox",
+     "id": 6210,
+     "ret": 163.01668716976963,
+     "p0": 0.03565314,
+     "p1": 5.84770991
+    },
+    {
+     "symbol": "MATIC",
+     "name": "Polygon",
+     "id": 3890,
+     "ret": 142.3159970079016,
+     "p0": 0.01763311,
+     "p1": 2.52710674
+    },
+    {
+     "symbol": "FTM",
+     "name": "Fantom",
+     "id": 3513,
+     "ret": 132.1968192029223,
+     "p0": 0.01692909,
+     "p1": 2.25490094
+    }
+   ]
+  },
+  {
+   "year": 2022,
+   "names": [
+    {
+     "symbol": "TWT",
+     "name": "Trust Wallet Token",
+     "id": 5964,
+     "ret": 1.0034369780263241,
+     "p0": 0.71024894,
+     "p1": 1.42293899
+    },
+    {
+     "symbol": "GMX",
+     "name": "GMX",
+     "id": 11857,
+     "ret": 0.8932742604056243,
+     "p0": 21.95598193,
+     "p1": 41.56869545
+    },
+    {
+     "symbol": "BGB",
+     "name": "Bitget Token",
+     "id": 11092,
+     "ret": 0.8487694248131954,
+     "p0": 0.09828859,
+     "p1": 0.18171294
+    },
+    {
+     "symbol": "OKB",
+     "name": "OKB",
+     "id": 3897,
+     "ret": -0.09755994176766569,
+     "p0": 28.81602499,
+     "p1": 26.00473527
+    },
+    {
+     "symbol": "TRX",
+     "name": "TRON",
+     "id": 1958,
+     "ret": -0.2771559335031817,
+     "p0": 0.07539669,
+     "p1": 0.05450005
+    }
+   ]
+  },
+  {
+   "year": 2023,
+   "names": [
+    {
+     "symbol": "BONK",
+     "name": "Bonk",
+     "id": 23095,
+     "ret": 65.75,
+     "p0": 2e-07,
+     "p1": 1.335e-05
+    },
+    {
+     "symbol": "INJ",
+     "name": "Injective",
+     "id": 7226,
+     "ret": 27.145465214927132,
+     "p0": 1.27110313,
+     "p1": 35.77578893
+    },
+    {
+     "symbol": "KAS",
+     "name": "Kaspa",
+     "id": 20396,
+     "ret": 20.25085796104516,
+     "p0": 0.00527996,
+     "p1": 0.11220368
+    },
+    {
+     "symbol": "AKT",
+     "name": "Akash Network",
+     "id": 7431,
+     "ret": 12.1913960963053,
+     "p0": 0.18563132,
+     "p1": 2.44873627
+    },
+    {
+     "symbol": "RNDR",
+     "name": "Render",
+     "id": 5690,
+     "ret": 10.091768017115891,
+     "p0": 0.40245176,
+     "p1": 4.46390156
+    }
+   ]
+  },
+  {
+   "year": 2024,
+   "names": [
+    {
+     "symbol": "OM",
+     "name": "MANTRA",
+     "id": 6536,
+     "ret": 64.37880610087655,
+     "p0": 0.05847881,
+     "p1": 3.82327478
+    },
+    {
+     "symbol": "PEPE",
+     "name": "Pepe",
+     "id": 24478,
+     "ret": 14.338461538461537,
+     "p0": 1.3e-06,
+     "p1": 1.994e-05
+    },
+    {
+     "symbol": "WIF",
+     "name": "dogwifhat",
+     "id": 28752,
+     "ret": 11.146635306214188,
+     "p0": 0.15296548,
+     "p1": 1.8580159
+    },
+    {
+     "symbol": "BGB",
+     "name": "Bitget Token",
+     "id": 11092,
+     "ret": 9.29031105755212,
+     "p0": 0.57948151,
+     "p1": 5.96304499
+    },
+    {
+     "symbol": "SUI",
+     "name": "Sui",
+     "id": 20947,
+     "ret": 4.288821650897131,
+     "p0": 0.77840913,
+     "p1": 4.11686706
+    }
+   ]
+  },
+  {
+   "year": 2025,
+   "names": [
+    {
+     "symbol": "AB",
+     "name": "AB",
+     "id": 3871,
+     "ret": 26.727625261602853,
+     "p0": 0.00016246,
+     "p1": 0.00450463
+    },
+    {
+     "symbol": "ZEC",
+     "name": "Zcash",
+     "id": 1437,
+     "ret": 8.132323043993336,
+     "p0": 56.12566924,
+     "p1": 512.55774256
+    },
+    {
+     "symbol": "XMR",
+     "name": "Monero",
+     "id": 328,
+     "ret": 1.2402965148706153,
+     "p0": 193.39929185,
+     "p1": 433.27175951
+    },
+    {
+     "symbol": "OKB",
+     "name": "OKB",
+     "id": 3897,
+     "ret": 1.2322407476727397,
+     "p0": 49.07309477,
+     "p1": 109.54296176
+    },
+    {
+     "symbol": "SYRUP",
+     "name": "Maple Finance",
+     "id": 33824,
+     "ret": 1.0666823707235227,
+     "p0": 0.15550122,
+     "p1": 0.32137163
+    }
+   ]
+  }
+ ],
+ "ytd": {
+  "year": 2026,
+  "as_of": "2026-10-11",
+  "symbol": "DHN",
+  "name": "Dohrnii",
+  "ret": 86.22635839542563,
+  "vol": 7275424.01,
+  "mcap": 740982692.9805704,
+  "top": [
+   {
+    "symbol": "DHN",
+    "name": "Dohrnii",
+    "ret": 86.22635839542563
+   },
+   {
+    "symbol": "AKE",
+    "name": "AKEDO",
+    "ret": 59.516280912756685
+   },
+   {
+    "symbol": "VVV",
+    "name": "Venice Token",
+    "ret": 14.042674813390942
+   },
+   {
+    "symbol": "DRV",
+    "name": "Derive",
+    "ret": 9.584518408009927
+   },
+   {
+    "symbol": "\u5e01\u5b89\u4eba\u751f",
+    "name": "\u5e01\u5b89\u4eba\u751f",
+    "ret": 4.186252603402372
+   }
+  ],
+  "thin_excluded": [
+   "DEL +20,817%"
+  ],
+  "note": "Single source (CMC), not verified. Small, thinly covered token; YTD to the last full UTC day."
+ },
+ "steps": [
+  {
+   "year": 2016,
+   "partial": false,
+   "end": "2016-12-31",
+   "a": 13.15678676524453,
+   "a_symbol": "GAME",
+   "b": 6.560662668942305,
+   "holdings": [
+    {
+     "symbol": "GAME",
+     "id": 576,
+     "buy": 0.01446978,
+     "sell": 0.20484559,
+     "ret": 13.15678676524453,
+     "valued": "snapshot"
+    },
+    {
+     "symbol": "IOC",
+     "id": 495,
+     "buy": 0.01871819,
+     "sell": 0.3652837,
+     "ret": 18.51490502019693,
+     "valued": "snapshot"
+    },
+    {
+     "symbol": "TIPS",
+     "id": 87,
+     "buy": 1.25e-06,
+     "sell": 3.73e-06,
+     "ret": 1.9839999999999995,
+     "valued": "snapshot"
+    },
+    {
+     "symbol": "NAUT",
+     "id": 321,
+     "buy": 0.10449765,
+     "sell": 0.04876172,
+     "ret": -0.5333701762671218,
+     "valued": "snapshot"
+    },
+    {
+     "symbol": "VTA",
+     "id": 520,
+     "buy": 1.815e-05,
+     "sell": 1.236e-05,
+     "ret": -0.31900826446280994,
+     "valued": "snapshot"
+    }
+   ],
+   "btc": 1.23830943353662,
+   "sp500": 0.1195991330631534
+  },
+  {
+   "year": 2017,
+   "partial": false,
+   "end": "2017-12-31",
+   "a": 24.32137334275848,
+   "a_symbol": "XMR",
+   "b": 51.69666776254867,
+   "holdings": [
+    {
+     "symbol": "XMR",
+     "id": 328,
+     "buy": 13.78384113,
+     "sell": 349.02578735,
+     "ret": 24.32137334275848,
+     "valued": "snapshot"
+    },
+    {
+     "symbol": "SIB",
+     "id": 1082,
+     "buy": 0.09213127,
+     "sell": 4.3822732,
+     "ret": 46.56553556680593,
+     "valued": "snapshot"
+    },
+    {
+     "symbol": "POT",
+     "id": 122,
+     "buy": 0.01540599,
+     "sell": 0.40886864,
+     "ret": 25.53958882226978,
+     "valued": "snapshot"
+    },
+    {
+     "symbol": "NAV",
+     "id": 377,
+     "buy": 0.03852489,
+     "sell": 3.21573973,
+     "ret": 82.471743332687,
+     "valued": "snapshot"
+    },
+    {
+     "symbol": "SYS",
+     "id": 541,
+     "buy": 0.00919096,
+     "sell": 0.74065441,
+     "ret": 79.58509774822217,
+     "valued": "snapshot"
+    }
+   ],
+   "btc": 13.689019679354663,
+   "sp500": 0.218315915558408
+  },
+  {
+   "year": 2018,
+   "partial": false,
+   "end": "2018-12-31",
+   "a": -0.9691637238715372,
+   "a_symbol": "XVG",
+   "b": -0.9322497778775626,
+   "holdings": [
+    {
+     "symbol": "XVG",
+     "id": 693,
+     "buy": 0.22260016,
+     "sell": 0.00686416,
+     "ret": -0.9691637238715372,
+     "valued": "snapshot"
+    },
+    {
+     "symbol": "PIVX",
+     "id": 1169,
+     "buy": 10.39541626,
+     "sell": 0.86124343,
+     "ret": -0.9171516167838382,
+     "valued": "snapshot"
+    },
+    {
+     "symbol": "TRIG",
+     "id": 1423,
+     "buy": 7.23507452,
+     "sell": 0.11809035,
+     "ret": -0.983678074127148,
+     "valued": "dropped from CMC listings; valued at last listed price (2018-10-28 snapshot)"
+    },
+    {
+     "symbol": "RDD",
+     "id": 118,
+     "buy": 0.01154556,
+     "sell": 0.00126493,
+     "ret": -0.8904401345625504,
+     "valued": "snapshot"
+    },
+    {
+     "symbol": "NEO",
+     "id": 1376,
+     "buy": 75.96055603,
+     "sell": 7.53412192,
+     "ret": -0.9008153400427393,
+     "valued": "snapshot"
+    }
+   ],
+   "btc": -0.7356185620358224,
+   "sp500": -0.043842333247031684
+  },
+  {
+   "year": 2019,
+   "partial": false,
+   "end": "2019-12-31",
+   "a": 1.2268028293013171,
+   "a_symbol": "BNB",
+   "b": 0.9469220553161355,
+   "holdings": [
+    {
+     "symbol": "BNB",
+     "id": 1839,
+     "buy": 6.16473187,
+     "sell": 13.72764237,
+     "ret": 1.2268028293013171,
+     "valued": "snapshot"
+    },
+    {
+     "symbol": "LINK",
+     "id": 1975,
+     "buy": 0.28944445,
+     "sell": 1.7694713,
+     "ret": 5.113336427767055,
+     "valued": "snapshot"
+    },
+    {
+     "symbol": "MANA",
+     "id": 1966,
+     "buy": 0.04542195,
+     "sell": 0.03013888,
+     "ret": -0.33646882179210713,
+     "valued": "snapshot"
+    },
+    {
+     "symbol": "TRX",
+     "id": 1958,
+     "buy": 0.01882603,
+     "sell": 0.01330569,
+     "ret": -0.29322910884557185,
+     "valued": "snapshot"
+    },
+    {
+     "symbol": "MGO",
+     "id": 1715,
+     "buy": 0.51251378,
+     "sell": 0.01238692,
+     "ret": -0.9758310498500158,
+     "valued": "snapshot"
+    }
+   ],
+   "btc": 0.9220344493822012,
+   "sp500": 0.31486361792387174
+  },
+  {
+   "year": 2020,
+   "partial": false,
+   "end": "2020-12-31",
+   "a": -0.9099107572043978,
+   "a_symbol": "MOF",
+   "b": 1.1322855828661857,
+   "holdings": [
+    {
+     "symbol": "MOF",
+     "id": 2441,
+     "buy": 1.7000588,
+     "sell": 0.15315701,
+     "ret": -0.9099107572043978,
+     "valued": "snapshot"
+    },
+    {
+     "symbol": "THR",
+     "id": 3144,
+     "buy": 1390.30662505,
+     "sell": 5668.73114965,
+     "ret": 3.077324417155916,
+     "valued": "snapshot"
+    },
+    {
+     "symbol": "SEELE",
+     "id": 2830,
+     "buy": 0.13784183,
+     "sell": 0.01196846,
+     "ret": -0.9131725108408674,
+     "valued": "snapshot"
+    },
+    {
+     "symbol": "EKT",
+     "id": 2453,
+     "buy": 0.0517767,
+     "sell": 0.0019545,
+     "ret": -0.9622513601677974,
+     "valued": "snapshot"
+    },
+    {
+     "symbol": "LINK",
+     "id": 1975,
+     "buy": 1.7694713,
+     "sell": 11.27053796,
+     "ret": 5.369438125388076,
+     "valued": "snapshot"
+    }
+   ],
+   "btc": 3.03160085920019,
+   "sp500": 0.18398831564768447
+  },
+  {
+   "year": 2021,
+   "partial": false,
+   "end": "2021-12-31",
+   "a": 18.867691973065316,
+   "a_symbol": "HEX",
+   "b": 4.459927273960845,
+   "holdings": [
+    {
+     "symbol": "HEX",
+     "id": 5015,
+     "buy": 0.01434433,
+     "sell": 0.28498873,
+     "ret": 18.867691973065316,
+     "valued": "snapshot"
+    },
+    {
+     "symbol": "KSM",
+     "id": 5034,
+     "buy": 71.95962378,
+     "sell": 277.55262926,
+     "ret": 2.8570605942653806,
+     "valued": "snapshot"
+    },
+    {
+     "symbol": "CEL",
+     "id": 2700,
+     "buy": 5.45748515,
+     "sell": 4.37191831,
+     "ret": -0.19891338412528714,
+     "valued": "snapshot"
+    },
+    {
+     "symbol": "CHSB",
+     "id": 2499,
+     "buy": 0.25762637,
+     "sell": 0.59414267,
+     "ret": 1.3062183812938093,
+     "valued": "snapshot"
+    },
+    {
+     "symbol": "BNANA",
+     "id": 3742,
+     "buy": 6.64868374,
+     "sell": 3.1087836,
+     "ret": -0.5324211946949968,
+     "valued": "snapshot"
+    }
+   ],
+   "btc": 0.5966793144207143,
+   "sp500": 0.2870536925932794
+  },
+  {
+   "year": 2022,
+   "partial": false,
+   "end": "2022-12-31",
+   "a": -0.9630955191697518,
+   "a_symbol": "GALA",
+   "b": -0.8888258442815987,
+   "holdings": [
+    {
+     "symbol": "GALA",
+     "id": 7080,
+     "buy": 0.45145629,
+     "sell": 0.01666076,
+     "ret": -0.9630955191697518,
+     "valued": "snapshot"
+    },
+    {
+     "symbol": "AXS",
+     "id": 6783,
+     "buy": 93.29644373,
+     "sell": 6.04195785,
+     "ret": -0.9352391408670899,
+     "valued": "snapshot"
+    },
+    {
+     "symbol": "SAND",
+     "id": 6210,
+     "buy": 5.84770991,
+     "sell": 0.38296895,
+     "ret": -0.9345095847957342,
+     "valued": "snapshot"
+    },
+    {
+     "symbol": "MATIC",
+     "id": 3890,
+     "buy": 2.52710674,
+     "sell": 0.75851682,
+     "ret": -0.6998477317978267,
+     "valued": "snapshot"
+    },
+    {
+     "symbol": "FTM",
+     "id": 3513,
+     "buy": 2.25490094,
+     "sell": 0.19970024,
+     "ret": -0.911437244777591,
+     "valued": "snapshot"
+    }
+   ],
+   "btc": -0.6426524436322871,
+   "sp500": -0.1811088888630299
+  },
+  {
+   "year": 2023,
+   "partial": false,
+   "end": "2023-12-31",
+   "a": -0.141973479832751,
+   "a_symbol": "TWT",
+   "b": 0.8908651388667981,
+   "holdings": [
+    {
+     "symbol": "TWT",
+     "id": 5964,
+     "buy": 1.42293899,
+     "sell": 1.22091939,
+     "ret": -0.141973479832751,
+     "valued": "snapshot"
+    },
+    {
+     "symbol": "GMX",
+     "id": 11857,
+     "buy": 41.56869545,
+     "sell": 55.04944913,
+     "ret": 0.324300619349843,
+     "valued": "snapshot"
+    },
+    {
+     "symbol": "BGB",
+     "id": 11092,
+     "buy": 0.18171294,
+     "sell": 0.57948151,
+     "ret": 2.188994190507292,
+     "valued": "snapshot"
+    },
+    {
+     "symbol": "OKB",
+     "id": 3897,
+     "buy": 26.00473527,
+     "sell": 54.8013564,
+     "ret": 1.1073606722395986,
+     "valued": "snapshot"
+    },
+    {
+     "symbol": "TRX",
+     "id": 1958,
+     "buy": 0.05450005,
+     "sell": 0.10767268,
+     "ret": 0.9756436920700073,
+     "valued": "snapshot"
+    }
+   ],
+   "btc": 1.5541741949455892,
+   "sp500": 0.2628765952467029
+  },
+  {
+   "year": 2024,
+   "partial": false,
+   "end": "2024-12-31",
+   "a": 1.2891385767790262,
+   "a_symbol": "BONK",
+   "b": 0.30354234175709277,
+   "holdings": [
+    {
+     "symbol": "BONK",
+     "id": 23095,
+     "buy": 1.335e-05,
+     "sell": 3.056e-05,
+     "ret": 1.2891385767790262,
+     "valued": "snapshot"
+    },
+    {
+     "symbol": "INJ",
+     "id": 7226,
+     "buy": 35.77578893,
+     "sell": 19.58769219,
+     "ret": -0.4524874845296668,
+     "valued": "snapshot"
+    },
+    {
+     "symbol": "KAS",
+     "id": 20396,
+     "buy": 0.11220368,
+     "sell": 0.11461329,
+     "ret": 0.021475320595545577,
+     "valued": "snapshot"
+    },
+    {
+     "symbol": "AKT",
+     "id": 7431,
+     "buy": 2.44873627,
+     "sell": 2.79194273,
+     "ret": 0.14015656328723392,
+     "valued": "snapshot"
+    },
+    {
+     "symbol": "RNDR",
+     "id": 5690,
+     "buy": 4.46390156,
+     "sell": 6.78258029,
+     "ret": 0.5194287326533249,
+     "valued": "snapshot"
+    }
+   ],
+   "btc": 1.2105475550096072,
+   "sp500": 0.250196819160305
+  },
+  {
+   "year": 2025,
+   "partial": false,
+   "end": "2025-12-31",
+   "a": -0.9819402255989563,
+   "a_symbol": "OM",
+   "b": -0.7420538934650297,
+   "holdings": [
+    {
+     "symbol": "OM",
+     "id": 6536,
+     "buy": 3.82327478,
+     "sell": 0.06904748,
+     "ret": -0.9819402255989563,
+     "valued": "snapshot"
+    },
+    {
+     "symbol": "PEPE",
+     "id": 24478,
+     "buy": 1.994e-05,
+     "sell": 4.03e-06,
+     "ret": -0.7978936810431294,
+     "valued": "snapshot"
+    },
+    {
+     "symbol": "WIF",
+     "id": 28752,
+     "buy": 1.8580159,
+     "sell": 0.26968211,
+     "ret": -0.854854788917576,
+     "valued": "snapshot"
+    },
+    {
+     "symbol": "BGB",
+     "id": 11092,
+     "buy": 5.96304499,
+     "sell": 3.48076693,
+     "ret": -0.41627692968320196,
+     "valued": "snapshot"
+    },
+    {
+     "symbol": "SUI",
+     "id": 20947,
+     "buy": 4.11686706,
+     "sell": 1.40260079,
+     "ret": -0.6593038420822848,
+     "valued": "snapshot"
+    }
+   ],
+   "btc": -0.06336752914183708,
+   "sp500": 0.17879972203280303
+  },
+  {
+   "year": 2026,
+   "partial": true,
+   "end": "2026-10-11",
+   "a": -0.8740895478651964,
+   "a_symbol": "AB",
+   "b": 0.15160743665052484,
+   "holdings": [
+    {
+     "symbol": "AB",
+     "id": 3871,
+     "buy": 0.00450463,
+     "sell": 0.00056718,
+     "ret": -0.8740895478651964,
+     "valued": "snapshot"
+    },
+    {
+     "symbol": "ZEC",
+     "id": 1437,
+     "buy": 512.55774256,
+     "sell": 1276.49734226,
+     "ret": 1.49044592690076,
+     "valued": "snapshot"
+    },
+    {
+     "symbol": "XMR",
+     "id": 328,
+     "buy": 433.27175951,
+     "sell": 537.24625547,
+     "ret": 0.23997524343056176,
+     "valued": "snapshot"
+    },
+    {
+     "symbol": "OKB",
+     "id": 3897,
+     "buy": 109.54296176,
+     "sell": 126.01305668,
+     "ret": 0.15035283559417256,
+     "valued": "snapshot"
+    },
+    {
+     "symbol": "SYRUP",
+     "id": 33824,
+     "buy": 0.32137163,
+     "sell": 0.24146345,
+     "ret": -0.24864727480767368,
+     "valued": "snapshot"
+    }
+   ],
+   "btc": -0.043759701894282355,
+   "sp500": 0.15142655071709465
+  }
+ ],
+ "series": {
+  "labels": [
+   "2016-01-01",
+   "2016-12-31",
+   "2017-12-31",
+   "2018-12-31",
+   "2019-12-31",
+   "2020-12-31",
+   "2021-12-31",
+   "2022-12-31",
+   "2023-12-31",
+   "2024-12-31",
+   "2025-12-31",
+   "2026-10-11"
+  ],
+  "btc": [
+   100.0,
+   223.830943353662,
+   3287.85713177046,
+   869.2483963182507,
+   1670.7253627939103,
+   6735.697808127478,
+   10754.74935842609,
+   3843.183402580791,
+   9816.159873315042,
+   21699.088207539982,
+   20324.0706031974,
+   19434.695332323136
+  ],
+  "a": [
+   100.0,
+   1415.6786765244528,
+   35846.928301657885,
+   1105.3857794671324,
+   2461.476181186852,
+   221.7525253225339,
+   4405.71086735747,
+   162.59047224801003,
+   139.5069371153097,
+   319.3507114789412,
+   5.767401804122466,
+   0.7261761688001415
+  ],
+  "b": [
+   100.0,
+   756.0662668942305,
+   39842.17287299572,
+   2699.3160619860105,
+   5255.357975349661,
+   11205.92404363891,
+   61183.53031579768,
+   6802.027326730017,
+   12861.71634573311,
+   16765.791844332416,
+   4324.670729221306,
+   4980.322972836105
+  ],
+  "sp500": [
+   100.0,
+   111.95991330631534,
+   136.40254428562358,
+   130.42233848331028,
+   171.48758783625718,
+   203.03930027673448,
+   261.3224811627268,
+   213.99465696441527,
+   270.2488437882069,
+   337.8642448857664,
+   398.2742779561644,
+   458.58357810640774
+  ]
+ },
+ "stats": {
+  "btc": {
+   "ending": 19434.7,
+   "cagr": 0.6307,
+   "max_drawdown": -0.7356
+  },
+  "a": {
+   "ending": 0.73,
+   "cagr": -0.3668,
+   "max_drawdown": -1.0
+  },
+  "b": {
+   "ending": 4980.32,
+   "cagr": 0.4371,
+   "max_drawdown": -0.9322
+  },
+  "sp500": {
+   "ending": 458.58,
+   "cagr": 0.1518,
+   "max_drawdown": -0.1811
+  }
+ }
+}

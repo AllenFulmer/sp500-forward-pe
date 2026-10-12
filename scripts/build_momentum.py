@@ -64,7 +64,7 @@ HARD_TR = {  # (ticker, year): total return, source
  ("COG", 2012): (0.3133, exa("COG", 2012)), ("COG", 2013): (0.5613, exa("COG", 2013)),
 }
 
-# ---------------- Strategy C: top 5 by year ----------------
+# ---------------- Strategy B: top 5 by year ----------------
 FOOL08 = "https://www.fool.com/investing/general/2009/01/02/a-wonderful-year-for-these-stocks.aspx"
 IBT10 = "https://www.ibtimes.com/ten-best-performing-stocks-sp-500-2010-252407"
 CNBC11 = "https://www.cnbc.com/2011/12/28/The-Best-Investments-of-2011.html"
@@ -88,11 +88,11 @@ NYP00 = "https://nypost.com/2000/12/31/some-stocks-didnt-crash-they-shone/"
 TOP5 = {
  1997: dict(status="unverified", names=[("DELL","Dell Computer",None,2.16)], sources=[SPDJI], note="Only the #1 is documented (S&P DJI list includes stocks of 212% or more). No full 1997 top-5 list found."),
  1998: dict(status="unverified", names=[("DELL","Dell Computer",None,2.48)], sources=[SPDJI], note="Only the #1 is documented. No full 1998 top-5 list found."),
- 1999: dict(status="verified-list", names=[("QCOM","Qualcomm","QCOM",None),("S/PCS","Sprint (PCS tracking stock per S&P DJI)",None,3.43),("NXTL","Nextel Communications",None,3.36),("LSI","LSI Logic",None,3.19),("NT","Nortel Networks",None,3.04)], sources=[SPDJI], note="Top 5 from S&P DJI's list, which includes each year's top 10 (all 10 of 1999's were above 212%). Not used in Strategy C: the 1998 and 2000 lists are incomplete."),
+ 1999: dict(status="verified-list", names=[("QCOM","Qualcomm","QCOM",None),("S/PCS","Sprint (PCS tracking stock per S&P DJI)",None,3.43),("NXTL","Nextel Communications",None,3.36),("LSI","LSI Logic",None,3.19),("NT","Nortel Networks",None,3.04)], sources=[SPDJI], note="Top 5 from S&P DJI's list, which includes each year's top 10 (all 10 of 1999's were above 212%). Not used in Strategy B: the 1998 and 2000 lists are incomplete."),
  2000: dict(status="partial", names=[("RBK","Reebok International",None,2.3392),("DYN","Dynegy",None,2.1822),("EOG","EOG Resources","EOG",None)], sources=[NYP00], note="Only #1 to #3 are ranked in the source. Power-One, Coastal and Alza were also in the top 10, but their order is not given."),
  2001: dict(status="unverified", names=[("NVDA","NVIDIA","NVDA",None)], sources=[SPDJI], note="Only the #1 is documented."),
  2002: dict(status="unverified", names=[("PVN","Providian Financial",None,0.8282)], sources=["https://www.iese.edu/media/research/pdfs/DI-0501-E.pdf"], note="Only #1 is reliably documented."),
- 2003: dict(status="verified-list", names=[("AV","Avaya",None,4.28),("WMB","Williams Cos.","WMB",None),("DYN","Dynegy",None,2.63),("PMCS","PMC-Sierra",None,2.62),("NOVL","Novell",None,2.15)], sources=[SPDJI], note="S&P DJI list (7 names of 212% or more in 2003; Novell and Corning were both about +215%, and Novell ranks higher on the list). Not used in Strategy C: 2002 and 2004 are incomplete."),
+ 2003: dict(status="verified-list", names=[("AV","Avaya",None,4.28),("WMB","Williams Cos.","WMB",None),("DYN","Dynegy",None,2.63),("PMCS","PMC-Sierra",None,2.62),("NOVL","Novell",None,2.15)], sources=[SPDJI], note="S&P DJI list (7 names of 212% or more in 2003; Novell and Corning were both about +215%, and Novell ranks higher on the list). Not used in Strategy B: 2002 and 2004 are incomplete."),
  2004: dict(status="unverified", names=[("ADSK","Autodesk","ADSK",None)], sources=[], note="No full top-5 list found."),
  2005: dict(status="unverified", names=[("VLO","Valero Energy","VLO",None)], sources=[], note="No full top-5 list found."),
  2006: dict(status="unverified", names=[("ATI","Allegheny Technologies","ATI",None)], sources=[], note="No full top-5 list found."),
@@ -168,16 +168,13 @@ for y in range(1996, LAST_YEAR + 1):
     if t:
         if sym: r["return"] = ret(close[sym], y); r["return_src"] = "Yahoo Finance close (split-adj.)"
         else: r["return"] = HARD_PRICE[y]; r["return_src"] = HARD_PRICE_SRC.get(y, "S&P DJI via Visual Capitalist")
-        n1, s1, p1 = tr(t, sym, y + 1); n2, s2, p2 = tr(t, sym, y + 2)
+        n1, s1, p1 = tr(t, sym, y + 1)
         r["next_year"] = n1; r["next_year_partial"] = p1
-        r["two_year"] = (1 + n1) * (1 + n2) - 1 if n1 is not None and n2 is not None else (n1 if p1 else None)
-        r["two_year_partial"] = p1 or p2
-        r["fwd_src"] = "; ".join(sorted({s for s in (s1, s2) if s}))
+        r["fwd_src"] = s1
     rows.append(r)
 win = {r["year"]: r for r in rows}
 
-# ---- Backtest (annual steps, total return). Starts Jan 1 1999: first year where both
-# sleeves of Strategy B are defined (1996 winner unverified).
+# ---- Backtest (annual steps, total return). Starts Jan 1 1999 (kept from the original page; Strategy A alone could start 1998).
 START = 1999
 sp = {y: ret(adj["^SP500TR"], y) for y in range(START, LAST_YEAR + 1)}
 def hold_ret(wy, y):
@@ -185,25 +182,14 @@ def hold_ret(wy, y):
     if not w or not w["ticker"]: return None
     return tr(w["ticker"], W[wy][2], y)[0]
 
-A, B, S = [100.0], [100.0], [100.0]
-sleeves = {0: 50.0, 1: 50.0}  # sleeve buys winner of year (y-1) when (y-1) % 2 == k ... held for 2 years
+A, S = [100.0], [100.0]
 steps = []
 for y in range(START, LAST_YEAR + 1):
     ra = hold_ret(y - 1, y)
-    # Strategy B: sleeve k holds winner of year wy where wy ≡ k (mod 2) and wy in {y-1, y-2}
-    rb_parts = {}
-    for k in (0, 1):
-        wy = y - 1 if (y - 1) % 2 == k else y - 2
-        rb_parts[k] = (wy, hold_ret(wy, y))
-    for k, (wy, rr) in rb_parts.items(): sleeves[k] *= 1 + rr
-    A.append(A[-1] * (1 + ra)); S.append(S[-1] * (1 + sp[y])); B.append(sleeves[0] + sleeves[1])
-    steps.append(dict(year=y, partial=(y == LAST_YEAR), sp500=sp[y], a_ticker=win[y - 1]["ticker"], a=ra,
-                      b_holdings=[win[wy]["ticker"] for wy, _ in rb_parts.values()],
-                      # per half: winner year it holds (bought Jan 1 of wy+1, sold Dec 31 of wy+2) and its return this year
-                      b_parts=[dict(k=k, wy=wy, ticker=win[wy]["ticker"], r=rr, sell=(y == wy + 2)) for k, (wy, rr) in rb_parts.items()],
-                      b=B[-1] / B[-2] - 1))
+    A.append(A[-1] * (1 + ra)); S.append(S[-1] * (1 + sp[y]))
+    steps.append(dict(year=y, partial=(y == LAST_YEAR), sp500=sp[y], a_ticker=win[y - 1]["ticker"], a=ra))
 
-# Strategy C: equal-weight last year's top 5, rebalanced each Jan 1.
+# Strategy B: equal-weight last year's top 5, rebalanced each Jan 1.
 top5_rows = []
 for y in sorted(TOP5):
     t = TOP5[y]; names = []
@@ -219,11 +205,11 @@ for y in sorted(TOP5):
                           next_partial=(y + 1 == LAST_YEAR)))
 T5 = {r["year"]: r for r in top5_rows}
 # earliest start: first year Y such that every list from Y-1 .. LAST_YEAR-1 is complete
-C_START = min(y for y in range(1997, LAST_YEAR + 1) if all(T5.get(k) and T5[k]["portfolio_next"] is not None for k in range(y - 1, LAST_YEAR)))
-Cv = [100.0]; c_steps = []
-for y in range(C_START, LAST_YEAR + 1):
-    r = T5[y - 1]["portfolio_next"]; Cv.append(Cv[-1] * (1 + r))
-    c_steps.append(dict(year=y, holdings=[n["ticker"] for n in T5[y - 1]["names"]], rets=[n["next"] for n in T5[y - 1]["names"]], c=r, partial=(y == LAST_YEAR)))
+B_START = min(y for y in range(1997, LAST_YEAR + 1) if all(T5.get(k) and T5[k]["portfolio_next"] is not None for k in range(y - 1, LAST_YEAR)))
+Bv = [100.0]; b_steps = []
+for y in range(B_START, LAST_YEAR + 1):
+    r = T5[y - 1]["portfolio_next"]; Bv.append(Bv[-1] * (1 + r))
+    b_steps.append(dict(year=y, holdings=[n["ticker"] for n in T5[y - 1]["names"]], rets=[n["next"] for n in T5[y - 1]["names"]], b=r, partial=(y == LAST_YEAR)))
 
 def stats(v, start=None):
     yrs = (last_date - datetime.datetime(start or START, 1, 1)).days / 365.25
@@ -234,16 +220,15 @@ def stats(v, start=None):
 out = dict(generated=datetime.date.today().isoformat(), last_close=last_date.date().isoformat(), start=START,
            winners=rows, steps=steps,
            series=dict(labels=[f"{START}-01-01"] + [f"{y}-12-31" for y in range(START, LAST_YEAR)] + [last_date.date().isoformat()],
-                       sp500=S, a=A, b=B),
-           stats=dict(sp500=stats(S), a=stats(A), b=stats(B), c=stats(Cv, C_START)),
-           c=dict(start=C_START, labels=[f"{C_START}-01-01"] + [f"{y}-12-31" for y in range(C_START, LAST_YEAR)] + [last_date.date().isoformat()],
-                  values=Cv, steps=c_steps),
+                       sp500=S, a=A),
+           stats=dict(sp500=stats(S), a=stats(A), b=stats(Bv, B_START)),
+           b=dict(start=B_START, labels=[f"{B_START}-01-01"] + [f"{y}-12-31" for y in range(B_START, LAST_YEAR)] + [last_date.date().isoformat()],
+                  values=Bv, steps=b_steps),
            top5=top5_rows)
 (ROOT / "data").mkdir(exist_ok=True)
 (ROOT / "data/momentum.json").write_text(json.dumps(out, indent=1, default=float))
 with open(ROOT / "data/momentum_winners.csv", "w", newline="") as f:
-    cols = ["year", "ticker", "company", "return", "return_src", "next_year", "next_year_partial", "two_year",
-            "two_year_partial", "fwd_src", "status", "sources", "note"]
+    cols = ["year", "ticker", "company", "return", "return_src", "next_year", "next_year_partial", "fwd_src", "status", "sources", "note"]
     w = csv.DictWriter(f, fieldnames=cols, extrasaction="ignore"); w.writeheader()
     for r in rows: w.writerow(r)
 with open(ROOT / "data/momentum_top5.csv", "w", newline="") as f:
@@ -251,5 +236,5 @@ with open(ROOT / "data/momentum_top5.csv", "w", newline="") as f:
     for r in top5_rows:
         for i, n in enumerate(r["names"], 1):
             w.writerow([r["year"], i, n["ticker"], n["company"], n["ret"], n["next"], n["next_src"], r["portfolio_next"], r["status"], r["sources"], r["note"]])
-print("C start", C_START)
+print("B start", B_START)
 for k, v in out["stats"].items(): print(k, {a: round(b, 4) for a, b in v.items()})
