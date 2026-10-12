@@ -1,0 +1,16 @@
+{
+ "_how_to_add": "Put the image in assets/charts/ (optionally also a smaller .webp for display), then add an entry at the TOP of 'charts' (newest first): file = full-size image, display = optional smaller version shown in the card, title, caption, credit, source (optional URL), added (YYYY-MM-DD). The page sorts by 'added', newest first.",
+ "charts": [
+  {
+   "file": "assets/charts/spx-quartercent-cycles.png",
+   "display": "assets/charts/spx-quartercent-cycles.webp",
+   "width": 4096,
+   "height": 2207,
+   "title": "SPX Quartercent Cycles Theory",
+   "caption": "Third-party chart, shown as published; it illustrates a cycle theory, not established fact. S&P 500 on a log scale from 1927 to the present, overlaid with a sine-wave cycle of roughly 25-year expansion phases separated by about 9–12-year 'Pause' periods (1929–42, 1966–75, 2000–09), with projected markers at '28, '34 and '41.",
+   "credit": "CryptoCon_, created with TradingView, Oct 09, 2026",
+   "source": "",
+   "added": "2026-10-12"
+  }
+ ]
+}
