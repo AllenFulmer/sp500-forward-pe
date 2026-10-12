@@ -199,6 +199,8 @@ for y in range(START, LAST_YEAR + 1):
     A.append(A[-1] * (1 + ra)); S.append(S[-1] * (1 + sp[y])); B.append(sleeves[0] + sleeves[1])
     steps.append(dict(year=y, partial=(y == LAST_YEAR), sp500=sp[y], a_ticker=win[y - 1]["ticker"], a=ra,
                       b_holdings=[win[wy]["ticker"] for wy, _ in rb_parts.values()],
+                      # per half: winner year it holds (bought Jan 1 of wy+1, sold Dec 31 of wy+2) and its return this year
+                      b_parts=[dict(k=k, wy=wy, ticker=win[wy]["ticker"], r=rr, sell=(y == wy + 2)) for k, (wy, rr) in rb_parts.items()],
                       b=B[-1] / B[-2] - 1))
 
 # Strategy C: equal-weight last year's top 5, rebalanced each Jan 1.
@@ -221,7 +223,7 @@ C_START = min(y for y in range(1997, LAST_YEAR + 1) if all(T5.get(k) and T5[k]["
 Cv = [100.0]; c_steps = []
 for y in range(C_START, LAST_YEAR + 1):
     r = T5[y - 1]["portfolio_next"]; Cv.append(Cv[-1] * (1 + r))
-    c_steps.append(dict(year=y, holdings=[n["ticker"] for n in T5[y - 1]["names"]], c=r, partial=(y == LAST_YEAR)))
+    c_steps.append(dict(year=y, holdings=[n["ticker"] for n in T5[y - 1]["names"]], rets=[n["next"] for n in T5[y - 1]["names"]], c=r, partial=(y == LAST_YEAR)))
 
 def stats(v, start=None):
     yrs = (last_date - datetime.datetime(start or START, 1, 1)).days / 365.25
