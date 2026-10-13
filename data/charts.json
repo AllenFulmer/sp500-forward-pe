@@ -2,6 +2,21 @@
  "_how_to_add": "Put the image in assets/charts/ (optionally also a smaller .webp for display), then add an entry at the TOP of 'charts' (newest first): file = full-size image, display = optional smaller version shown in the card, title, caption, credit, source (optional URL), added (YYYY-MM-DD). The page sorts by 'added', newest first. Optional: chart_date (YYYY-MM-DD, the chart's own date; tie-break within the same 'added' day, newest first) and tags (e.g. [\"Stocks\"]; tag filter buttons appear automatically).",
  "charts": [
   {
+   "file": "assets/charts/us10y-rate-cycles.png",
+   "display": "assets/charts/us10y-rate-cycles.webp",
+   "width": 4096,
+   "height": 2330,
+   "title": "10 Year Rate Cycles",
+   "caption": "Third-party chart, shown as published; it illustrates a cycle theory, not established fact. The US 10-year Treasury yield since the late 1800s against the S&P 500, split into recession, recovery and expansion phases of roughly 180–247 months, with a sine-wave panel marking the 1940 low, the 1981 high and the 2019 low. It projects a pivot cross in 2033 and a recession starting in late 2034.",
+   "credit": "CryptoCon_, created with TradingView, Oct 12, 2026",
+   "source": "https://x.com/CryptoCon_/status/2109767018287137143",
+   "added": "2026-10-13",
+   "chart_date": "2026-10-12",
+   "tags": [
+    "Rates"
+   ]
+  },
+  {
    "file": "assets/charts/spx-quartercent-cycles.png",
    "display": "assets/charts/spx-quartercent-cycles.webp",
    "width": 4096,
