@@ -237,7 +237,7 @@
   .topnav a:hover { color: var(--ink); }
   .topnav a[aria-current="page"] { color: var(--ink); border-bottom-color: var(--green); }
   .topnav a:focus-visible { outline: 2px solid var(--focus); outline-offset: -2px; }
-  @media (max-width: 700px) { .topnav { display: grid; grid-template-columns: 1fr 1fr; gap: 0; overflow: visible; } .topnav a { min-height: 44px; justify-content: center; padding: 0 6px; font-size: 13.5px; } }
+  @media (max-width: 700px) { .topnav { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 0; overflow: visible; } .topnav a { min-height: 44px; justify-content: center; text-align: center; white-space: normal; line-height: 1.2; padding: 4px 4px; font-size: 13px; } }
   .mom-stats { display: grid; grid-template-columns: repeat(4, minmax(0,1fr)); gap: 12px; margin: 14px 0 6px; }
   .stat { border: 1px solid var(--card-border); border-radius: 6px; padding: 10px 12px; background: var(--btn-bg); }
   .stat h3 { margin: 0 0 6px; font-size: 13px; display: flex; align-items: center; gap: 8px; }
@@ -294,6 +294,7 @@
     <a href="./">Valuation &amp; Macro</a>
     <a href="momentum.html">Momentum</a>
     <a href="crypto.html">Crypto Momentum</a>
+    <a href="dca.html">Monthly DCA</a>
     <a href="charts.html" aria-current="page">Charts</a>
   </nav>
   <div class="card">

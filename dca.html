@@ -1,0 +1,510 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+<title>Monthly DCA — $1,000 a month into last month's best S&amp;P 500 stock</title>
+<script>
+  // Set theme before first paint to avoid a flash. Default is dark for first-time
+  // visitors (OS preference intentionally ignored); a saved choice is respected.
+  (function () {
+    var t = "dark";
+    try { var s = localStorage.getItem("theme"); if (s === "light" || s === "dark") t = s; } catch (e) {}
+    document.documentElement.setAttribute("data-theme", t);
+  })();
+</script>
+<meta name="color-scheme" content="dark light" />
+<link rel="icon" href="data:," />
+<meta name="theme-color" content="#0e1013" />
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+<style>
+  /* Light theme (original palette) */
+  :root, [data-theme="light"] {
+    color-scheme: light;
+    --page-bg: #f2f2f2;
+    --bg: #ffffff;
+    --ink: #1a1a1a;
+    --muted: #555;
+    --footer-ink: #666;
+    --link: #444;
+    --card-border: #c8c8c8;
+    --rule: #e5e5e5;
+    --grid: #d9d9d9;
+    --green: #5f8a31;
+    --line: #3a3a3a;
+    --tick: #333;
+    --axis: #888;
+    --badge: #1a1a1a;
+    --badge-ink: #fff;
+    --pill-bg: #eef5e4;
+    --pill-warn-bg: #f7f0df; --pill-warn-ink: #8a6d1f;
+    --pill-err-bg: #f6e4e4;  --pill-err-ink: #8a2f2f;
+    --inset-bg: rgba(255,255,255,0.94);
+    --inset-border: #222;
+    --inset-head-bg: #f7f7f7;
+    --inset-desc: #444;
+    --msg-ink: #8a2f2f; --msg-bg: #fff; --msg-border: #d9b3b3;
+    --tip-bg: rgba(255,255,255,0.97);
+    --tip-ink: #1a1a1a;
+    --tip-border: #c8c8c8;
+    --btn-bg: #ffffff;
+    --btn-border: #bdbdbd;
+    --btn-hover: #f0f0f0;
+    --focus: #2f6fd6;
+    --shadow: 0 1px 2px rgba(0,0,0,.04);
+  }
+  /* Dark theme (default) */
+  [data-theme="dark"] {
+    color-scheme: dark;
+    --page-bg: #0e1013;
+    --bg: #171a1f;
+    --ink: #e9ebee;
+    --muted: #a7adb6;
+    --footer-ink: #9aa0a8;
+    --link: #c8cdd4;
+    --card-border: #2b3038;
+    --rule: #2b3038;
+    --grid: #2a2f37;
+    --green: #8cc152;
+    --line: #e4e7eb;
+    --tick: #b9bec6;
+    --axis: #5b626c;
+    --badge: #e9ebee;
+    --badge-ink: #111317;
+    --pill-bg: rgba(140,193,82,0.14);
+    --pill-warn-bg: rgba(224,180,70,0.15); --pill-warn-ink: #e3c169;
+    --pill-err-bg: rgba(230,100,100,0.15);  --pill-err-ink: #f09a9a;
+    --inset-bg: rgba(23,26,31,0.94);
+    --inset-border: #5b626c;
+    --inset-head-bg: #20242b;
+    --inset-desc: #b9bec6;
+    --msg-ink: #f09a9a; --msg-bg: #171a1f; --msg-border: #6b3a3a;
+    --tip-bg: rgba(32,36,43,0.97);
+    --tip-ink: #e9ebee;
+    --tip-border: #3a404a;
+    --btn-bg: #20242b;
+    --btn-border: #3a404a;
+    --btn-hover: #2a2f37;
+    --focus: #7fb0ff;
+    --shadow: 0 1px 2px rgba(0,0,0,.4);
+  }
+  * { box-sizing: border-box; }
+  html { -webkit-text-size-adjust: 100%; text-size-adjust: 100%; }
+  html, body { margin: 0; padding: 0; background: var(--page-bg); color: var(--ink);
+    font-family: "Helvetica Neue", Helvetica, Arial, sans-serif; }
+  .page { max-width: 1100px; margin: 24px auto; padding: 0 16px 40px; }
+  .card {
+    background: var(--bg); border: 1px solid var(--card-border); border-radius: 2px;
+    padding: 18px 22px 14px; box-shadow: var(--shadow);
+  }
+  .header { display: flex; justify-content: space-between; align-items: flex-start; gap: 12px; }
+  .header .titles { min-width: 0; }
+  h1 { font-size: 22px; font-weight: 700; margin: 0 0 4px; letter-spacing: -0.2px; }
+  h2 { font-size: 15px; font-weight: 700; margin: 0; color: var(--ink); }
+  .subtitle-row { display: flex; align-items: center; flex-wrap: wrap; gap: 6px 12px; }
+  .seg { display: inline-flex; border: 1px solid var(--btn-border); border-radius: 7px; overflow: hidden;
+    background: var(--btn-bg); flex-shrink: 0; }
+  .seg button { appearance: none; -webkit-appearance: none; border: 0; margin: 0; background: transparent;
+    color: var(--muted); font: 600 12px/1 "Helvetica Neue", Helvetica, Arial, sans-serif; letter-spacing: 0.2px;
+    height: 28px; min-width: 52px; padding: 0 12px; cursor: pointer; -webkit-tap-highlight-color: transparent; }
+  .seg button + button { border-left: 1px solid var(--btn-border); }
+  .seg button:hover { background: var(--btn-hover); color: var(--ink); }
+  .seg button[aria-pressed="true"] { background: var(--ink); color: var(--bg); }
+  .seg button:focus-visible { outline: 2px solid var(--focus); outline-offset: -2px; position: relative; }
+  .header-actions { display: flex; align-items: center; gap: 10px; flex-shrink: 0; }
+  .badges { display: flex; gap: 6px; flex-shrink: 0; }
+  .badge {
+    background: var(--badge); color: var(--badge-ink); font-size: 11px; font-weight: 700;
+    padding: 4px 9px; border-radius: 3px; letter-spacing: 0.3px;
+  }
+  .theme-toggle {
+    display: inline-flex; align-items: center; justify-content: center;
+    width: 44px; height: 44px; padding: 0; margin: -6px 0 0;
+    background: var(--btn-bg); color: var(--ink); border: 1px solid var(--btn-border);
+    border-radius: 8px; cursor: pointer; flex-shrink: 0;
+    transition: background-color .15s ease, border-color .15s ease;
+    -webkit-tap-highlight-color: transparent;
+  }
+  .theme-toggle:hover { background: var(--btn-hover); }
+  .theme-toggle:focus-visible { outline: 2px solid var(--focus); outline-offset: 2px; }
+  .theme-toggle svg { width: 20px; height: 20px; display: block; }
+  /* Show the icon of the theme you will switch TO */
+  [data-theme="dark"] .theme-toggle .icon-moon { display: none; }
+  [data-theme="light"] .theme-toggle .icon-sun { display: none; }
+  .status {
+    margin: 10px 0 6px; font-size: 12px; color: var(--muted);
+    display: flex; flex-wrap: wrap; gap: 8px 16px; align-items: center;
+  }
+  .status .pill {
+    display: inline-block; padding: 2px 8px; border-radius: 999px;
+    background: var(--pill-bg); color: var(--green); font-weight: 600; font-size: 11px;
+  }
+  .status .pill.warn { background: var(--pill-warn-bg); color: var(--pill-warn-ink); }
+  .status .pill.err { background: var(--pill-err-bg); color: var(--pill-err-ink); }
+  .range-row { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 14px; margin: 8px 0 6px; font-size: 13px; }
+  .range-row label { font-weight: 700; white-space: nowrap; }
+  .range-row output { font-weight: 700; font-variant-numeric: tabular-nums; min-width: 3.2em; color: var(--green); font-size: 15px; }
+  .range-wrap { flex: 1 1 260px; display: flex; align-items: center; gap: 8px; min-width: 0; }
+  .range-wrap span { color: var(--muted); font-size: 11.5px; font-variant-numeric: tabular-nums; }
+  #start-range { flex: 1; min-width: 0; height: 32px; accent-color: var(--green); cursor: pointer; touch-action: pan-y; }
+  #start-range:focus-visible { outline: 2px solid var(--focus); outline-offset: 2px; }
+  .tax-toggle { display: inline-flex; align-items: center; gap: 8px; font-weight: 700; cursor: pointer; min-height: 32px; }
+  .tax-toggle input { width: 18px; height: 18px; accent-color: var(--green); }
+  .c-note { font-size: 12px; color: var(--muted); margin: 2px 0 0; }
+  @media (max-width: 700px) { #start-range { height: 44px; } .range-row .seg button { height: 36px; } }
+  .chart-block { position: relative; width: 100%; margin-top: 4px; }
+  .chart-wrap { position: relative; width: 100%; height: clamp(380px, 52vw, 520px); }
+  canvas { width: 100% !important; height: 100% !important; display: block; }
+  .chart-msg { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center;
+    text-align: center; padding: 24px; color: var(--msg-ink); font-size: 15px; background: var(--msg-bg);
+    border: 1px dashed var(--msg-border); }
+  /* Inset valuation table overlay */
+  .inset {
+    position: absolute; left: 29%; top: 30px; z-index: 2;
+    background: var(--inset-bg); border: 1px solid var(--inset-border);
+    font-size: 11.5px; line-height: 1.35; min-width: 310px;
+    box-shadow: 0 1px 0 rgba(0,0,0,.04);
+  }
+  .inset table { border-collapse: collapse; width: 100%; }
+  .inset th, .inset td { padding: 5px 10px; text-align: left; border-bottom: 1px solid var(--rule); white-space: nowrap; }
+  .inset tr:last-child td { border-bottom: none; }
+  .inset th { font-weight: 700; background: var(--inset-head-bg); border-bottom: 1px solid var(--inset-border); }
+  .inset td.num, .inset th.num { text-align: right; font-variant-numeric: tabular-nums; }
+  .inset td.desc { color: var(--inset-desc); }
+  footer {
+    margin-top: 12px; font-size: 11px; color: var(--footer-ink); line-height: 1.45;
+    border-top: 1px solid var(--rule); padding-top: 10px;
+  }
+  footer a { color: var(--link); }
+  /* Indicator charts below the main chart */
+  .macro { margin-top: 20px; }
+  .section-title { font-size: 17px; margin: 0 0 10px; padding: 0 2px; }
+  .macro-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px; }
+  .mini { padding: 14px 18px 12px; min-width: 0; display: flex; flex-direction: column; }
+  .mini-head { display: flex; justify-content: space-between; align-items: baseline; gap: 4px 12px; flex-wrap: wrap; }
+  .mini h3 { font-size: 15px; font-weight: 700; margin: 0; color: var(--ink); }
+  .mini-title-row { display: flex; align-items: center; flex-wrap: wrap; gap: 6px 10px; }
+  .mini-latest { display: flex; align-items: baseline; gap: 8px; white-space: nowrap; }
+  .mini-value { font-size: 20px; font-weight: 700; color: var(--green); font-variant-numeric: tabular-nums; }
+  .mini-date { font-size: 12px; color: var(--muted); }
+  .mini-def { margin: 4px 0 6px; font-size: 12px; color: var(--muted); line-height: 1.4; }
+  .mini-chart { position: relative; width: 100%; height: 230px; margin-top: auto; }
+  .mini-chart .chart-msg { font-size: 13px; padding: 12px; }
+  .mini-source { margin: 8px 0 0; font-size: 11px; color: var(--footer-ink); line-height: 1.45;
+    border-top: 1px solid var(--rule); padding-top: 7px; }
+  .mini-source a { color: var(--link); }
+  @media (max-width: 700px) {
+    .page { margin: 12px auto; padding: 0 10px 24px; }
+    .card { padding: 14px 14px 12px; }
+    h1 { font-size: 19px; line-height: 1.25; }
+    h2 { font-size: 15px; line-height: 1.3; }
+    .header { flex-wrap: wrap; }
+    .header .titles { flex: 1 1 200px; }
+    .seg button { height: 40px; min-width: 64px; font-size: 13px; }
+    .status { font-size: 13px; }
+    .status .pill { font-size: 12px; padding: 3px 9px; line-height: 1.4; }
+    /* Table moves out of the chart overlay and scrolls within its own box if needed */
+    .inset {
+      position: static; min-width: 0; max-width: 100%; width: 100%;
+      font-size: 13px; margin: 6px 0 10px;
+      overflow-x: auto; -webkit-overflow-scrolling: touch;
+    }
+    .inset th, .inset td { padding: 7px 8px; }
+    .inset th { white-space: normal; vertical-align: bottom; }
+    .inset td.desc { white-space: normal; min-width: 7em; }
+    .chart-wrap { height: clamp(300px, 92vw, 420px); }
+    footer { font-size: 13px; line-height: 1.75; }
+    footer a { padding: 6px 0; }
+    .macro { margin-top: 16px; }
+    .macro-grid { grid-template-columns: minmax(0, 1fr); gap: 12px; }
+    .mini { padding: 14px 14px 12px; }
+    .mini h3 { font-size: 16px; }
+    .mini-def { font-size: 13px; }
+    .mini-chart { height: 220px; }
+    .mini-source { font-size: 12.5px; line-height: 1.7; }
+    .mini-source a { padding: 6px 0; }
+  }
+  @media (max-width: 400px) {
+    .card { padding: 12px 10px 10px; }
+    .mini { padding: 12px 10px 10px; }
+    .inset { font-size: 12.5px; }
+    .inset th, .inset td { padding: 7px 6px; }
+  }
+  /* Top tab navigation (shared with momentum.html) */
+  .topnav { display: flex; gap: 4px; margin: 0 0 12px; border-bottom: 1px solid var(--card-border); overflow-x: auto; }
+  .topnav a { display: inline-flex; align-items: center; min-height: 40px; padding: 0 14px; color: var(--muted);
+    text-decoration: none; font-size: 14px; font-weight: 600; border-bottom: 2px solid transparent; margin-bottom: -1px; white-space: nowrap; }
+  .topnav a:hover { color: var(--ink); }
+  .topnav a[aria-current="page"] { color: var(--ink); border-bottom-color: var(--green); }
+  .topnav a:focus-visible { outline: 2px solid var(--focus); outline-offset: -2px; }
+  @media (max-width: 700px) { .topnav { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 0; overflow: visible; } .topnav a { min-height: 44px; justify-content: center; text-align: center; white-space: normal; line-height: 1.2; padding: 4px 4px; font-size: 13px; } }
+  .mom-stats { display: grid; grid-template-columns: repeat(4, minmax(0,1fr)); gap: 12px; margin: 14px 0 6px; }
+  .stat { border: 1px solid var(--card-border); border-radius: 6px; padding: 10px 12px; background: var(--btn-bg); }
+  .stat h3 { margin: 0 0 6px; font-size: 13px; display: flex; align-items: center; gap: 8px; }
+  .stat .sw { width: 14px; height: 3px; border-radius: 2px; display: inline-block; }
+  .stat dl { margin: 0; display: grid; grid-template-columns: auto auto; gap: 2px 10px; font-size: 12.5px; }
+  .stat dt { color: var(--muted); } .stat dd { margin: 0; text-align: right; font-weight: 700; font-variant-numeric: tabular-nums; }
+  .tbl-wrap { overflow-x: auto; -webkit-overflow-scrolling: touch; margin-top: 8px; }
+  table.wins { border-collapse: collapse; width: 100%; font-size: 13px; }
+  .wins th, .wins td { padding: 6px 8px; border-bottom: 1px solid var(--rule); text-align: left; white-space: nowrap; }
+  .wins th { background: var(--inset-head-bg); font-weight: 700; position: sticky; top: 0; }
+  .wins td.num, .wins th.num { text-align: right; font-variant-numeric: tabular-nums; }
+  .wins td.co { white-space: normal; min-width: 9em; }
+  .wins tr.flag td { background: var(--pill-warn-bg); }
+  .pos { color: var(--green); } .neg { color: var(--pill-err-ink); }
+  .tag { display: inline-block; font-size: 10.5px; font-weight: 700; padding: 1px 6px; border-radius: 999px;
+    background: var(--pill-bg); color: var(--green); }
+  .tag.warn { background: var(--pill-warn-bg); color: var(--pill-warn-ink); }
+  .tag.err { background: var(--pill-err-bg); color: var(--pill-err-ink); }
+  .notes { font-size: 13.5px; line-height: 1.55; }
+  .notes li { margin: 4px 0; } .notes a { color: var(--link); }
+  .card + .card { margin-top: 16px; }
+  .muted { color: var(--muted); font-size: 12.5px; }
+  details.t5 summary { cursor: pointer; font-weight: 700; padding: 6px 0; }
+  .wins td.list { white-space: normal; min-width: 18em; }
+  @media (max-width: 1000px) and (min-width: 701px) { .mom-stats { grid-template-columns: repeat(2, minmax(0,1fr)); } }
+  @media (max-width: 700px) { .mom-stats { grid-template-columns: minmax(0,1fr); } .wins { font-size: 12.5px; } }
+  .mom-stats.five { grid-template-columns: repeat(4, minmax(0,1fr)); }
+  .cov-wrap { position: relative; height: 180px; margin-top: 6px; }
+  .compare td.num, .compare th.num { text-align: right; }
+</style>
+</head>
+<body>
+<div class="page">
+  <nav class="topnav" aria-label="Pages">
+    <a href="./">Valuation &amp; Macro</a>
+    <a href="momentum.html">Momentum</a>
+    <a href="crypto.html">Crypto Momentum</a>
+    <a href="dca.html" aria-current="page">Monthly DCA</a>
+    <a href="charts.html">Charts</a>
+  </nav>
+  <div class="card">
+    <div class="header">
+      <div class="titles">
+        <h1>Monthly DCA: $1,000 a month into last month&rsquo;s best S&amp;P 500 stock</h1>
+        <div class="subtitle-row">
+          <h2>Portfolio value vs money put in (buy and hold every lot, never sell)</h2>
+          <div class="seg" id="scale-seg" role="group" aria-label="Y-axis scale">
+            <button type="button" data-scale="logarithmic" aria-pressed="true">Log</button>
+            <button type="button" data-scale="linear" aria-pressed="false">Linear</button>
+          </div>
+        </div>
+      </div>
+      <div class="header-actions">
+        <button type="button" class="theme-toggle" id="theme-toggle" aria-label="Switch to light mode" title="Switch to light mode">
+          <svg class="icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><circle cx="12" cy="12" r="4.5"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41"/></svg>
+          <svg class="icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+        </button>
+      </div>
+    </div>
+    <div class="status" id="status">Loading…</div>
+    <p class="muted">Idea and original backtest: <a href="https://x.com/AzianMike/status/2109715826169585699">Michael Luo (@AzianMike) on X</a> · <a href="https://github.com/azianmike/monthly-winner-research">his open-source repo</a> · <a href="https://azianmike.github.io/monthly-winner-research/">his report</a>, inspired by @gurgavin&rsquo;s yearly-winner thread. This page is an independent rebuild with our own data and rules.</p>
+    <div class="range-row">
+      <label for="start-range">Start year</label><output id="start-out" for="start-range">1997</output>
+      <div class="range-wrap"><span>1997</span><input type="range" id="start-range" min="1997" max="2025" step="1" value="1997" aria-describedby="c-note"><span>2025</span></div>
+      <div class="seg" id="preset-seg" role="group" aria-label="Start year presets">
+        <button type="button" data-y="1997" aria-pressed="true">1997</button><button type="button" data-y="1998" aria-pressed="false">1998 (Luo)</button><button type="button" data-y="2010" aria-pressed="false">2010</button>
+      </div>
+    </div>
+    <div class="range-row">
+      <label class="tax-toggle"><input type="checkbox" id="tax-on"> Apply 20% capital gains tax</label>
+    </div>
+    <p class="c-note" id="c-note"></p>
+    <p class="c-note" id="tax-note" hidden>Nothing is ever sold, so no tax is due along the way. With the toggle on, each card adds the value if everything were sold on the last date, after a flat 20% tax on the total gain (ending value minus money put in). The chart is unchanged.</p>
+    <div class="chart-block"><div class="chart-wrap"><canvas id="chart" role="img" aria-label="Portfolio value over time for each strategy and the S&amp;P 500, with total contributions"></canvas></div></div>
+    <div class="mom-stats five" id="stats"></div>
+  </div>
+
+  <div class="card">
+    <h2 class="section-title" style="padding:0">Our result vs the original claim</h2>
+    <div class="tbl-wrap"><table class="wins compare" id="compare"></table></div>
+    <ul class="notes" id="compare-notes"></ul>
+  </div>
+
+  <div class="card">
+    <h2 class="section-title" style="padding:0">A few lots did most of the work</h2>
+    <p class="muted">Largest lots of the main strategy (last month&rsquo;s #1, $1,000 each) for the selected start year, valued at the last close.</p>
+    <div class="tbl-wrap"><table class="wins"><thead><tr><th>Bought</th><th>Ticker</th><th class="num">Prior-month return</th><th class="num">Value now</th><th class="num">Share of portfolio</th></tr></thead><tbody id="top-body"></tbody></table></div>
+  </div>
+
+  <div class="card">
+    <h2 class="section-title" style="padding:0">How much of the index we could rank</h2>
+    <p class="muted">Share of the month&rsquo;s S&amp;P 500 members with usable prices. The rest are mostly companies that later disappeared, which Yahoo no longer carries. When they are missing, the &ldquo;winner&rdquo; is only the best of the survivors.</p>
+    <div class="cov-wrap"><canvas id="cov" role="img" aria-label="Share of S&amp;P 500 members ranked each month"></canvas></div>
+  </div>
+
+  <div class="card">
+    <h2 class="section-title" style="padding:0">Every monthly pick</h2>
+    <details class="t5" id="lots-details"><summary>Show all <span id="lot-count"></span> monthly purchases</summary>
+      <div class="tbl-wrap"><table class="wins"><thead><tr><th>Bought</th><th>Ticker</th><th class="num">Prior-month return</th><th class="num">Ranked</th><th>Luo&rsquo;s pick</th><th class="num">Value of $1,000 now</th></tr></thead><tbody id="lots-body"></tbody></table></div>
+    </details>
+  </div>
+
+  <div class="card notes">
+    <h2 class="section-title" style="padding:0">Method</h2>
+    <ul>
+      <li><b>Universe</b>: S&amp;P 500 members on the last trading day of the signal month, from the <a href="https://github.com/fja05680/sp500">fja05680/sp500</a> historical components (the list runs through <span class="memthru"></span>; later months use that list).</li>
+      <li><b>Signal</b>: total return over the prior calendar month, from Yahoo Finance dividend- and split-adjusted closes (last trading day of the month vs the month before). Ties go to the first ticker alphabetically.</li>
+      <li><b>Buy</b>: at the <b>close of the first trading day</b> of the next month, after the signal is known, so there is no lookahead. Luo buys at that day&rsquo;s open, which is slightly different.</li>
+      <li><b>Strategy</b>: $1,000 every month into the winner, never sold and never rebalanced. Repeat winners get another $1,000. Extra lines: last month&rsquo;s top 5 at $200 each, and the stock with the best trailing 12-month return at $1,000.</li>
+      <li><b>Benchmark</b>: $1,000 into the S&amp;P 500 Total Return index (^SP500TR) at the same close each month. Money-weighted return (XIRR) uses the actual dated deposits.</li>
+      <li><b>Data screens</b>: a stock is skipped in a month if (a) Yahoo has no prices for it, (b) its Yahoo history starts after it joined the index, which means the symbol was later reused by another company, (c) more than 30% of its daily closes over the past year were unchanged, a sign of an illiquid stand-in rather than an S&amp;P 500 company, or (d) it is a known recycled symbol (El Paso &ldquo;EP&rdquo;, MCI &ldquo;MCIC&rdquo;, Compuware &ldquo;CPWR&rdquo;, Sonat &ldquo;SNT&rdquo;, and <a href="https://github.com/Johnbrick123/sp500-data">Johnbrick123/sp500-data</a>&rsquo;s list). Missing returns are never filled in.</li>
+      <li><b>Delisted holdings</b>: none of our picks stopped trading, because the screens leave only stocks with prices through today. That is exactly the survivorship problem described below.</li>
+    </ul>
+    <h2 class="section-title" style="padding:0">Why our number is higher than his, and why neither is the true answer</h2>
+    <ul id="why"></ul>
+    <h2 class="section-title" style="padding:0">Data</h2>
+    <ul>
+      <li><a href="data/dca_lots.csv">dca_lots.csv</a> (every lot, all strategies) · <a href="data/dca_coverage.csv">dca_coverage.csv</a> (members, ranked, screened and missing tickers per month) · <a href="data/dca.json">dca.json</a> · rebuilt with <a href="https://github.com/AllenFulmer/sp500-forward-pe/blob/main/scripts/build_dca.py">scripts/build_dca.py</a>.</li>
+      <li>This is not investment advice.</li>
+    </ul>
+  </div>
+  <footer id="foot"></footer>
+</div>
+<script>
+(function () {
+  "use strict";
+  const $ = (id) => document.getElementById(id);
+  function themeColors() {
+    const cs = getComputedStyle(document.documentElement);
+    const v = (n, fb) => (cs.getPropertyValue(n) || "").trim() || fb;
+    const dark = document.documentElement.getAttribute("data-theme") !== "light";
+    return { line: v("--line", "#3a3a3a"), grid: v("--grid", "#d9d9d9"), tick: v("--tick", "#333"), green: v("--green", "#5f8a31"),
+      tipBg: v("--tip-bg", "#fff"), tipInk: v("--tip-ink", "#111"), tipBorder: v("--tip-border", "#ccc"),
+      w: dark ? "#f0a35e" : "#c46a12", t5: dark ? "#d68cff" : "#8a3fc0", w12: dark ? "#5ec8c8" : "#1b8a8a", inv: dark ? "#8a9099" : "#8a8f96" };
+  }
+  let C = themeColors(), chart = null, cov = null, D = null, startYear = 1997, taxOn = false;
+  let scale = "logarithmic";
+  try { const s = localStorage.getItem("dcaScale"); if (s === "linear" || s === "logarithmic") scale = s; } catch (e) {}
+  const pct = (x, d = 1) => x == null ? "—" : (x >= 0 ? "+" : "") + (x * 100).toLocaleString("en-US", { maximumFractionDigits: d, minimumFractionDigits: d }) + "%";
+  const cls = (x) => x == null ? "" : (x >= 0 ? "pos" : "neg");
+  const money = (x) => "$" + Math.round(x).toLocaleString("en-US");
+  const esc = (s) => String(s).replace(/[&<>"]/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"})[c]);
+  const series = () => [
+    { key: "w", label: "Last month's #1 ($1,000)", color: C.w },
+    { key: "t5", label: "Last month's top 5 ($200 each)", color: C.t5 },
+    { key: "w12", label: "Best trailing 12 months ($1,000)", color: C.w12 },
+    { key: "sp", label: "S&P 500 TR ($1,000)", color: C.line },
+  ];
+  // value path for lots bought from Jan 1 of startYear
+  function compute(key) {
+    const L = D.lots[key].filter(l => l[0] >= startYear + "-01-01");
+    const j0 = D.labels.findIndex(x => x >= startYear + "-01-01");
+    const labels = D.labels.slice(j0), val = labels.map(() => 0), inv = labels.map(() => 0);
+    L.forEach(([bd, t, amt, bpx]) => { const P = D.prices[t];
+      labels.forEach((lab, k) => { if (lab < bd) return; inv[k] += amt; val[k] += amt * P[j0 + k] / bpx; }); });
+    return { L, labels, val, inv };
+  }
+  function xirr(L, final, end) {
+    const t0 = new Date(L[0][0]), cf = L.map(l => [(new Date(l[0]) - t0) / (365.25 * 864e5), -l[2]]).concat([[(new Date(end) - t0) / (365.25 * 864e5), final]]);
+    let lo = -0.99, hi = 10;
+    for (let i = 0; i < 200; i++) { const m = (lo + hi) / 2, npv = cf.reduce((s, [t, c]) => s + c / Math.pow(1 + m, t), 0); if (npv > 0) lo = m; else hi = m; }
+    return (lo + hi) / 2;
+  }
+  function mdd(v) { let pk = v[0], m = 0; v.forEach(x => { pk = Math.max(pk, x); m = Math.min(m, x / pk - 1); }); return m; }
+  let R = {};
+  function recompute() { R = {}; series().forEach(s => R[s.key] = compute(s.key)); }
+  function draw() {
+    const W = R.w, labels = W.labels.map(l => l === D.last_close ? l + "*" : l.slice(0, 7));
+    const ds = series().map(s => ({ label: s.label, data: R[s.key].val, borderColor: s.color, backgroundColor: s.color, borderWidth: 2, pointRadius: 0, pointHoverRadius: 3, tension: 0 }))
+      .concat([{ label: "Money put in", data: W.inv, borderColor: C.inv, backgroundColor: C.inv, borderDash: [5, 4], borderWidth: 1.6, pointRadius: 0, tension: 0 }]);
+    if (chart) { chart.data.labels = labels; chart.data.datasets = ds; chart.options.scales.y.type = scale; chart.update("none"); return; }
+    chart = new Chart($("chart"), { type: "line", data: { labels, datasets: ds },
+      options: { responsive: true, maintainAspectRatio: false, animation: false, interaction: { mode: "index", intersect: false },
+        plugins: { legend: { labels: { color: C.tick, boxWidth: 14, boxHeight: 3 } },
+          tooltip: { backgroundColor: C.tipBg, titleColor: C.tipInk, bodyColor: C.tipInk, borderColor: C.tipBorder, borderWidth: 1,
+            callbacks: { label: (c) => c.dataset.label + ": " + money(c.parsed.y) } } },
+        scales: { x: { ticks: { color: C.tick, maxRotation: 0, autoSkipPadding: 14 }, grid: { color: C.grid } },
+          y: { type: scale, ticks: { color: C.tick, callback: (v) => { const s = String(v); return (scale === "linear" || /^[125]/.test(s)) ? money(v) : ""; } }, grid: { color: C.grid } } } } });
+  }
+  function redraw() { if (chart) { chart.destroy(); chart = null; } draw(); drawCov(); }
+  function renderStats() {
+    const st = {};
+    $("stats").innerHTML = series().map(s => { const r = R[s.key], n = r.val.length - 1, V = r.val[n], I = r.inv[n];
+      st[s.key] = { invested: I, ending: V, xirr: xirr(r.L, V, D.last_close), max_drawdown: mdd(r.val), after_tax: V - 0.2 * Math.max(0, V - I) };
+      const x = st[s.key];
+      return `<div class="stat" data-key="${s.key}"><h3><span class="sw" style="background:${s.color}"></span>${esc(s.label)}</h3>
+      <dl><dt>Money put in</dt><dd>${money(I)}</dd><dt>Ending value</dt><dd class="ev">${money(V)}</dd><dt>Money-weighted return (XIRR)</dt><dd>${pct(x.xirr, 2)}/yr</dd>
+      <dt>Max drawdown (month-end value)</dt><dd class="neg">${pct(x.max_drawdown)}</dd>${taxOn ? `<dt>If sold at end, after 20% tax</dt><dd class="liq">${money(x.after_tax)}</dd>` : ""}</dl></div>`; }).join("");
+    window.__dcaStats = st;
+    $("c-note").textContent = `${R.w.L.length} monthly deposits from ${R.w.L[0][0]} to ${R.w.L[R.w.L.length - 1][0]}, valued at the ${D.last_close} close. Drawdowns include new deposits, so they understate how far the existing money fell.`;
+  }
+  function renderTop() {
+    const r = R.w, n = r.val.length - 1, tot = r.val[n], P = D.prices, j = D.labels.length - 1;
+    const lots = r.L.map(l => ({ bd: l[0], t: l[1], ret: l[4], v: l[2] * P[l[1]][j] / l[3] })).sort((a, b) => b.v - a.v).slice(0, 10);
+    $("top-body").innerHTML = lots.map(l => `<tr><td>${l.bd}</td><td><b>${esc(l.t)}</b></td><td class="num ${cls(l.ret)}">${pct(l.ret)}</td><td class="num">${money(l.v)}</td><td class="num">${pct(l.v / tot).replace("+", "")}</td></tr>`).join("");
+  }
+  function renderLots() {
+    const P = D.prices, j = D.labels.length - 1, cv = {}; D.coverage.forEach(c => cv[c[0]] = c);
+    $("lot-count").textContent = D.lots.w.length;
+    $("lots-body").innerHTML = D.lots.w.slice().reverse().map(l => { const v = l[2] * P[l[1]][j] / l[3], c = cv[l[5]], lp = D.luo.picks[l[0].slice(0, 7)];
+      const diff = lp && lp[0].split("-")[0] !== l[1];
+      return `<tr class="${diff ? "flag" : ""}"><td>${l[0]}</td><td><b>${esc(l[1])}</b></td><td class="num ${cls(l[4])}">${pct(l[4])}</td><td class="num">${c ? c[2] + "/" + c[1] : ""}</td>
+        <td>${lp ? esc(lp[0]) + (diff ? ` (${pct(lp[1])})` : "") : "—"}</td><td class="num">${money(v)}</td></tr>`; }).join("");
+  }
+  function drawCov() {
+    const lab = D.coverage.map(c => c[0]), v = D.coverage.map(c => 100 * c[2] / c[1]);
+    if (cov) cov.destroy();
+    cov = new Chart($("cov"), { type: "line", data: { labels: lab, datasets: [{ label: "% of members ranked", data: v, borderColor: C.green, backgroundColor: C.green, pointRadius: 0, borderWidth: 1.8 }] },
+      options: { responsive: true, maintainAspectRatio: false, animation: false, plugins: { legend: { display: false },
+        tooltip: { backgroundColor: C.tipBg, titleColor: C.tipInk, bodyColor: C.tipInk, borderColor: C.tipBorder, borderWidth: 1, callbacks: { label: (c) => c.parsed.y.toFixed(0) + "% ranked" } } },
+        scales: { x: { ticks: { color: C.tick, maxRotation: 0, autoSkipPadding: 20 }, grid: { color: C.grid } }, y: { min: 0, max: 100, ticks: { color: C.tick, callback: v => v + "%" }, grid: { color: C.grid } } } } });
+  }
+  function renderCompare() {
+    const L = D.luo, s = D.summary, f = (x) => money(x);
+    $("compare").innerHTML = `<thead><tr><th></th><th class="num">Luo (his repo)</th><th class="num">Ours, same 1998 start</th></tr></thead><tbody>
+      <tr><td>Period</td><td class="num">${L.start} → ${L.as_of}</td><td class="num">1998-01-02 → ${D.last_close}</td></tr>
+      <tr><td>Deposits</td><td class="num">${L.deposits} × $1,000</td><td class="num">${s.w_1998.lots} × $1,000</td></tr>
+      <tr><td>Last month's #1, ending value</td><td class="num">${f(L.ending)}</td><td class="num">${f(s.w_1998.ending)}</td></tr>
+      <tr><td>Benchmark ending value</td><td class="num">${f(L.spy)} (SPY)</td><td class="num">${f(s.sp_1998.ending)} (^SP500TR)</td></tr>
+      <tr><td>Money-weighted return</td><td class="num">${pct(L.xirr, 2)} vs ${pct(L.spy_xirr, 2)}</td><td class="num">${pct(s.w_1998.xirr, 2)} vs ${pct(s.sp_1998.xirr, 2)}</td></tr>
+      <tr><td>Months where the true winner is unknown (missing prices)</td><td class="num">${L.missing_ranking_months} of ${L.deposits}</td><td class="num">all ${s.w_1998.lots}</td></tr></tbody>`;
+    const same = D.lots.w.filter(l => { const p = L.picks[l[0].slice(0, 7)]; return p && p[0].split("-")[0] === l[1]; }).length;
+    const n98 = D.lots.w.filter(l => L.picks[l[0].slice(0, 7)]).length;
+    $("compare-notes").innerHTML = `<li><b>The claim</b>: ${f(L.ending)} vs ${f(L.spy)} for SPY, a gap of about ${f(L.ending - L.spy)} (&ldquo;over $6 million&rdquo; in the post). It reproduces from his frozen data, and his own audit says the true full-universe result is unverified.</li>
+      <li><b>Same pick in ${same} of ${n98} months.</b> Rows where we differ are shaded in the purchase table. Most differences are months where he had prices for a company that later disappeared and we do not.</li>`;
+    $("why").innerHTML = `<li><b>Survivorship bias, mostly in our favor.</b> Yahoo has dropped most companies that left the index, so in the 1990s and 2000s we can rank only about 40&ndash;60% of members (chart above). His dataset had more delisted names, and in several months his &ldquo;winner&rdquo; was a stock that later stopped trading (bankrupt or bought out, e.g. Altera, Citrix, McDermott), which his rule values at $0 (${L.writeoff_lots} lots). With those names missing from Yahoo, our pick in those months is often a survivor like NVIDIA or Apple. Four NVDA/AAPL lots from 2003&ndash;04 that he did not buy (he bought MDR, Altera, Men&rsquo;s Wearhouse and Citrix) are worth over $4 million on their own. Our higher number is <i>more</i> flattered, not more correct.</li>
+      <li><b>Dead stocks.</b> He values any holding that stopped trading at $0, including cash takeovers. None of our lots stopped trading, so the question never comes up, which is again a symptom of the missing data.</li>
+      <li><b>Data and timing.</b> We use Yahoo adjusted closes and buy at the first trading day&rsquo;s close; he used a curated Yahoo/Tiingo dataset with his own split fixes and bought at the open. The benchmark here is the S&amp;P 500 Total Return index, not SPY, so it has no fund fees. Our data ends ${D.last_close}; his ends ${L.as_of}.</li>
+      <li><b>Lookahead.</b> Both studies rank on the completed prior month and buy afterwards, so neither uses future prices. But choosing &ldquo;stocks still trading today&rdquo; is a form of hindsight, and that is what free data forces on both of us.</li>
+      <li><b>Concentration.</b> In both versions a handful of NVIDIA and Apple lots are most of the ending value. Starting a few years later (try 2010 on the slider) gives a far smaller edge. Treat the full-period headline as one lucky path, not an expected return.</li>`;
+  }
+  function renderAll() { recompute(); draw(); renderStats(); renderTop(); }
+  function setStart(y) {
+    y = Math.min(2025, Math.max(1997, Math.round(+y) || 1997)); startYear = y;
+    $("start-range").value = y; $("start-out").textContent = y; $("start-range").setAttribute("aria-valuetext", "Start " + y);
+    document.querySelectorAll("#preset-seg button").forEach(b => b.setAttribute("aria-pressed", +b.dataset.y === y ? "true" : "false"));
+    if (D) renderAll();
+  }
+  $("tax-on").addEventListener("change", (e) => { taxOn = e.target.checked; $("tax-note").hidden = !taxOn; if (D) renderStats(); });
+  $("start-range").addEventListener("input", (e) => setStart(e.target.value));
+  document.querySelectorAll("#preset-seg button").forEach(b => b.addEventListener("click", () => setStart(b.dataset.y)));
+  function setScale(s) {
+    scale = s; try { localStorage.setItem("dcaScale", s); } catch (e) {}
+    document.querySelectorAll("#scale-seg button").forEach(b => b.setAttribute("aria-pressed", b.dataset.scale === s ? "true" : "false"));
+    if (D) draw();
+  }
+  document.querySelectorAll("#scale-seg button").forEach(b => b.addEventListener("click", () => setScale(b.dataset.scale)));
+  setScale(scale);
+  const toggle = $("theme-toggle");
+  const cur = () => document.documentElement.getAttribute("data-theme") === "light" ? "light" : "dark";
+  function syncToggle() {
+    const label = "Switch to " + (cur() === "dark" ? "light" : "dark") + " mode";
+    toggle.setAttribute("aria-label", label); toggle.setAttribute("title", label);
+    const meta = document.querySelector('meta[name="theme-color"]'); if (meta) meta.setAttribute("content", cur() === "dark" ? "#0e1013" : "#f2f2f2");
+  }
+  toggle.addEventListener("click", () => { const t = cur() === "dark" ? "light" : "dark";
+    document.documentElement.setAttribute("data-theme", t); try { localStorage.setItem("theme", t); } catch (e) {}
+    syncToggle(); C = themeColors(); if (D) { redraw(); renderStats(); } });
+  syncToggle();
+  fetch("data/dca.json", { cache: "no-cache" }).then(r => { if (!r.ok) throw new Error("HTTP " + r.status); return r.json(); }).then(d => {
+    D = d;
+    $("status").innerHTML = `<span class="pill">Data through ${esc(d.last_close)}</span><span>Deposits from ${d.first_buy} · built ${esc(d.generated)}</span>`;
+    document.querySelectorAll(".memthru").forEach(e => e.textContent = d.membership_through);
+    renderAll(); drawCov(); renderCompare(); renderLots();
+    $("foot").innerHTML = `Hypothetical backtest. Prices: Yahoo Finance. Membership: fja05680/sp500. Idea: Michael Luo (@AzianMike).`;
+  }).catch(e => { $("status").innerHTML = `<span class="pill err">Could not load data</span>`; console.warn("dca.json load failed:", e); });
+})();
+</script>
+</body>
+</html>
