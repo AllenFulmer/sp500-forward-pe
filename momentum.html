@@ -231,11 +231,11 @@
     .inset th, .inset td { padding: 7px 6px; }
   }
   /* Top tab navigation (shared with momentum.html) */
-  .topnav { display: flex; gap: 4px; margin: 0 0 12px; border-bottom: 1px solid var(--card-border); overflow-x: auto; }
+  .topnav { display: flex; flex-wrap: wrap; gap: 0 4px; margin: 0 0 12px; border-bottom: 1px solid var(--card-border); overflow: visible; }
   .topnav a { display: inline-flex; align-items: center; min-height: 40px; padding: 0 14px; color: var(--muted);
-    text-decoration: none; font-size: 14px; font-weight: 600; border-bottom: 2px solid transparent; margin-bottom: -1px; white-space: nowrap; }
+    text-decoration: none; font-size: 14px; font-weight: 600; border-bottom: 2px solid transparent; white-space: nowrap; }
   .topnav a:hover { color: var(--ink); }
-  .topnav a[aria-current="page"] { color: var(--ink); border-bottom-color: var(--green); }
+  .topnav a[aria-current="page"] { color: var(--ink); border-bottom-color: var(--green); box-shadow: 0 1px 0 var(--green); }
   .topnav a:focus-visible { outline: 2px solid var(--focus); outline-offset: -2px; }
   @media (max-width: 700px) { .topnav { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 0; overflow: visible; } .topnav a { min-height: 44px; justify-content: center; text-align: center; white-space: normal; line-height: 1.2; padding: 4px 4px; font-size: 13px; } }
   .mom-stats { display: grid; grid-template-columns: repeat(4, minmax(0,1fr)); gap: 12px; margin: 14px 0 6px; }
@@ -303,7 +303,7 @@
       </div>
     </div>
     <div class="range-row">
-      <label class="tax-toggle"><input type="checkbox" id="tax-on"> Apply 20% capital gains tax</label>
+      <label class="tax-toggle"><input type="checkbox" id="tax-on" autocomplete="off"> Apply 20% capital gains tax</label>
     </div>
     <p class="c-note" id="c-note"></p>
     <p class="c-note" id="tax-note" hidden>Tax assumptions: a flat 20% on realized gains, with no state tax. A gain is the sale value minus that position's cost basis. Strategy A sells every Jan 1, even when it buys the same stock back. Strategy B sells all five every Jan 1, and gains and losses net within the year. Net losses carry forward to offset later gains. Tax is paid from the portfolio. Cash from a buyout during the year is taxed in that year. Dividends are left in the total returns and not taxed. At a start after 1999, positions count as bought on Jan 1 of the start year. Lines and stats show positions still open at the end before selling (the S&amp;P 500 is never sold). The "if sold at end" row shows each value after a final sale and tax.</p>
@@ -502,7 +502,10 @@
     document.querySelectorAll("#preset-seg button").forEach(b => b.setAttribute("aria-pressed", +b.dataset.y === y ? "true" : "false"));
     if (DATA) { draw(); renderStats(); }
   }
-  $("tax-on").addEventListener("change", (e) => { taxOn = e.target.checked; $("tax-note").hidden = !taxOn; if (DATA) { draw(); renderStats(); } });
+  function syncTax() { taxOn = $("tax-on").checked; $("tax-note").hidden = !taxOn; if (DATA) { draw(); renderStats(); } }
+  $("tax-on").addEventListener("change", syncTax);
+  window.addEventListener("pageshow", syncTax);  // Back/Forward and reload can restore the box as checked
+  syncTax();
   $("start-range").addEventListener("input", (e) => setStart(e.target.value));
   document.querySelectorAll("#preset-seg button").forEach(b => b.addEventListener("click", () => setStart(b.dataset.y)));
   function renderTable() {

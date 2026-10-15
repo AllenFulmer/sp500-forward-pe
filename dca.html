@@ -231,11 +231,11 @@
     .inset th, .inset td { padding: 7px 6px; }
   }
   /* Top tab navigation (shared with momentum.html) */
-  .topnav { display: flex; gap: 4px; margin: 0 0 12px; border-bottom: 1px solid var(--card-border); overflow-x: auto; }
+  .topnav { display: flex; flex-wrap: wrap; gap: 0 4px; margin: 0 0 12px; border-bottom: 1px solid var(--card-border); overflow: visible; }
   .topnav a { display: inline-flex; align-items: center; min-height: 40px; padding: 0 14px; color: var(--muted);
-    text-decoration: none; font-size: 14px; font-weight: 600; border-bottom: 2px solid transparent; margin-bottom: -1px; white-space: nowrap; }
+    text-decoration: none; font-size: 14px; font-weight: 600; border-bottom: 2px solid transparent; white-space: nowrap; }
   .topnav a:hover { color: var(--ink); }
-  .topnav a[aria-current="page"] { color: var(--ink); border-bottom-color: var(--green); }
+  .topnav a[aria-current="page"] { color: var(--ink); border-bottom-color: var(--green); box-shadow: 0 1px 0 var(--green); }
   .topnav a:focus-visible { outline: 2px solid var(--focus); outline-offset: -2px; }
   @media (max-width: 700px) { .topnav { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 0; overflow: visible; } .topnav a { min-height: 44px; justify-content: center; text-align: center; white-space: normal; line-height: 1.2; padding: 4px 4px; font-size: 13px; } }
   .mom-stats { display: grid; grid-template-columns: repeat(4, minmax(0,1fr)); gap: 12px; margin: 14px 0 6px; }
@@ -264,7 +264,6 @@
   .wins td.list { white-space: normal; min-width: 18em; }
   @media (max-width: 1000px) and (min-width: 701px) { .mom-stats { grid-template-columns: repeat(2, minmax(0,1fr)); } }
   @media (max-width: 700px) { .mom-stats { grid-template-columns: minmax(0,1fr); } .wins { font-size: 12.5px; } }
-  .mom-stats.five { grid-template-columns: repeat(4, minmax(0,1fr)); }
   .cov-wrap { position: relative; height: 180px; margin-top: 6px; }
   .compare td.num, .compare th.num { text-align: right; }
 </style>
@@ -306,11 +305,7 @@
         <button type="button" data-y="1997" aria-pressed="true">1997</button><button type="button" data-y="1998" aria-pressed="false">1998 (Luo)</button><button type="button" data-y="2010" aria-pressed="false">2010</button>
       </div>
     </div>
-    <div class="range-row">
-      <label class="tax-toggle"><input type="checkbox" id="tax-on"> Apply 20% capital gains tax</label>
-    </div>
     <p class="c-note" id="c-note"></p>
-    <p class="c-note" id="tax-note" hidden>Nothing is ever sold, so no tax is due along the way. With the toggle on, each card adds the value if everything were sold on the last date, after a flat 20% tax on the total gain (ending value minus money put in). The chart is unchanged.</p>
     <div class="chart-block"><div class="chart-wrap"><canvas id="chart" role="img" aria-label="Portfolio value over time for each strategy and the S&amp;P 500, with total contributions"></canvas></div></div>
     <div class="mom-stats five" id="stats"></div>
   </div>
@@ -373,7 +368,7 @@
       tipBg: v("--tip-bg", "#fff"), tipInk: v("--tip-ink", "#111"), tipBorder: v("--tip-border", "#ccc"),
       w: dark ? "#f0a35e" : "#c46a12", t5: dark ? "#d68cff" : "#8a3fc0", w12: dark ? "#5ec8c8" : "#1b8a8a", inv: dark ? "#8a9099" : "#8a8f96" };
   }
-  let C = themeColors(), chart = null, cov = null, D = null, startYear = 1997, taxOn = false;
+  let C = themeColors(), chart = null, cov = null, D = null, startYear = 1997;
   let scale = "logarithmic";
   try { const s = localStorage.getItem("dcaScale"); if (s === "linear" || s === "logarithmic") scale = s; } catch (e) {}
   const pct = (x, d = 1) => x == null ? "—" : (x >= 0 ? "+" : "") + (x * 100).toLocaleString("en-US", { maximumFractionDigits: d, minimumFractionDigits: d }) + "%";
@@ -421,11 +416,11 @@
   function renderStats() {
     const st = {};
     $("stats").innerHTML = series().map(s => { const r = R[s.key], n = r.val.length - 1, V = r.val[n], I = r.inv[n];
-      st[s.key] = { invested: I, ending: V, xirr: xirr(r.L, V, D.last_close), max_drawdown: mdd(r.val), after_tax: V - 0.2 * Math.max(0, V - I) };
+      st[s.key] = { invested: I, ending: V, xirr: xirr(r.L, V, D.last_close), max_drawdown: mdd(r.val) };
       const x = st[s.key];
       return `<div class="stat" data-key="${s.key}"><h3><span class="sw" style="background:${s.color}"></span>${esc(s.label)}</h3>
       <dl><dt>Money put in</dt><dd>${money(I)}</dd><dt>Ending value</dt><dd class="ev">${money(V)}</dd><dt>Money-weighted return (XIRR)</dt><dd>${pct(x.xirr, 2)}/yr</dd>
-      <dt>Max drawdown (month-end value)</dt><dd class="neg">${pct(x.max_drawdown)}</dd>${taxOn ? `<dt>If sold at end, after 20% tax</dt><dd class="liq">${money(x.after_tax)}</dd>` : ""}</dl></div>`; }).join("");
+      <dt>Max drawdown (month-end value)</dt><dd class="neg">${pct(x.max_drawdown)}</dd></dl></div>`; }).join("");
     window.__dcaStats = st;
     $("c-note").textContent = `${R.w.L.length} monthly deposits from ${R.w.L[0][0]} to ${R.w.L[R.w.L.length - 1][0]}, valued at the ${D.last_close} close. Drawdowns include new deposits, so they understate how far the existing money fell.`;
   }
@@ -476,7 +471,6 @@
     document.querySelectorAll("#preset-seg button").forEach(b => b.setAttribute("aria-pressed", +b.dataset.y === y ? "true" : "false"));
     if (D) renderAll();
   }
-  $("tax-on").addEventListener("change", (e) => { taxOn = e.target.checked; $("tax-note").hidden = !taxOn; if (D) renderStats(); });
   $("start-range").addEventListener("input", (e) => setStart(e.target.value));
   document.querySelectorAll("#preset-seg button").forEach(b => b.addEventListener("click", () => setStart(b.dataset.y)));
   function setScale(s) {

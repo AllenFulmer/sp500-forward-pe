@@ -221,11 +221,11 @@
     .inset th, .inset td { padding: 7px 6px; }
   }
   /* Top tab navigation (shared with momentum.html) */
-  .topnav { display: flex; gap: 4px; margin: 0 0 12px; border-bottom: 1px solid var(--card-border); overflow-x: auto; }
+  .topnav { display: flex; flex-wrap: wrap; gap: 0 4px; margin: 0 0 12px; border-bottom: 1px solid var(--card-border); overflow: visible; }
   .topnav a { display: inline-flex; align-items: center; min-height: 40px; padding: 0 14px; color: var(--muted);
-    text-decoration: none; font-size: 14px; font-weight: 600; border-bottom: 2px solid transparent; margin-bottom: -1px; white-space: nowrap; }
+    text-decoration: none; font-size: 14px; font-weight: 600; border-bottom: 2px solid transparent; white-space: nowrap; }
   .topnav a:hover { color: var(--ink); }
-  .topnav a[aria-current="page"] { color: var(--ink); border-bottom-color: var(--green); }
+  .topnav a[aria-current="page"] { color: var(--ink); border-bottom-color: var(--green); box-shadow: 0 1px 0 var(--green); }
   .topnav a:focus-visible { outline: 2px solid var(--focus); outline-offset: -2px; }
   @media (max-width: 700px) { .topnav { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 0; overflow: visible; } .topnav a { min-height: 44px; justify-content: center; text-align: center; white-space: normal; line-height: 1.2; padding: 4px 4px; font-size: 13px; } }
 </style>
