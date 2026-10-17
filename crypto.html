@@ -407,19 +407,28 @@
     const m = arr[arr.length - 1] / arr[0];
     return { ending: 100 * m, cagr: Math.pow(m, 1 / yrs) - 1, max_drawdown: mdd };
   }
+  function yRange(arrs) {
+    const v = arrs.flat().filter(x => x != null && x > 0), lo = Math.min(...v), hi = Math.max(...v);
+    return scale === "logarithmic" ? { min: lo / 1.15, max: hi * 1.15 } : { min: 0, max: hi * 1.05 };
+  }
   function draw() {
-    const W = simulate(startYear, taxOn);
+    const W = simulate(startYear, taxOn), P = taxOn ? simulate(startYear, false) : W;
     const labels = W.labels.map((l, i) => i === 0 ? "Start " + startYear : (l.endsWith("-12-31") ? l.slice(0, 4) : l + "*"));
     const ds = series().map(s => ({ label: s.label, data: W[s.key], borderColor: s.color, backgroundColor: s.color, borderDash: s.dash || [],
       borderWidth: s.dash ? 1.6 : 2.2, pointRadius: 2, pointHoverRadius: 4, tension: 0 }));
-    if (chart) { chart.data.labels = labels; chart.data.datasets = ds; chart.options.scales.y.type = scale; chart.update("none"); return; }
+    if (taxOn) ds.forEach((d, i) => { const k = series()[i].key; if (k === "a" || k === "b") d.label += " after tax"; });
+    if (taxOn) series().filter(s => s.key === "a" || s.key === "b").forEach(s => ds.push({ label: s.label.replace(/ \(.*/, "") + " before tax", data: P[s.key],
+      borderColor: s.color + "80", backgroundColor: s.color + "80", borderDash: [4, 4], borderWidth: 1.4, pointRadius: 0, pointHoverRadius: 3, tension: 0 }));
+    const yr = yRange(["btc", "a", "b", "sp500"].map(k => P[k]).concat(["a", "b"].map(k => W[k])));
+    window.__cChartY = yr;
+    if (chart) { chart.data.labels = labels; chart.data.datasets = ds; Object.assign(chart.options.scales.y, { type: scale }, yr); chart.update("none"); return; }
     chart = new Chart($("chart"), { type: "line", data: { labels, datasets: ds },
       options: { responsive: true, maintainAspectRatio: false, animation: false, interaction: { mode: "index", intersect: false },
         plugins: { legend: { labels: { color: C.tick, boxWidth: 14, boxHeight: 3 } },
           tooltip: { backgroundColor: C.tipBg, titleColor: C.tipInk, bodyColor: C.tipInk, borderColor: C.tipBorder, borderWidth: 1,
             callbacks: { label: (c) => c.dataset.label + ": " + money(c.parsed.y) } } },
         scales: { x: { ticks: { color: C.tick, maxRotation: 0, autoSkipPadding: 8 }, grid: { color: C.grid } },
-          y: { type: scale, ticks: { color: C.tick, callback: (v) => { const s = String(v); return (scale === "linear" || /^[125]/.test(s)) ? money(v) : ""; } }, grid: { color: C.grid } } } } });
+          y: { type: scale, min: yr.min, max: yr.max, ticks: { color: C.tick, callback: (v) => { const s = String(v); return (scale === "linear" || /^[125]/.test(s)) ? money(v) : ""; } }, grid: { color: C.grid } } } } });
   }
   function redraw() { if (chart) { chart.destroy(); chart = null; } draw(); }
   function renderStats() {
