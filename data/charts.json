@@ -2,6 +2,36 @@
  "_how_to_add": "Put the image in assets/charts/ (optionally also a smaller .webp for display), then add an entry at the TOP of 'charts' (newest first): file = full-size image, display = optional smaller version shown in the card, title, caption, credit, source (optional URL), added (YYYY-MM-DD). The page sorts by 'added', newest first. Optional: chart_date (YYYY-MM-DD, the chart's own date; tie-break within the same 'added' day, newest first) and tags (e.g. [\"Stocks\"]; tag filter buttons appear automatically).",
  "charts": [
   {
+   "file": "assets/charts/btc-fidelity-power-law.png",
+   "display": "assets/charts/btc-fidelity-power-law.webp",
+   "width": 1135,
+   "height": 617,
+   "title": "Bitcoin Power Law Cycles (Fidelity)",
+   "caption": "Third-party chart, shown as published; a model reading, not established fact. Bitcoin on a log scale since 2010 with a power-law trendline, support and resistance lines, plus a panel of BTC versus the power law and the 52-week z-score of the BTC/gold ratio, marking distribution and accumulation zones. Shared with Jurrien Timmer's comment that a new 4-year-cycle bull market could be underway.",
+   "credit": "Fidelity Investments (Jurrien Timmer, @TimmerFidelity), via @BitcoinArchive on X",
+   "source": "https://x.com/BitcoinArchive/status/2111220461367689449",
+   "added": "2026-10-17",
+   "chart_date": "2026-10-17",
+   "tags": [
+    "Bitcoin"
+   ]
+  },
+  {
+   "file": "assets/charts/btc-price-projection-davthewave.png",
+   "display": "assets/charts/btc-price-projection-davthewave.webp",
+   "width": 1827,
+   "height": 928,
+   "title": "BTC Price Projection",
+   "caption": "Third-party chart, shown as published; a projection, not established fact. Monthly Bitcoin chart (log scale) since 2018 with a rising support band and about 1,430-day measured moves from cycle low to cycle high, projecting a roughly $220,000 target around 2030 where three trendlines converge.",
+   "credit": "@davthewave on X; chart by christophercolumbus, created with TradingView, Oct 16, 2026",
+   "source": "https://x.com/davthewave/status/2110916300084224239",
+   "added": "2026-10-17",
+   "chart_date": "2026-10-16",
+   "tags": [
+    "Bitcoin"
+   ]
+  },
+  {
    "file": "assets/charts/us10y-rate-cycles.png",
    "display": "assets/charts/us10y-rate-cycles.webp",
    "width": 4096,
