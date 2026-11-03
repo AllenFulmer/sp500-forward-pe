@@ -2,6 +2,21 @@
  "_how_to_add": "Put the image in assets/charts/ (optionally also a smaller .webp for display), then add an entry at the TOP of 'charts' (newest first): file = full-size image, display = optional smaller version shown in the card, title, caption, credit, source (optional URL), added (YYYY-MM-DD). The page sorts by 'added', newest first. Optional: chart_date (YYYY-MM-DD, the chart's own date; tie-break within the same 'added' day, newest first) and tags (e.g. [\"Stocks\"]; tag filter buttons appear automatically).",
  "charts": [
   {
+   "file": "assets/charts/btc-technical-base-hs-davthewave.png",
+   "display": "assets/charts/btc-technical-base-hs-davthewave.webp",
+   "width": 1456,
+   "height": 744,
+   "title": "BTC Update: Formation of a Technical Base",
+   "caption": "Third-party chart, shown as published; a technical-pattern reading, not established fact. Weekly Bitcoin chart (log scale) since 2024 marking a possible inverse head-and-shoulders base, with the left shoulder in early 2026, the head near $59K around mid-2026 and a projected right shoulder, inside a rising channel. A Fibonacci-style box projects a move toward roughly $125K to $130K into 2027.",
+   "credit": "@davthewave on X; chart by christophercolumbus, created with TradingView, Nov 01, 2026",
+   "source": "https://x.com/davthewave/status/2117342081576497227",
+   "added": "2026-11-03",
+   "chart_date": "2026-11-01",
+   "tags": [
+    "Bitcoin"
+   ]
+  },
+  {
    "file": "assets/charts/btc-fidelity-power-law.png",
    "display": "assets/charts/btc-fidelity-power-law.webp",
    "width": 1135,
