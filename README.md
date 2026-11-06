@@ -1,6 +1,6 @@
 # sp500-forward-pe
 
-Static site: https://allenfulmer.github.io/sp500-forward-pe/ (Valuation & Macro, Momentum, Crypto Momentum, Charts).
+Static site: https://allenfulmer.github.io/sp500-forward-pe/ (Valuation & Macro, Charts, Momentum, Monthly DCA).
 
 ## Adding a chart to the Charts tab
 
