@@ -172,10 +172,23 @@
   .mini-gauge { width: 88px; height: 64px; }
   .spark { min-width: 0; }
 
+  .price-card { margin-top: 16px; }
+  .price-chart-wrap { position: relative; width: 100%; height: 320px; margin-top: 8px; }
+  .price-chart-wrap canvas { width: 100%; height: 100%; display: block; touch-action: none; }
+  .price-tip {
+    position: absolute; z-index: 2; pointer-events: none;
+    background: var(--bg); color: var(--ink); border: 1px solid var(--card-border);
+    border-radius: 6px; padding: 6px 8px; font-size: 12px; line-height: 1.35;
+    box-shadow: var(--shadow); max-width: 260px;
+  }
+  #price-legend { margin-top: 8px; }
+
   @media (max-width: 700px) {
     .page { margin: 12px auto; padding: 0 10px 24px; }
     .card { padding: 14px 14px 12px; }
     .mvalue { font-size: 22px; }
+    .price-chart-wrap { height: 230px; }
+    .price-tip { font-size: 11px; max-width: 190px; }
   }
 </style>
 </head>
@@ -193,7 +206,7 @@
     <div class="header">
       <div class="titles">
         <h1>Gauges</h1>
-        <h2 class="muted" style="font-weight:400">Thirteen valuation, recession, and sentiment models. +SD is bearish for the composite; scores capped at ±2.</h2>
+        <h2 class="muted" style="font-weight:400">Twelve valuation, recession, and sentiment models. +SD is bearish for the composite; scores capped at ±2.</h2>
       </div>
       <div class="header-actions">
         <button type="button" class="theme-toggle" id="theme-toggle" aria-label="Switch to light mode" title="Switch to light mode">
@@ -234,6 +247,18 @@
     </div>
   </div>
 
+  <div class="card price-card" id="price-card" hidden>
+    <h2>S&amp;P 500 and the saved composite signal</h2>
+    <p class="legend" id="price-note">Signal tracking starts on the first saved composite. Prices before that date are shown in gray. No composite history is estimated. Colored marks are saved readings, not a backtest of strategy returns.</p>
+    <p class="legend" id="price-latest"></p>
+    <div class="legend-swatches" id="price-legend"></div>
+    <div class="price-chart-wrap">
+      <canvas id="price-chart" aria-describedby="price-note" aria-label="S&amp;P 500 monthly price. Gray before signal tracking starts. Colored only where a composite was saved."></canvas>
+      <div class="price-tip" id="price-tip" hidden></div>
+    </div>
+    <p class="mmeta" id="price-src" style="border:0;padding-top:8px"></p>
+  </div>
+
   <div id="sections"></div>
 
   <footer id="foot">
@@ -246,6 +271,7 @@
   "use strict";
   const $ = (id) => document.getElementById(id);
   const esc = (s) => String(s == null ? "" : s).replace(/[&<>"]/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"})[c]);
+  let lastData = null;
   const toggle = $("theme-toggle");
   const cur = () => document.documentElement.getAttribute("data-theme") === "light" ? "light" : "dark";
   function syncToggle() {
@@ -258,6 +284,7 @@
     document.documentElement.setAttribute("data-theme", t);
     try { localStorage.setItem("theme", t); } catch (e) {}
     syncToggle();
+    if (lastData) render(lastData);
   });
   syncToggle();
 
@@ -389,9 +416,220 @@
     return cssVar("--cat-sen");
   }
 
+  const RETIRED_GAUGES = new Set(["meanrev", "ps"]);
+  const MONTHS = ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"];
+  function dateMs(s) {
+    if (!s) return NaN;
+    const iso = String(s).length === 7 ? String(s) + "-01" : String(s).slice(0, 10);
+    return Date.parse(iso + "T00:00:00Z");
+  }
+  function fmtMonth(s) {
+    const ms = dateMs(s);
+    if (!isFinite(ms)) return "";
+    const d = new Date(ms);
+    return MONTHS[d.getUTCMonth()] + " " + d.getUTCFullYear();
+  }
+  function fmtDay(s) {
+    const ms = dateMs(s);
+    if (!isFinite(ms)) return "";
+    const d = new Date(ms);
+    return MONTHS[d.getUTCMonth()] + " " + d.getUTCDate() + ", " + d.getUTCFullYear();
+  }
+  function fmtPrice(v) {
+    return Number(v).toLocaleString("en-US", { maximumFractionDigits: 2 });
+  }
+  function signalColor(name) {
+    const key = String(name || "").toUpperCase();
+    if (key === "STRONG BUY") return cssVar("--strong-buy");
+    if (key === "BUY") return cssVar("--buy");
+    if (key === "HOLD") return cssVar("--hold");
+    if (key === "SELL") return cssVar("--sell");
+    if (key === "STRONG SELL") return cssVar("--strong-sell");
+    return cssVar("--muted");
+  }
+
+  function drawPriceChart(canvas, chart) {
+    const prices = (chart && chart.prices) || [];
+    const obs = ((chart && chart.observations) || []).filter(o => isFinite(dateMs(o.date)) && typeof o.price === "number");
+    const wrap = canvas.parentElement;
+    const dpr = Math.min(window.devicePixelRatio || 1, 2);
+    const cssW = Math.max(280, wrap.clientWidth || 640);
+    const cssH = Math.max(180, wrap.clientHeight || 300);
+    canvas.width = Math.round(cssW * dpr);
+    canvas.height = Math.round(cssH * dpr);
+    canvas.style.width = "100%";
+    canvas.style.height = "100%";
+    const ctx = canvas.getContext("2d");
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    ctx.clearRect(0, 0, cssW, cssH);
+    const padL = 56, padR = 12, padT = 12, padB = 26;
+    if (prices.length < 2) {
+      ctx.fillStyle = cssVar("--muted");
+      ctx.font = "13px Helvetica, Arial, sans-serif";
+      ctx.fillText("Price series unavailable", padL, padT + 24);
+      canvas._layout = null;
+      return;
+    }
+    const xs = prices.map(p => dateMs(p.date)).concat(obs.map(o => dateMs(o.date))).filter(v => isFinite(v));
+    const minX = Math.min.apply(null, xs);
+    const maxX = Math.max.apply(null, xs);
+    const ys = prices.map(p => p.price).concat(obs.map(o => o.price));
+    let minY = Math.min.apply(null, ys);
+    let maxY = Math.max.apply(null, ys);
+    const spanY = (maxY - minY) || 1;
+    minY -= spanY * 0.06;
+    maxY += spanY * 0.06;
+    const plotW = cssW - padL - padR;
+    const plotH = cssH - padT - padB;
+    const xOf = (ms) => padL + ((ms - minX) / ((maxX - minX) || 1)) * plotW;
+    const yOf = (v) => padT + (1 - (v - minY) / (maxY - minY)) * plotH;
+    ctx.strokeStyle = cssVar("--rule");
+    ctx.lineWidth = 1;
+    ctx.fillStyle = cssVar("--muted");
+    ctx.font = "11px Helvetica, Arial, sans-serif";
+    ctx.textAlign = "right";
+    ctx.textBaseline = "middle";
+    for (let i = 0; i <= 4; i++) {
+      const v = minY + (maxY - minY) * (i / 4);
+      const y = yOf(v);
+      ctx.beginPath();
+      ctx.moveTo(padL, y);
+      ctx.lineTo(padL + plotW, y);
+      ctx.stroke();
+      ctx.fillText(fmtPrice(v), padL - 6, y);
+    }
+    ctx.textAlign = "center";
+    ctx.textBaseline = "alphabetic";
+    [0, 0.5, 1].forEach((t) => {
+      const ms = minX + (maxX - minX) * t;
+      ctx.fillText(String(new Date(ms).getUTCFullYear()), xOf(ms), cssH - 6);
+    });
+    ctx.beginPath();
+    prices.forEach((p, i) => {
+      const x = xOf(dateMs(p.date));
+      const y = yOf(p.price);
+      if (i === 0) ctx.moveTo(x, y); else ctx.lineTo(x, y);
+    });
+    ctx.strokeStyle = cssVar("--muted");
+    ctx.lineWidth = 1.5;
+    ctx.stroke();
+    const saved = obs.slice().sort((a, b) => a.date < b.date ? -1 : a.date > b.date ? 1 : 0);
+    ctx.lineWidth = 2.5;
+    ctx.lineCap = "round";
+    for (let i = 0; i < saved.length - 1; i++) {
+      const a = saved[i], b = saved[i + 1];
+      ctx.beginPath();
+      ctx.moveTo(xOf(dateMs(a.date)), yOf(a.price));
+      ctx.lineTo(xOf(dateMs(b.date)), yOf(b.price));
+      ctx.strokeStyle = signalColor(a.signal);
+      ctx.stroke();
+    }
+    saved.forEach((o) => {
+      const x = xOf(dateMs(o.date)), y = yOf(o.price);
+      ctx.beginPath();
+      ctx.arc(x, y, 5.5, 0, Math.PI * 2);
+      ctx.fillStyle = signalColor(o.signal);
+      ctx.fill();
+      ctx.lineWidth = 1.5;
+      ctx.strokeStyle = cssVar("--bg");
+      ctx.stroke();
+    });
+    const hits = prices.map(p => ({ x: xOf(dateMs(p.date)), y: yOf(p.price), kind: "price", item: p }));
+    saved.forEach(o => hits.push({ x: xOf(dateMs(o.date)), y: yOf(o.price), kind: "signal", item: o }));
+    canvas._layout = { hits: hits };
+  }
+
+  function bindPriceHover(canvas) {
+    if (canvas._bound) return;
+    canvas._bound = true;
+    const tip = $("price-tip");
+    function show(hit, clientX, clientY) {
+      const rect = canvas.getBoundingClientRect();
+      let html;
+      if (hit.kind === "signal") {
+        const o = hit.item;
+        const score = (o.score >= 0 ? "+" : "") + Number(o.score).toFixed(2);
+        html = "<strong>" + esc(o.signal) + " (" + score + ")</strong><br>" +
+          esc(fmtDay(o.date)) + "<br>Price " + esc(fmtPrice(o.price)) +
+          " · Shiller month " + esc(fmtMonth(o.price_as_of));
+      } else {
+        html = esc(fmtMonth(hit.item.date)) + " · " + esc(fmtPrice(hit.item.price)) +
+          "<br>Signal history unavailable";
+      }
+      tip.innerHTML = html;
+      tip.hidden = false;
+      const tw = tip.offsetWidth, th = tip.offsetHeight;
+      let left = clientX - rect.left + 12;
+      let top = clientY - rect.top + 12;
+      if (left + tw > rect.width - 4) left = Math.max(4, clientX - rect.left - tw - 12);
+      if (top + th > rect.height - 4) top = Math.max(4, clientY - rect.top - th - 12);
+      tip.style.left = left + "px";
+      tip.style.top = top + "px";
+    }
+    function pick(ev) {
+      const layout = canvas._layout;
+      if (!layout) { tip.hidden = true; return; }
+      const rect = canvas.getBoundingClientRect();
+      const x = ev.clientX - rect.left;
+      const y = ev.clientY - rect.top;
+      let best = null, bestD = 18;
+      layout.hits.forEach((hit) => {
+        const d = Math.hypot(hit.x - x, hit.y - y);
+        const limit = hit.kind === "signal" ? 16 : 12;
+        if (d < limit && (best == null || hit.kind === "signal" && best.kind !== "signal" || d < bestD)) {
+          best = hit; bestD = d;
+        }
+      });
+      if (!best) { tip.hidden = true; return; }
+      show(best, ev.clientX, ev.clientY);
+    }
+    canvas.addEventListener("pointermove", pick);
+    canvas.addEventListener("pointerleave", () => { tip.hidden = true; });
+  }
+
+  function renderPrice(chart) {
+    const card = $("price-card");
+    card.hidden = false;
+    const note = $("price-note");
+    if (!chart || !(chart.prices || []).length) {
+      note.textContent = "S&P price series is unavailable, so the chart is not drawn. No composite history is estimated.";
+      $("price-latest").textContent = "";
+      return;
+    }
+    const start = chart.tracking_started ? fmtDay(chart.tracking_started) : "";
+    note.textContent = (chart.disclaimer || note.textContent) + (start ? " Tracking starts " + start + "." : "");
+    const swatches = [
+      ["No saved signal", cssVar("--muted")],
+      ["Strong Buy", cssVar("--strong-buy")],
+      ["Buy", cssVar("--buy")],
+      ["Hold", cssVar("--hold")],
+      ["Sell", cssVar("--sell")],
+      ["Strong Sell", cssVar("--strong-sell")],
+    ];
+    $("price-legend").innerHTML = swatches.map(([lab, col]) =>
+      `<span class="sw"><i style="background:${col}"></i> ${esc(lab)}</span>`).join("");
+    const saved = chart.observations || [];
+    const latest = saved.length ? saved[saved.length - 1] : null;
+    $("price-latest").textContent = latest
+      ? ("Latest saved signal: " + latest.signal + " (" + (latest.score >= 0 ? "+" : "") + Number(latest.score).toFixed(2) +
+        ") on " + fmtDay(latest.date) + ". Price " + fmtPrice(latest.price) +
+        " is the Shiller monthly average as of " + fmtMonth(latest.price_as_of) + ", not a daily close.")
+      : "No composite has been saved yet. The price line stays gray until the first reading.";
+    const src = $("price-src");
+    src.innerHTML = chart.source_url
+      ? ('Source: <a href="' + esc(chart.source_url) + '" target="_blank" rel="noopener">' + esc(chart.source_name || "Shiller") + "</a>")
+      : esc(chart.source_name || "");
+    const canvas = $("price-chart");
+    bindPriceHover(canvas);
+    requestAnimationFrame(() => drawPriceChart(canvas, chart));
+  }
+  window.addEventListener("resize", () => {
+    if (lastData && lastData.price_chart) drawPriceChart($("price-chart"), lastData.price_chart);
+  });
+
   function render(data) {
-    // Retired gauge id meanrev must not render from a stale JSON file.
-    const models = (data.models || []).filter(m => m && m.id !== "meanrev");
+    // Retired ids must not render from a stale JSON file.
+    const models = (data.models || []).filter(m => m && !RETIRED_GAUGES.has(m.id));
     const comp = data.composite || {};
     const rp = data.recession_probability || {};
     $("summary").hidden = false;
@@ -496,6 +734,8 @@
       });
     });
 
+    renderPrice(data.price_chart);
+
     const nOk = models.filter(m => m.status === "ok" || m.status === "substitute").length;
     const nSub = models.filter(m => m.status === "substitute").length;
     const nNa = models.filter(m => m.status === "unavailable").length;
@@ -508,7 +748,7 @@
   fetch("data/gauges.json", { cache: "no-cache" }).then(r => {
     if (!r.ok) throw new Error("HTTP " + r.status);
     return r.json();
-  }).then(render).catch(e => {
+  }).then(data => { lastData = data; render(data); }).catch(e => {
     $("status").innerHTML = `<span class="pill err">Could not load gauges</span>`;
     console.warn(e);
   });

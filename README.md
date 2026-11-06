@@ -13,7 +13,9 @@ python3 scripts/build_gauges.py
 /workspace/.pwvenv/bin/python scripts/build_gauges.py
 ```
 
-A weekday GitHub Action (`.github/workflows/gauges-daily.yml`) rebuilds and commits the JSON after the US close. The full rebuild is also intended for the monthly data-refresh routine (16th). Both paths run `scripts/build_gauges.py`, which scores 13 models at valuation 50% / recession 25% / sentiment 25%. Mean Reversion (`meanrev`) is retired: it is not built, not restored from an older `data/gauges.json`, and not included in category or composite scores.
+A weekday GitHub Action (`.github/workflows/gauges-daily.yml`) rebuilds and commits the JSON after the US close. The full rebuild is also intended for the monthly data-refresh routine (16th). Both paths run `scripts/build_gauges.py`, which scores 12 models at valuation 50% / recession 25% / sentiment 25%. Mean Reversion (`meanrev`) and Price/Sales (`ps`) are retired: they are not built, not restored from an older `data/gauges.json`, and not included in category or composite scores.
+
+The S&P price chart on that page is not a reconstructed backtest. Live z-scores use each series' full sample through the latest point, and several inputs are revised vintages, so past signals are not estimated. `data/gauge_signal_history.json` stores each successful composite from the day it is first saved (one row per date, never rewritten). The price line is Robert Shiller's monthly average S&P price, kept as first stored. Months before the first saved reading are drawn in gray. Colored marks are those saved readings, not strategy returns. The daily workflow commits the history file with `data/gauges.json`.
 
 ## Adding a chart to the Charts tab
 

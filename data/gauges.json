@@ -697,27 +697,6 @@
       "window": "z-score vs history since 1990-01"
     },
     {
-      "id": "ps",
-      "name": "Price / Sales Ratio",
-      "category": "valuation",
-      "desc": "S&P 500 price-to-sales.",
-      "value": null,
-      "value_display": "\u2014",
-      "unit": "",
-      "sd": null,
-      "direction": 1,
-      "direction_note": "",
-      "as_of": null,
-      "status": "unavailable",
-      "unavailable_reason": "No free redistributable S&P 500 price-to-sales series found (index-level sales data is proprietary). Card left as a placeholder.",
-      "substitute_of": null,
-      "substitute_note": null,
-      "source_name": "\u2014",
-      "source_url": "",
-      "history": [],
-      "window": null
-    },
-    {
       "id": "interest",
       "name": "Interest Rate Model",
       "category": "valuation",
@@ -6333,6 +6312,1548 @@
     "Weights: Valuation 50%, Recession 25%, Sentiment 25%.",
     "Signal map: \u2264\u22121.5 Strong Buy; \u2264\u22120.5 Buy; \u22640.5 Hold; \u22641.5 Sell; else Strong Sell.",
     "ICE BofA HY OAS is not redistributed (FRED Pre-Approval Required); Baa\u221210Y is the labeled substitute.",
-    "Price/Sales has no free redistributable source and is shown as unavailable."
-  ]
+    "Price/Sales had no free redistributable source and has been removed. It is not scored.",
+    "The S&P price chart colors only composite readings saved in gauge_signal_history.json. Earlier prices are context. No historical signal is estimated."
+  ],
+  "price_chart": {
+    "title": "S&P 500 and the saved composite signal",
+    "frequency": "monthly",
+    "price_kind": "shiller_monthly_average",
+    "source_name": "Robert J. Shiller, Irrational Exuberance data (monthly average price)",
+    "source_url": "https://shillerdata.com/",
+    "tracking_started": "2026-11-06",
+    "history_unavailable_before": "2026-11-06",
+    "disclaimer": "Signal tracking starts on the first date a composite was saved. Prices before that are shown in gray because no composite history was saved, and none is estimated. The line is Shiller's monthly average S&P price as first stored here, not a daily close and not an intraday quote. Stored months are not rewritten when Shiller revises them. Colored marks are saved gauge readings at the price then on file. This chart illustrates those readings. It is not a backtest of strategy returns.",
+    "prices": [
+      {
+        "date": "1996-01",
+        "price": 614.42
+      },
+      {
+        "date": "1996-02",
+        "price": 649.54
+      },
+      {
+        "date": "1996-03",
+        "price": 647.07
+      },
+      {
+        "date": "1996-04",
+        "price": 647.17
+      },
+      {
+        "date": "1996-05",
+        "price": 661.23
+      },
+      {
+        "date": "1996-06",
+        "price": 668.5
+      },
+      {
+        "date": "1996-07",
+        "price": 644.07
+      },
+      {
+        "date": "1996-08",
+        "price": 662.68
+      },
+      {
+        "date": "1996-09",
+        "price": 674.88
+      },
+      {
+        "date": "1996-10",
+        "price": 701.46
+      },
+      {
+        "date": "1996-11",
+        "price": 735.67
+      },
+      {
+        "date": "1996-12",
+        "price": 743.25
+      },
+      {
+        "date": "1997-01",
+        "price": 766.22
+      },
+      {
+        "date": "1997-02",
+        "price": 798.39
+      },
+      {
+        "date": "1997-03",
+        "price": 792.16
+      },
+      {
+        "date": "1997-04",
+        "price": 763.93
+      },
+      {
+        "date": "1997-05",
+        "price": 833.09
+      },
+      {
+        "date": "1997-06",
+        "price": 876.29
+      },
+      {
+        "date": "1997-07",
+        "price": 925.29
+      },
+      {
+        "date": "1997-08",
+        "price": 927.24
+      },
+      {
+        "date": "1997-09",
+        "price": 937.02
+      },
+      {
+        "date": "1997-10",
+        "price": 951.16
+      },
+      {
+        "date": "1997-11",
+        "price": 938.92
+      },
+      {
+        "date": "1997-12",
+        "price": 962.37
+      },
+      {
+        "date": "1998-01",
+        "price": 963.36
+      },
+      {
+        "date": "1998-02",
+        "price": 1023.74
+      },
+      {
+        "date": "1998-03",
+        "price": 1076.83
+      },
+      {
+        "date": "1998-04",
+        "price": 1112.2
+      },
+      {
+        "date": "1998-05",
+        "price": 1108.42
+      },
+      {
+        "date": "1998-06",
+        "price": 1108.39
+      },
+      {
+        "date": "1998-07",
+        "price": 1156.58
+      },
+      {
+        "date": "1998-08",
+        "price": 1074.62
+      },
+      {
+        "date": "1998-09",
+        "price": 1020.64
+      },
+      {
+        "date": "1998-10",
+        "price": 1032.47
+      },
+      {
+        "date": "1998-11",
+        "price": 1144.43
+      },
+      {
+        "date": "1998-12",
+        "price": 1190.05
+      },
+      {
+        "date": "1999-01",
+        "price": 1248.77
+      },
+      {
+        "date": "1999-02",
+        "price": 1246.58
+      },
+      {
+        "date": "1999-03",
+        "price": 1281.66
+      },
+      {
+        "date": "1999-04",
+        "price": 1334.76
+      },
+      {
+        "date": "1999-05",
+        "price": 1332.07
+      },
+      {
+        "date": "1999-06",
+        "price": 1322.55
+      },
+      {
+        "date": "1999-07",
+        "price": 1380.99
+      },
+      {
+        "date": "1999-08",
+        "price": 1327.49
+      },
+      {
+        "date": "1999-09",
+        "price": 1318.17
+      },
+      {
+        "date": "1999-10",
+        "price": 1300.01
+      },
+      {
+        "date": "1999-11",
+        "price": 1391.0
+      },
+      {
+        "date": "1999-12",
+        "price": 1428.68
+      },
+      {
+        "date": "2000-01",
+        "price": 1425.59
+      },
+      {
+        "date": "2000-02",
+        "price": 1388.87
+      },
+      {
+        "date": "2000-03",
+        "price": 1442.21
+      },
+      {
+        "date": "2000-04",
+        "price": 1461.36
+      },
+      {
+        "date": "2000-05",
+        "price": 1418.48
+      },
+      {
+        "date": "2000-06",
+        "price": 1461.96
+      },
+      {
+        "date": "2000-07",
+        "price": 1473.0
+      },
+      {
+        "date": "2000-08",
+        "price": 1485.46
+      },
+      {
+        "date": "2000-09",
+        "price": 1468.05
+      },
+      {
+        "date": "2000-10",
+        "price": 1390.14
+      },
+      {
+        "date": "2000-11",
+        "price": 1378.04
+      },
+      {
+        "date": "2000-12",
+        "price": 1330.93
+      },
+      {
+        "date": "2001-01",
+        "price": 1335.63
+      },
+      {
+        "date": "2001-02",
+        "price": 1305.75
+      },
+      {
+        "date": "2001-03",
+        "price": 1185.85
+      },
+      {
+        "date": "2001-04",
+        "price": 1189.84
+      },
+      {
+        "date": "2001-05",
+        "price": 1270.37
+      },
+      {
+        "date": "2001-06",
+        "price": 1238.71
+      },
+      {
+        "date": "2001-07",
+        "price": 1204.45
+      },
+      {
+        "date": "2001-08",
+        "price": 1178.5
+      },
+      {
+        "date": "2001-09",
+        "price": 1044.64
+      },
+      {
+        "date": "2001-10",
+        "price": 1076.59
+      },
+      {
+        "date": "2001-11",
+        "price": 1129.68
+      },
+      {
+        "date": "2001-12",
+        "price": 1144.93
+      },
+      {
+        "date": "2002-01",
+        "price": 1140.21
+      },
+      {
+        "date": "2002-02",
+        "price": 1100.67
+      },
+      {
+        "date": "2002-03",
+        "price": 1153.79
+      },
+      {
+        "date": "2002-04",
+        "price": 1111.93
+      },
+      {
+        "date": "2002-05",
+        "price": 1079.25
+      },
+      {
+        "date": "2002-06",
+        "price": 1014.02
+      },
+      {
+        "date": "2002-07",
+        "price": 903.59
+      },
+      {
+        "date": "2002-08",
+        "price": 912.55
+      },
+      {
+        "date": "2002-09",
+        "price": 867.81
+      },
+      {
+        "date": "2002-10",
+        "price": 854.63
+      },
+      {
+        "date": "2002-11",
+        "price": 909.93
+      },
+      {
+        "date": "2002-12",
+        "price": 899.18
+      },
+      {
+        "date": "2003-01",
+        "price": 895.84
+      },
+      {
+        "date": "2003-02",
+        "price": 837.03
+      },
+      {
+        "date": "2003-03",
+        "price": 846.63
+      },
+      {
+        "date": "2003-04",
+        "price": 890.03
+      },
+      {
+        "date": "2003-05",
+        "price": 935.96
+      },
+      {
+        "date": "2003-06",
+        "price": 988.0
+      },
+      {
+        "date": "2003-07",
+        "price": 992.54
+      },
+      {
+        "date": "2003-08",
+        "price": 989.53
+      },
+      {
+        "date": "2003-09",
+        "price": 1019.44
+      },
+      {
+        "date": "2003-10",
+        "price": 1038.73
+      },
+      {
+        "date": "2003-11",
+        "price": 1049.9
+      },
+      {
+        "date": "2003-12",
+        "price": 1080.64
+      },
+      {
+        "date": "2004-01",
+        "price": 1132.52
+      },
+      {
+        "date": "2004-02",
+        "price": 1143.36
+      },
+      {
+        "date": "2004-03",
+        "price": 1123.98
+      },
+      {
+        "date": "2004-04",
+        "price": 1133.36
+      },
+      {
+        "date": "2004-05",
+        "price": 1102.78
+      },
+      {
+        "date": "2004-06",
+        "price": 1132.76
+      },
+      {
+        "date": "2004-07",
+        "price": 1105.85
+      },
+      {
+        "date": "2004-08",
+        "price": 1088.94
+      },
+      {
+        "date": "2004-09",
+        "price": 1117.66
+      },
+      {
+        "date": "2004-10",
+        "price": 1117.21
+      },
+      {
+        "date": "2004-11",
+        "price": 1168.94
+      },
+      {
+        "date": "2004-12",
+        "price": 1199.21
+      },
+      {
+        "date": "2005-01",
+        "price": 1181.41
+      },
+      {
+        "date": "2005-02",
+        "price": 1199.63
+      },
+      {
+        "date": "2005-03",
+        "price": 1194.9
+      },
+      {
+        "date": "2005-04",
+        "price": 1164.43
+      },
+      {
+        "date": "2005-05",
+        "price": 1178.28
+      },
+      {
+        "date": "2005-06",
+        "price": 1202.25
+      },
+      {
+        "date": "2005-07",
+        "price": 1222.24
+      },
+      {
+        "date": "2005-08",
+        "price": 1224.27
+      },
+      {
+        "date": "2005-09",
+        "price": 1225.92
+      },
+      {
+        "date": "2005-10",
+        "price": 1191.96
+      },
+      {
+        "date": "2005-11",
+        "price": 1237.37
+      },
+      {
+        "date": "2005-12",
+        "price": 1262.07
+      },
+      {
+        "date": "2006-01",
+        "price": 1278.73
+      },
+      {
+        "date": "2006-02",
+        "price": 1276.65
+      },
+      {
+        "date": "2006-03",
+        "price": 1293.74
+      },
+      {
+        "date": "2006-04",
+        "price": 1302.17
+      },
+      {
+        "date": "2006-05",
+        "price": 1290.01
+      },
+      {
+        "date": "2006-06",
+        "price": 1253.17
+      },
+      {
+        "date": "2006-07",
+        "price": 1260.24
+      },
+      {
+        "date": "2006-08",
+        "price": 1287.15
+      },
+      {
+        "date": "2006-09",
+        "price": 1317.74
+      },
+      {
+        "date": "2006-10",
+        "price": 1363.38
+      },
+      {
+        "date": "2006-11",
+        "price": 1388.64
+      },
+      {
+        "date": "2006-12",
+        "price": 1416.42
+      },
+      {
+        "date": "2007-01",
+        "price": 1424.16
+      },
+      {
+        "date": "2007-02",
+        "price": 1444.8
+      },
+      {
+        "date": "2007-03",
+        "price": 1406.95
+      },
+      {
+        "date": "2007-04",
+        "price": 1463.64
+      },
+      {
+        "date": "2007-05",
+        "price": 1511.14
+      },
+      {
+        "date": "2007-06",
+        "price": 1514.19
+      },
+      {
+        "date": "2007-07",
+        "price": 1520.71
+      },
+      {
+        "date": "2007-08",
+        "price": 1454.62
+      },
+      {
+        "date": "2007-09",
+        "price": 1497.12
+      },
+      {
+        "date": "2007-10",
+        "price": 1539.66
+      },
+      {
+        "date": "2007-11",
+        "price": 1463.39
+      },
+      {
+        "date": "2007-12",
+        "price": 1479.22
+      },
+      {
+        "date": "2008-01",
+        "price": 1378.76
+      },
+      {
+        "date": "2008-02",
+        "price": 1354.87
+      },
+      {
+        "date": "2008-03",
+        "price": 1316.94
+      },
+      {
+        "date": "2008-04",
+        "price": 1370.47
+      },
+      {
+        "date": "2008-05",
+        "price": 1403.22
+      },
+      {
+        "date": "2008-06",
+        "price": 1341.25
+      },
+      {
+        "date": "2008-07",
+        "price": 1257.33
+      },
+      {
+        "date": "2008-08",
+        "price": 1281.47
+      },
+      {
+        "date": "2008-09",
+        "price": 1216.95
+      },
+      {
+        "date": "2008-10",
+        "price": 968.8
+      },
+      {
+        "date": "2008-11",
+        "price": 883.04
+      },
+      {
+        "date": "2008-12",
+        "price": 877.56
+      },
+      {
+        "date": "2009-01",
+        "price": 865.58
+      },
+      {
+        "date": "2009-02",
+        "price": 805.23
+      },
+      {
+        "date": "2009-03",
+        "price": 757.13
+      },
+      {
+        "date": "2009-04",
+        "price": 848.15
+      },
+      {
+        "date": "2009-05",
+        "price": 902.41
+      },
+      {
+        "date": "2009-06",
+        "price": 926.12
+      },
+      {
+        "date": "2009-07",
+        "price": 935.82
+      },
+      {
+        "date": "2009-08",
+        "price": 1009.73
+      },
+      {
+        "date": "2009-09",
+        "price": 1044.55
+      },
+      {
+        "date": "2009-10",
+        "price": 1067.66
+      },
+      {
+        "date": "2009-11",
+        "price": 1088.07
+      },
+      {
+        "date": "2009-12",
+        "price": 1110.38
+      },
+      {
+        "date": "2010-01",
+        "price": 1123.58
+      },
+      {
+        "date": "2010-02",
+        "price": 1089.16
+      },
+      {
+        "date": "2010-03",
+        "price": 1152.05
+      },
+      {
+        "date": "2010-04",
+        "price": 1197.32
+      },
+      {
+        "date": "2010-05",
+        "price": 1125.06
+      },
+      {
+        "date": "2010-06",
+        "price": 1083.36
+      },
+      {
+        "date": "2010-07",
+        "price": 1079.8
+      },
+      {
+        "date": "2010-08",
+        "price": 1087.28
+      },
+      {
+        "date": "2010-09",
+        "price": 1122.08
+      },
+      {
+        "date": "2010-10",
+        "price": 1171.58
+      },
+      {
+        "date": "2010-11",
+        "price": 1198.89
+      },
+      {
+        "date": "2010-12",
+        "price": 1241.53
+      },
+      {
+        "date": "2011-01",
+        "price": 1282.62
+      },
+      {
+        "date": "2011-02",
+        "price": 1321.12
+      },
+      {
+        "date": "2011-03",
+        "price": 1304.49
+      },
+      {
+        "date": "2011-04",
+        "price": 1331.51
+      },
+      {
+        "date": "2011-05",
+        "price": 1338.31
+      },
+      {
+        "date": "2011-06",
+        "price": 1287.29
+      },
+      {
+        "date": "2011-07",
+        "price": 1325.19
+      },
+      {
+        "date": "2011-08",
+        "price": 1185.31
+      },
+      {
+        "date": "2011-09",
+        "price": 1173.88
+      },
+      {
+        "date": "2011-10",
+        "price": 1207.22
+      },
+      {
+        "date": "2011-11",
+        "price": 1226.42
+      },
+      {
+        "date": "2011-12",
+        "price": 1243.32
+      },
+      {
+        "date": "2012-01",
+        "price": 1300.58
+      },
+      {
+        "date": "2012-02",
+        "price": 1352.49
+      },
+      {
+        "date": "2012-03",
+        "price": 1389.24
+      },
+      {
+        "date": "2012-04",
+        "price": 1386.43
+      },
+      {
+        "date": "2012-05",
+        "price": 1341.27
+      },
+      {
+        "date": "2012-06",
+        "price": 1323.48
+      },
+      {
+        "date": "2012-07",
+        "price": 1359.78
+      },
+      {
+        "date": "2012-08",
+        "price": 1403.45
+      },
+      {
+        "date": "2012-09",
+        "price": 1443.42
+      },
+      {
+        "date": "2012-10",
+        "price": 1437.82
+      },
+      {
+        "date": "2012-11",
+        "price": 1394.51
+      },
+      {
+        "date": "2012-12",
+        "price": 1422.29
+      },
+      {
+        "date": "2013-01",
+        "price": 1480.4
+      },
+      {
+        "date": "2013-02",
+        "price": 1512.31
+      },
+      {
+        "date": "2013-03",
+        "price": 1550.83
+      },
+      {
+        "date": "2013-04",
+        "price": 1570.7
+      },
+      {
+        "date": "2013-05",
+        "price": 1639.84
+      },
+      {
+        "date": "2013-06",
+        "price": 1618.77
+      },
+      {
+        "date": "2013-07",
+        "price": 1668.68
+      },
+      {
+        "date": "2013-08",
+        "price": 1670.09
+      },
+      {
+        "date": "2013-09",
+        "price": 1687.17
+      },
+      {
+        "date": "2013-10",
+        "price": 1720.03
+      },
+      {
+        "date": "2013-11",
+        "price": 1783.54
+      },
+      {
+        "date": "2013-12",
+        "price": 1807.78
+      },
+      {
+        "date": "2014-01",
+        "price": 1822.36
+      },
+      {
+        "date": "2014-02",
+        "price": 1817.04
+      },
+      {
+        "date": "2014-03",
+        "price": 1863.52
+      },
+      {
+        "date": "2014-04",
+        "price": 1864.26
+      },
+      {
+        "date": "2014-05",
+        "price": 1889.77
+      },
+      {
+        "date": "2014-06",
+        "price": 1947.09
+      },
+      {
+        "date": "2014-07",
+        "price": 1973.1
+      },
+      {
+        "date": "2014-08",
+        "price": 1961.53
+      },
+      {
+        "date": "2014-09",
+        "price": 1993.23
+      },
+      {
+        "date": "2014-10",
+        "price": 1937.27
+      },
+      {
+        "date": "2014-11",
+        "price": 2044.57
+      },
+      {
+        "date": "2014-12",
+        "price": 2054.27
+      },
+      {
+        "date": "2015-01",
+        "price": 2028.18
+      },
+      {
+        "date": "2015-02",
+        "price": 2082.2
+      },
+      {
+        "date": "2015-03",
+        "price": 2079.99
+      },
+      {
+        "date": "2015-04",
+        "price": 2094.86
+      },
+      {
+        "date": "2015-05",
+        "price": 2111.94
+      },
+      {
+        "date": "2015-06",
+        "price": 2099.29
+      },
+      {
+        "date": "2015-07",
+        "price": 2094.14
+      },
+      {
+        "date": "2015-08",
+        "price": 2039.87
+      },
+      {
+        "date": "2015-09",
+        "price": 1944.41
+      },
+      {
+        "date": "2015-10",
+        "price": 2024.81
+      },
+      {
+        "date": "2015-11",
+        "price": 2080.62
+      },
+      {
+        "date": "2015-12",
+        "price": 2054.08
+      },
+      {
+        "date": "2016-01",
+        "price": 1918.6
+      },
+      {
+        "date": "2016-02",
+        "price": 1904.42
+      },
+      {
+        "date": "2016-03",
+        "price": 2021.95
+      },
+      {
+        "date": "2016-04",
+        "price": 2075.54
+      },
+      {
+        "date": "2016-05",
+        "price": 2065.55
+      },
+      {
+        "date": "2016-06",
+        "price": 2083.89
+      },
+      {
+        "date": "2016-07",
+        "price": 2148.9
+      },
+      {
+        "date": "2016-08",
+        "price": 2170.95
+      },
+      {
+        "date": "2016-09",
+        "price": 2157.69
+      },
+      {
+        "date": "2016-10",
+        "price": 2143.02
+      },
+      {
+        "date": "2016-11",
+        "price": 2164.99
+      },
+      {
+        "date": "2016-12",
+        "price": 2246.63
+      },
+      {
+        "date": "2017-01",
+        "price": 2275.12
+      },
+      {
+        "date": "2017-02",
+        "price": 2329.91
+      },
+      {
+        "date": "2017-03",
+        "price": 2366.82
+      },
+      {
+        "date": "2017-04",
+        "price": 2359.31
+      },
+      {
+        "date": "2017-05",
+        "price": 2395.35
+      },
+      {
+        "date": "2017-06",
+        "price": 2433.99
+      },
+      {
+        "date": "2017-07",
+        "price": 2454.1
+      },
+      {
+        "date": "2017-08",
+        "price": 2456.22
+      },
+      {
+        "date": "2017-09",
+        "price": 2492.84
+      },
+      {
+        "date": "2017-10",
+        "price": 2557.0
+      },
+      {
+        "date": "2017-11",
+        "price": 2593.61
+      },
+      {
+        "date": "2017-12",
+        "price": 2664.34
+      },
+      {
+        "date": "2018-01",
+        "price": 2789.8
+      },
+      {
+        "date": "2018-02",
+        "price": 2705.16
+      },
+      {
+        "date": "2018-03",
+        "price": 2702.77
+      },
+      {
+        "date": "2018-04",
+        "price": 2653.63
+      },
+      {
+        "date": "2018-05",
+        "price": 2701.49
+      },
+      {
+        "date": "2018-06",
+        "price": 2754.35
+      },
+      {
+        "date": "2018-07",
+        "price": 2793.64
+      },
+      {
+        "date": "2018-08",
+        "price": 2857.82
+      },
+      {
+        "date": "2018-09",
+        "price": 2901.5
+      },
+      {
+        "date": "2018-10",
+        "price": 2785.46
+      },
+      {
+        "date": "2018-11",
+        "price": 2723.23
+      },
+      {
+        "date": "2018-12",
+        "price": 2567.31
+      },
+      {
+        "date": "2019-01",
+        "price": 2607.39
+      },
+      {
+        "date": "2019-02",
+        "price": 2754.86
+      },
+      {
+        "date": "2019-03",
+        "price": 2803.98
+      },
+      {
+        "date": "2019-04",
+        "price": 2903.8
+      },
+      {
+        "date": "2019-05",
+        "price": 2854.71
+      },
+      {
+        "date": "2019-06",
+        "price": 2890.17
+      },
+      {
+        "date": "2019-07",
+        "price": 2996.11
+      },
+      {
+        "date": "2019-08",
+        "price": 2897.5
+      },
+      {
+        "date": "2019-09",
+        "price": 2982.16
+      },
+      {
+        "date": "2019-10",
+        "price": 2977.68
+      },
+      {
+        "date": "2019-11",
+        "price": 3104.9
+      },
+      {
+        "date": "2019-12",
+        "price": 3176.75
+      },
+      {
+        "date": "2020-01",
+        "price": 3278.2
+      },
+      {
+        "date": "2020-02",
+        "price": 3277.31
+      },
+      {
+        "date": "2020-03",
+        "price": 2652.39
+      },
+      {
+        "date": "2020-04",
+        "price": 2761.98
+      },
+      {
+        "date": "2020-05",
+        "price": 2919.61
+      },
+      {
+        "date": "2020-06",
+        "price": 3104.66
+      },
+      {
+        "date": "2020-07",
+        "price": 3207.62
+      },
+      {
+        "date": "2020-08",
+        "price": 3391.71
+      },
+      {
+        "date": "2020-09",
+        "price": 3365.52
+      },
+      {
+        "date": "2020-10",
+        "price": 3418.7
+      },
+      {
+        "date": "2020-11",
+        "price": 3548.99
+      },
+      {
+        "date": "2020-12",
+        "price": 3695.31
+      },
+      {
+        "date": "2021-01",
+        "price": 3793.75
+      },
+      {
+        "date": "2021-02",
+        "price": 3883.43
+      },
+      {
+        "date": "2021-03",
+        "price": 3910.51
+      },
+      {
+        "date": "2021-04",
+        "price": 4141.18
+      },
+      {
+        "date": "2021-05",
+        "price": 4167.85
+      },
+      {
+        "date": "2021-06",
+        "price": 4238.49
+      },
+      {
+        "date": "2021-07",
+        "price": 4363.71
+      },
+      {
+        "date": "2021-08",
+        "price": 4454.21
+      },
+      {
+        "date": "2021-09",
+        "price": 4445.54
+      },
+      {
+        "date": "2021-10",
+        "price": 4460.71
+      },
+      {
+        "date": "2021-11",
+        "price": 4667.39
+      },
+      {
+        "date": "2021-12",
+        "price": 4674.77
+      },
+      {
+        "date": "2022-01",
+        "price": 4573.82
+      },
+      {
+        "date": "2022-02",
+        "price": 4435.98
+      },
+      {
+        "date": "2022-03",
+        "price": 4391.27
+      },
+      {
+        "date": "2022-04",
+        "price": 4391.3
+      },
+      {
+        "date": "2022-05",
+        "price": 4040.36
+      },
+      {
+        "date": "2022-06",
+        "price": 3898.95
+      },
+      {
+        "date": "2022-07",
+        "price": 3911.73
+      },
+      {
+        "date": "2022-08",
+        "price": 4158.56
+      },
+      {
+        "date": "2022-09",
+        "price": 3850.52
+      },
+      {
+        "date": "2022-10",
+        "price": 3726.05
+      },
+      {
+        "date": "2022-11",
+        "price": 3917.49
+      },
+      {
+        "date": "2022-12",
+        "price": 3912.38
+      },
+      {
+        "date": "2023-01",
+        "price": 3960.66
+      },
+      {
+        "date": "2023-02",
+        "price": 4079.68
+      },
+      {
+        "date": "2023-03",
+        "price": 3968.56
+      },
+      {
+        "date": "2023-04",
+        "price": 4121.47
+      },
+      {
+        "date": "2023-05",
+        "price": 4146.17
+      },
+      {
+        "date": "2023-06",
+        "price": 4345.37
+      },
+      {
+        "date": "2023-07",
+        "price": 4508.08
+      },
+      {
+        "date": "2023-08",
+        "price": 4457.36
+      },
+      {
+        "date": "2023-09",
+        "price": 4409.09
+      },
+      {
+        "date": "2023-10",
+        "price": 4269.4
+      },
+      {
+        "date": "2023-11",
+        "price": 4460.06
+      },
+      {
+        "date": "2023-12",
+        "price": 4685.05
+      },
+      {
+        "date": "2024-01",
+        "price": 4815.61
+      },
+      {
+        "date": "2024-02",
+        "price": 5011.96
+      },
+      {
+        "date": "2024-03",
+        "price": 5170.57
+      },
+      {
+        "date": "2024-04",
+        "price": 5112.49
+      },
+      {
+        "date": "2024-05",
+        "price": 5235.23
+      },
+      {
+        "date": "2024-06",
+        "price": 5415.14
+      },
+      {
+        "date": "2024-07",
+        "price": 5538.0
+      },
+      {
+        "date": "2024-08",
+        "price": 5478.21
+      },
+      {
+        "date": "2024-09",
+        "price": 5621.26
+      },
+      {
+        "date": "2024-10",
+        "price": 5792.32
+      },
+      {
+        "date": "2024-11",
+        "price": 5929.92
+      },
+      {
+        "date": "2024-12",
+        "price": 6010.91
+      },
+      {
+        "date": "2025-01",
+        "price": 5979.52
+      },
+      {
+        "date": "2025-02",
+        "price": 6038.69
+      },
+      {
+        "date": "2025-03",
+        "price": 5683.98
+      },
+      {
+        "date": "2025-04",
+        "price": 5369.5
+      },
+      {
+        "date": "2025-05",
+        "price": 5810.92
+      },
+      {
+        "date": "2025-06",
+        "price": 6029.95
+      },
+      {
+        "date": "2025-07",
+        "price": 6296.5
+      },
+      {
+        "date": "2025-08",
+        "price": 6408.95
+      },
+      {
+        "date": "2025-09",
+        "price": 6584.02
+      },
+      {
+        "date": "2025-10",
+        "price": 6735.69
+      },
+      {
+        "date": "2025-11",
+        "price": 6740.89
+      },
+      {
+        "date": "2025-12",
+        "price": 6853.03
+      },
+      {
+        "date": "2026-01",
+        "price": 6929.12
+      },
+      {
+        "date": "2026-02",
+        "price": 6893.81
+      },
+      {
+        "date": "2026-03",
+        "price": 6654.42
+      },
+      {
+        "date": "2026-04",
+        "price": 6957.01
+      },
+      {
+        "date": "2026-05",
+        "price": 7412.55
+      },
+      {
+        "date": "2026-06",
+        "price": 7450.03
+      },
+      {
+        "date": "2026-07",
+        "price": 7481.34
+      },
+      {
+        "date": "2026-08",
+        "price": 7711.32
+      },
+      {
+        "date": "2026-09",
+        "price": 7669.41
+      },
+      {
+        "date": "2026-10",
+        "price": 7722.72
+      }
+    ],
+    "observations": [
+      {
+        "date": "2026-11-06",
+        "observed_at": "2026-11-06T16:44:52+00:00",
+        "score": 0.52,
+        "signal": "SELL",
+        "signal_color": "#FF8A65",
+        "valuation_avg": 1.23,
+        "recession_avg": -0.01,
+        "sentiment_avg": -0.37,
+        "weights": {
+          "valuation": 0.5,
+          "recession": 0.25,
+          "sentiment": 0.25
+        },
+        "price": 7722.72,
+        "price_as_of": "2026-10",
+        "price_kind": "shiller_monthly_average",
+        "model_version": "v1:buffett,cape,interest,eyg,yieldcurve,sahm,statecoin,margin,junk,vix,epu,consumer",
+        "constituent_ids": [
+          "buffett",
+          "cape",
+          "interest",
+          "eyg",
+          "yieldcurve",
+          "sahm",
+          "statecoin",
+          "margin",
+          "junk",
+          "vix",
+          "epu",
+          "consumer"
+        ],
+        "inputs_as_of": {
+          "buffett": "2026-04-01",
+          "cape": "2026-10-30",
+          "interest": "2026-08-05",
+          "eyg": "2026-06-01",
+          "yieldcurve": "2026-11-05",
+          "sahm": "2026-10-01",
+          "statecoin": "2026-09-01",
+          "margin": "2026-09-01",
+          "junk": "2026-10-01",
+          "vix": "2026-11-05",
+          "epu": "2026-10-01",
+          "consumer": "2026-09-01"
+        }
+      }
+    ]
+  }
 }
