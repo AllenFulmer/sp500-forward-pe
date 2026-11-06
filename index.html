@@ -466,11 +466,38 @@
     const values = series.filter(p => p.date >= cut).map(p => p.value);
     return { values, cut };
   }
+  // Calendar date for a chart observation. YYYY-MM-DD is read as that calendar day in
+  // every timezone (not as a UTC instant, which would show the previous day west of UTC).
+  // The time scale's tooltip label is already text like "Nov 5, 2026". Appending
+  // "T00:00:00" to that string is an Invalid Date, so this parser never does that.
   function fmtDate(iso) {
-    if (!iso) return "—";
-    const d = new Date(iso + "T00:00:00");
     const months = ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"];
-    return months[d.getMonth()] + " " + d.getDate() + ", " + d.getFullYear();
+    const fromYMD = (y, m, day) => {
+      if (!Number.isInteger(y) || !Number.isInteger(m) || !Number.isInteger(day)) return null;
+      if (m < 1 || m > 12 || day < 1 || day > 31) return null;
+      return months[m - 1] + " " + day + ", " + y;
+    };
+    if (iso == null || iso === "") return "—";
+    if (iso instanceof Date) {
+      if (isNaN(iso.getTime())) return "—";
+      return fromYMD(iso.getFullYear(), iso.getMonth() + 1, iso.getDate()) || "—";
+    }
+    if (typeof iso === "number" && isFinite(iso)) {
+      const d = new Date(iso);
+      if (isNaN(d.getTime())) return "—";
+      // Date-only values the time scale stores are UTC midnights. Use the UTC
+      // calendar day so the label does not move in timezones west of UTC.
+      return fromYMD(d.getUTCFullYear(), d.getUTCMonth() + 1, d.getUTCDate()) || "—";
+    }
+    const s = String(iso).trim();
+    const ymd = /^(\d{4})-(\d{2})-(\d{2})(?:$|[T\s])/.exec(s);
+    if (ymd) return fromYMD(+ymd[1], +ymd[2], +ymd[3]) || "—";
+    const named = /^([A-Za-z]{3,9})\s+(\d{1,2}),\s*(\d{4})$/.exec(s);
+    if (named) {
+      const mi = months.findIndex(mo => mo.toLowerCase() === named[1].slice(0, 3).toLowerCase());
+      if (mi >= 0) return fromYMD(+named[3], mi + 1, +named[2]) || "—";
+    }
+    return "—";
   }
   function fmtX(v, digits) {
     if (v == null || !isFinite(v)) return "—";
@@ -789,11 +816,25 @@
             displayColors: false,
             padding: 8,
             callbacks: {
-              title: (items) => items[0] ? fmtDate(items[0].label) : "",
-              label: (item) => Y
-                ? [" Forward earnings yield: " + (+item.raw).toFixed(2) + "%",
-                   " (Forward P/E: " + peValues[item.dataIndex].toFixed(2) + "x)"]
-                : " Forward P/E: " + (+item.raw).toFixed(2) + "x",
+              // items[0].label is the time scale's display text ("Nov 5, 2026"), not the
+              // observation date. Format the series date at this index instead.
+              title: (items) => {
+                const item = items && items[0];
+                if (!item || item.dataIndex == null) return "";
+                const point = metrics.series[item.dataIndex];
+                return fmtDate(point && point.date);
+              },
+              label: (item) => {
+                const raw = Number(item && item.raw);
+                const pe = peValues[item.dataIndex];
+                const peText = Number.isFinite(pe) ? pe.toFixed(2) + "x" : "—";
+                if (Y) {
+                  const yText = Number.isFinite(raw) ? raw.toFixed(2) + "%" : "—";
+                  return [" Forward earnings yield: " + yText, " (Forward P/E: " + peText + ")"];
+                }
+                const peNow = Number.isFinite(raw) ? raw.toFixed(2) + "x" : "—";
+                return " Forward P/E: " + peNow;
+              },
             }
           },
           refs: Y ? {
