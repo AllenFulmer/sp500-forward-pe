@@ -1,0 +1,517 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+<title>Gauges — market valuation &amp; risk dashboard</title>
+<script>
+  (function () {
+    var t = "dark";
+    try { var s = localStorage.getItem("theme"); if (s === "light" || s === "dark") t = s; } catch (e) {}
+    document.documentElement.setAttribute("data-theme", t);
+  })();
+</script>
+<meta name="color-scheme" content="dark light" />
+<link rel="icon" href="favicon.svg" type="image/svg+xml" />
+<link rel="icon" href="favicon-32.png" sizes="32x32" type="image/png" />
+<link rel="apple-touch-icon" href="apple-touch-icon.png" />
+<meta name="theme-color" content="#0e1013" />
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+<style>
+  :root, [data-theme="light"] {
+    color-scheme: light;
+    --page-bg: #f2f2f2; --bg: #ffffff; --ink: #1a1a1a; --muted: #555; --footer-ink: #666;
+    --link: #444; --card-border: #c8c8c8; --rule: #e5e5e5; --grid: #d9d9d9; --green: #5f8a31;
+    --line: #3a3a3a; --tick: #333; --axis: #888; --badge: #1a1a1a; --badge-ink: #fff;
+    --pill-bg: #eef5e4; --pill-warn-bg: #f7f0df; --pill-warn-ink: #8a6d1f;
+    --pill-err-bg: #f6e4e4; --pill-err-ink: #8a2f2f;
+    --inset-bg: rgba(255,255,255,0.94); --inset-border: #222; --inset-head-bg: #f7f7f7; --inset-desc: #444;
+    --btn-bg: #ffffff; --btn-border: #bdbdbd; --btn-hover: #f0f0f0; --focus: #2f6fd6;
+    --shadow: 0 1px 2px rgba(0,0,0,.04);
+    --cat-val: #c45e00; --cat-rec: #1565c0; --cat-sen: #7b1fa2;
+    --strong-buy: #00C853; --buy: #69F0AE; --hold: #FFD600; --sell: #FF8A65; --strong-sell: #FF1744;
+  }
+  [data-theme="dark"] {
+    color-scheme: dark;
+    --page-bg: #0e1013; --bg: #171a1f; --ink: #e9ebee; --muted: #a7adb6; --footer-ink: #9aa0a8;
+    --link: #c8cdd4; --card-border: #2b3038; --rule: #2b3038; --grid: #2a2f37; --green: #8cc152;
+    --line: #e4e7eb; --tick: #b9bec6; --axis: #5b626c; --badge: #e9ebee; --badge-ink: #111317;
+    --pill-bg: rgba(140,193,82,0.14); --pill-warn-bg: rgba(224,180,70,0.15); --pill-warn-ink: #e3c169;
+    --pill-err-bg: rgba(230,100,100,0.15); --pill-err-ink: #f09a9a;
+    --inset-bg: rgba(23,26,31,0.94); --inset-border: #5b626c; --inset-head-bg: #20242b; --inset-desc: #b9bec6;
+    --btn-bg: #20242b; --btn-border: #3a404a; --btn-hover: #2a2f37; --focus: #7fb0ff;
+    --shadow: 0 1px 2px rgba(0,0,0,.4);
+    --cat-val: #ff8a3d; --cat-rec: #64b5f6; --cat-sen: #ce93d8;
+  }
+  * { box-sizing: border-box; }
+  html { -webkit-text-size-adjust: 100%; text-size-adjust: 100%; }
+  html, body { margin: 0; padding: 0; background: var(--page-bg); color: var(--ink);
+    font-family: "Helvetica Neue", Helvetica, Arial, sans-serif; }
+  .page { max-width: 1180px; margin: 24px auto; padding: 0 16px 40px; }
+  .card {
+    background: var(--bg); border: 1px solid var(--card-border); border-radius: 2px;
+    padding: 18px 22px 14px; box-shadow: var(--shadow);
+  }
+  .header { display: flex; justify-content: space-between; align-items: flex-start; gap: 12px; }
+  .header .titles { min-width: 0; }
+  h1 { font-size: 22px; font-weight: 700; margin: 0 0 4px; letter-spacing: -0.2px; }
+  h2 { font-size: 15px; font-weight: 700; margin: 0; color: var(--ink); }
+  .muted { color: var(--muted); font-size: 12.5px; }
+  .header-actions { display: flex; align-items: center; gap: 10px; flex-shrink: 0; }
+  .theme-toggle {
+    display: inline-flex; align-items: center; justify-content: center;
+    width: 44px; height: 44px; padding: 0; margin: -6px 0 0;
+    background: var(--btn-bg); color: var(--ink); border: 1px solid var(--btn-border);
+    border-radius: 8px; cursor: pointer; flex-shrink: 0;
+    transition: background-color .15s ease, border-color .15s ease;
+    -webkit-tap-highlight-color: transparent;
+  }
+  .theme-toggle:hover { background: var(--btn-hover); }
+  .theme-toggle:focus-visible { outline: 2px solid var(--focus); outline-offset: 2px; }
+  .theme-toggle svg { width: 20px; height: 20px; display: block; }
+  [data-theme="dark"] .theme-toggle .icon-moon { display: none; }
+  [data-theme="light"] .theme-toggle .icon-sun { display: none; }
+  .status {
+    margin: 10px 0 6px; font-size: 12px; color: var(--muted);
+    display: flex; flex-wrap: wrap; gap: 8px 16px; align-items: center;
+  }
+  .status .pill {
+    display: inline-block; padding: 2px 8px; border-radius: 999px;
+    background: var(--pill-bg); color: var(--green); font-weight: 600; font-size: 11px;
+  }
+  .status .pill.warn { background: var(--pill-warn-bg); color: var(--pill-warn-ink); }
+  .status .pill.err { background: var(--pill-err-bg); color: var(--pill-err-ink); }
+  .topnav { display: flex; flex-wrap: wrap; gap: 0 4px; margin: 0 0 12px; border-bottom: 1px solid var(--card-border); overflow: visible; }
+  .topnav a { display: inline-flex; align-items: center; min-height: 40px; padding: 0 14px; color: var(--muted);
+    text-decoration: none; font-size: 14px; font-weight: 600; border-bottom: 2px solid transparent; white-space: nowrap; }
+  .topnav a:hover { color: var(--ink); }
+  .topnav a[aria-current="page"] { color: var(--ink); border-bottom-color: var(--green); box-shadow: 0 1px 0 var(--green); }
+  .topnav a:focus-visible { outline: 2px solid var(--focus); outline-offset: -2px; }
+  @media (max-width: 700px) {
+    .topnav { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 0; overflow: visible; }
+    .topnav a { min-height: 44px; justify-content: center; text-align: center; white-space: normal; line-height: 1.2; padding: 4px 4px; font-size: 12.5px; }
+  }
+  footer {
+    margin-top: 16px; font-size: 11px; color: var(--footer-ink); line-height: 1.45;
+    border-top: 1px solid var(--rule); padding-top: 10px;
+  }
+  footer a { color: var(--link); }
+
+  /* Summary row */
+  .summary {
+    display: grid; grid-template-columns: minmax(0, 1.1fr) minmax(0, 0.9fr) minmax(0, 1fr);
+    gap: 16px; margin-top: 16px;
+  }
+  @media (max-width: 900px) { .summary { grid-template-columns: minmax(0, 1fr); } }
+  .summary .card { min-width: 0; }
+  .signal-badge {
+    display: inline-block; font-size: 20px; font-weight: 800; letter-spacing: 0.5px;
+    padding: 6px 14px; border-radius: 6px; color: #111; margin: 8px 0 4px;
+  }
+  .composite-score { font-size: 13px; color: var(--muted); font-variant-numeric: tabular-nums; }
+  .gauge-wrap { position: relative; width: 100%; max-width: 320px; margin: 8px auto 0; }
+  .gauge-wrap canvas { width: 100% !important; height: auto !important; display: block; }
+  .breakdown { margin-top: 10px; display: grid; gap: 8px; }
+  .bd-row { display: grid; grid-template-columns: 90px 1fr 48px; gap: 8px; align-items: center; font-size: 12.5px; }
+  .bd-row .lab { font-weight: 700; }
+  .bd-track { height: 8px; background: var(--rule); border-radius: 999px; overflow: hidden; position: relative; }
+  .bd-fill { height: 100%; border-radius: 999px; }
+  .bd-val { text-align: right; font-variant-numeric: tabular-nums; font-weight: 700; }
+  .rec-prob-val { font-size: 36px; font-weight: 800; font-variant-numeric: tabular-nums; margin: 6px 0 2px; }
+  .rec-bar { height: 10px; background: var(--rule); border-radius: 999px; overflow: hidden; margin: 8px 0; }
+  .rec-bar > span { display: block; height: 100%; border-radius: 999px; }
+  .legend { font-size: 12px; color: var(--muted); line-height: 1.5; }
+  .legend-swatches { display: flex; flex-wrap: wrap; gap: 6px 12px; margin-top: 8px; }
+  .sw { display: inline-flex; align-items: center; gap: 6px; }
+  .sw i { width: 10px; height: 10px; border-radius: 2px; display: inline-block; }
+
+  /* Category sections */
+  .section { margin-top: 22px; }
+  .section-head {
+    display: flex; align-items: baseline; justify-content: space-between; gap: 10px;
+    margin: 0 0 10px; padding-bottom: 6px; border-bottom: 2px solid var(--card-border);
+  }
+  .section-head h2 { font-size: 16px; }
+  .section-head .count { font-size: 12px; color: var(--muted); font-weight: 600; }
+  .section.valuation .section-head { border-bottom-color: var(--cat-val); }
+  .section.recession .section-head { border-bottom-color: var(--cat-rec); }
+  .section.sentiment .section-head { border-bottom-color: var(--cat-sen); }
+
+  .grid {
+    display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 14px;
+  }
+  @media (max-width: 1000px) { .grid { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+  @media (max-width: 600px) { .grid { grid-template-columns: minmax(0, 1fr); } }
+
+  .mcard {
+    background: var(--bg); border: 1px solid var(--card-border); border-radius: 6px;
+    padding: 12px 14px 10px; box-shadow: var(--shadow); min-width: 0;
+    display: flex; flex-direction: column; gap: 4px;
+    border-top: 3px solid var(--card-border);
+  }
+  .mcard.valuation { border-top-color: var(--cat-val); }
+  .mcard.recession { border-top-color: var(--cat-rec); }
+  .mcard.sentiment { border-top-color: var(--cat-sen); }
+  .mcard.unavailable { opacity: 0.85; }
+  .mcard-top { display: flex; justify-content: space-between; align-items: flex-start; gap: 8px; }
+  .mcard h3 { font-size: 14px; font-weight: 700; margin: 0; line-height: 1.25; }
+  .tag {
+    display: inline-block; font-size: 10px; font-weight: 700; padding: 2px 7px; border-radius: 999px;
+    background: var(--pill-bg); color: var(--green); white-space: nowrap; flex-shrink: 0;
+  }
+  .tag.warn { background: var(--pill-warn-bg); color: var(--pill-warn-ink); }
+  .tag.err { background: var(--pill-err-bg); color: var(--pill-err-ink); }
+  .mdesc { font-size: 11.5px; color: var(--muted); line-height: 1.35; margin: 0; }
+  .mvalue { font-size: 26px; font-weight: 800; font-variant-numeric: tabular-nums; letter-spacing: -0.3px; margin: 2px 0; }
+  .msd { font-size: 12.5px; font-weight: 700; font-variant-numeric: tabular-nums; }
+  .mdir { font-size: 11px; color: var(--muted); }
+  .mmeta { font-size: 11px; color: var(--footer-ink); margin-top: auto; padding-top: 6px; border-top: 1px solid var(--rule); line-height: 1.4; }
+  .mmeta a { color: var(--link); }
+  .mcharts { display: grid; grid-template-columns: 88px 1fr; gap: 8px; align-items: end; margin: 4px 0 2px; min-height: 64px; }
+  .mcharts canvas { width: 100% !important; height: 64px !important; display: block; }
+  .mini-gauge { width: 88px; height: 64px; }
+  .spark { min-width: 0; }
+
+  @media (max-width: 700px) {
+    .page { margin: 12px auto; padding: 0 10px 24px; }
+    .card { padding: 14px 14px 12px; }
+    .mvalue { font-size: 22px; }
+  }
+</style>
+</head>
+<body>
+<div class="page">
+  <nav class="topnav" aria-label="Pages">
+    <a href="./">Valuation &amp; Macro</a>
+    <a href="charts.html">Charts</a>
+    <a href="momentum.html">Momentum</a>
+    <a href="dca.html">Monthly DCA</a>
+    <a href="gauges.html" aria-current="page">Gauges</a>
+  </nav>
+
+  <div class="card">
+    <div class="header">
+      <div class="titles">
+        <h1>Gauges</h1>
+        <h2 class="muted" style="font-weight:400">Fourteen valuation, recession, and sentiment models. +SD is bearish for the composite; scores capped at ±2.</h2>
+      </div>
+      <div class="header-actions">
+        <button type="button" class="theme-toggle" id="theme-toggle" aria-label="Switch to light mode" title="Switch to light mode">
+          <svg class="icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><circle cx="12" cy="12" r="4.5"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41"/></svg>
+          <svg class="icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+        </button>
+      </div>
+    </div>
+    <div class="status" id="status">Loading…</div>
+  </div>
+
+  <div class="summary" id="summary" hidden>
+    <div class="card" id="composite-card">
+      <h2>Composite trading signal</h2>
+      <div class="signal-badge" id="signal-badge">—</div>
+      <div class="composite-score" id="composite-score"></div>
+      <div class="gauge-wrap"><canvas id="composite-gauge" width="320" height="180" aria-label="Composite SD gauge"></canvas></div>
+      <div class="breakdown" id="breakdown"></div>
+      <p class="legend" style="margin-top:10px">Weights: Valuation 50% · Recession 25% · Sentiment 25%</p>
+    </div>
+    <div class="card" id="recprob-card">
+      <h2>Recession probability</h2>
+      <div class="rec-prob-val" id="rec-prob-val">—</div>
+      <div class="rec-bar"><span id="rec-prob-bar" style="width:0%"></span></div>
+      <p class="muted" id="rec-prob-label" style="margin:0"></p>
+      <p class="mmeta" id="rec-prob-src" style="border:0;padding-top:8px"></p>
+    </div>
+    <div class="card">
+      <h2>Signal legend</h2>
+      <div class="legend-swatches" style="flex-direction:column;align-items:flex-start;gap:8px;margin-top:10px">
+        <span class="sw"><i style="background:var(--strong-buy)"></i> Strong Buy (composite ≤ −1.5)</span>
+        <span class="sw"><i style="background:var(--buy)"></i> Buy (−1.5 to −0.5)</span>
+        <span class="sw"><i style="background:var(--hold)"></i> Hold (−0.5 to +0.5)</span>
+        <span class="sw"><i style="background:var(--sell)"></i> Sell (+0.5 to +1.5)</span>
+        <span class="sw"><i style="background:var(--strong-sell)"></i> Strong Sell (&gt; +1.5)</span>
+      </div>
+      <p class="legend" style="margin-top:12px">Each model’s SD is a z-score vs its own history (usually since 1990), signed so <strong>+SD = bearish / expensive / risky</strong> for the composite, then capped at ±2. Fear gauges (VIX, wide credit spreads, high EPU, low consumer confidence) flip to contrarian bullish.</p>
+    </div>
+  </div>
+
+  <div id="sections"></div>
+
+  <footer id="foot">
+    Data rebuilt into <a href="data/gauges.json">data/gauges.json</a>. Sources credited on each card.
+    Not investment advice. History of Market CAPE/forward P/E: CC BY 4.0.
+  </footer>
+</div>
+<script>
+(function () {
+  "use strict";
+  const $ = (id) => document.getElementById(id);
+  const esc = (s) => String(s == null ? "" : s).replace(/[&<>"]/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"})[c]);
+  const toggle = $("theme-toggle");
+  const cur = () => document.documentElement.getAttribute("data-theme") === "light" ? "light" : "dark";
+  function syncToggle() {
+    const label = "Switch to " + (cur() === "dark" ? "light" : "dark") + " mode";
+    toggle.setAttribute("aria-label", label); toggle.setAttribute("title", label);
+    const meta = document.querySelector('meta[name="theme-color"]'); if (meta) meta.setAttribute("content", cur() === "dark" ? "#0e1013" : "#f2f2f2");
+  }
+  toggle.addEventListener("click", () => {
+    const t = cur() === "dark" ? "light" : "dark";
+    document.documentElement.setAttribute("data-theme", t);
+    try { localStorage.setItem("theme", t); } catch (e) {}
+    syncToggle();
+  });
+  syncToggle();
+
+  function cssVar(name) {
+    return getComputedStyle(document.documentElement).getPropertyValue(name).trim();
+  }
+  function sdColor(sd) {
+    if (sd == null || !isFinite(sd)) return cssVar("--muted");
+    if (sd <= -1.5) return cssVar("--strong-buy");
+    if (sd <= -0.5) return cssVar("--buy");
+    if (sd <= 0.5) return cssVar("--hold");
+    if (sd <= 1.5) return cssVar("--sell");
+    return cssVar("--strong-sell");
+  }
+  function sdLabel(sd) {
+    if (sd == null || !isFinite(sd)) return "—";
+    const p = (sd >= 0 ? "+" : "") + sd.toFixed(2);
+    return p + " SD";
+  }
+
+  function drawCompositeGauge(canvas, score) {
+    const ctx = canvas.getContext("2d");
+    const w = canvas.width, h = canvas.height;
+    ctx.clearRect(0, 0, w, h);
+    const cx = w / 2, cy = h - 28, r = Math.min(w * 0.42, h * 0.78);
+    const start = Math.PI, end = 2 * Math.PI;
+    // gradient arc background
+    const colors = ["#00C853", "#69F0AE", "#FFD600", "#FF8A65", "#FF1744"];
+    for (let i = 0; i < 5; i++) {
+      const a0 = start + (end - start) * (i / 5);
+      const a1 = start + (end - start) * ((i + 1) / 5);
+      ctx.beginPath();
+      ctx.arc(cx, cy, r, a0, a1);
+      ctx.strokeStyle = colors[i];
+      ctx.lineWidth = 16;
+      ctx.lineCap = "butt";
+      ctx.stroke();
+    }
+    // ticks
+    ctx.fillStyle = cssVar("--muted");
+    ctx.font = "11px Helvetica, Arial, sans-serif";
+    ctx.textAlign = "center";
+    [-2, -1, 0, 1, 2].forEach((t) => {
+      const a = start + (end - start) * ((t + 2) / 4);
+      const x = cx + Math.cos(a) * (r + 18);
+      const y = cy + Math.sin(a) * (r + 18);
+      ctx.fillText((t >= 0 ? "+" : "") + t, x, y + 3);
+    });
+    // needle
+    const s = Math.max(-2, Math.min(2, score == null ? 0 : score));
+    const ang = start + (end - start) * ((s + 2) / 4);
+    ctx.strokeStyle = cssVar("--ink");
+    ctx.fillStyle = cssVar("--ink");
+    ctx.lineWidth = 2.5;
+    ctx.beginPath();
+    ctx.moveTo(cx, cy);
+    ctx.lineTo(cx + Math.cos(ang) * (r - 10), cy + Math.sin(ang) * (r - 10));
+    ctx.stroke();
+    ctx.beginPath();
+    ctx.arc(cx, cy, 5, 0, Math.PI * 2);
+    ctx.fill();
+  }
+
+  function drawMiniGauge(canvas, sd) {
+    const ctx = canvas.getContext("2d");
+    const w = canvas.width, h = canvas.height;
+    ctx.clearRect(0, 0, w, h);
+    if (sd == null || !isFinite(sd)) {
+      ctx.fillStyle = cssVar("--muted");
+      ctx.font = "11px Helvetica, Arial, sans-serif";
+      ctx.textAlign = "center";
+      ctx.fillText("n/a", w / 2, h / 2 + 4);
+      return;
+    }
+    const cx = w / 2, cy = h - 6, r = Math.min(w * 0.45, h * 0.85);
+    const start = Math.PI, end = 2 * Math.PI;
+    ctx.beginPath();
+    ctx.arc(cx, cy, r, start, end);
+    ctx.strokeStyle = cssVar("--rule");
+    ctx.lineWidth = 8;
+    ctx.stroke();
+    // colored portion from 0 to sd
+    const mid = start + (end - start) * 0.5;
+    const ang = start + (end - start) * ((Math.max(-2, Math.min(2, sd)) + 2) / 4);
+    ctx.beginPath();
+    if (sd >= 0) ctx.arc(cx, cy, r, mid, ang);
+    else ctx.arc(cx, cy, r, ang, mid);
+    ctx.strokeStyle = sdColor(sd);
+    ctx.lineWidth = 8;
+    ctx.stroke();
+    // needle
+    ctx.strokeStyle = cssVar("--ink");
+    ctx.lineWidth = 1.5;
+    ctx.beginPath();
+    ctx.moveTo(cx, cy);
+    ctx.lineTo(cx + Math.cos(ang) * (r - 4), cy + Math.sin(ang) * (r - 4));
+    ctx.stroke();
+  }
+
+  function drawSpark(canvas, history, color) {
+    const ctx = canvas.getContext("2d");
+    const w = canvas.width, h = canvas.height;
+    ctx.clearRect(0, 0, w, h);
+    const vals = (history || []).map(p => p.value).filter(v => typeof v === "number" && isFinite(v));
+    if (vals.length < 2) {
+      ctx.fillStyle = cssVar("--muted");
+      ctx.font = "10px Helvetica, Arial, sans-serif";
+      ctx.textAlign = "center";
+      ctx.fillText("no history", w / 2, h / 2 + 3);
+      return;
+    }
+    const min = Math.min(...vals), max = Math.max(...vals);
+    const pad = 4;
+    const span = (max - min) || 1;
+    ctx.beginPath();
+    vals.forEach((v, i) => {
+      const x = pad + (i / (vals.length - 1)) * (w - pad * 2);
+      const y = h - pad - ((v - min) / span) * (h - pad * 2);
+      if (i === 0) ctx.moveTo(x, y); else ctx.lineTo(x, y);
+    });
+    ctx.strokeStyle = color || cssVar("--green");
+    ctx.lineWidth = 1.5;
+    ctx.stroke();
+  }
+
+  function catColor(cat) {
+    if (cat === "valuation") return cssVar("--cat-val");
+    if (cat === "recession") return cssVar("--cat-rec");
+    return cssVar("--cat-sen");
+  }
+
+  function render(data) {
+    const models = data.models || [];
+    const comp = data.composite || {};
+    const rp = data.recession_probability || {};
+    $("summary").hidden = false;
+
+    const badge = $("signal-badge");
+    badge.textContent = comp.signal || "—";
+    badge.style.background = comp.signal_color || cssVar("--hold");
+    $("composite-score").textContent = "Composite score: " +
+      ((comp.score >= 0 ? "+" : "") + (comp.score != null ? comp.score.toFixed(2) : "—"));
+    drawCompositeGauge($("composite-gauge"), comp.score);
+
+    const bd = $("breakdown");
+    const rows = [
+      ["Valuation", comp.valuation_avg, cssVar("--cat-val"), 0.5],
+      ["Recession", comp.recession_avg, cssVar("--cat-rec"), 0.25],
+      ["Sentiment", comp.sentiment_avg, cssVar("--cat-sen"), 0.25],
+    ];
+    bd.innerHTML = rows.map(([lab, avg, col]) => {
+      const a = avg == null ? 0 : avg;
+      const pct = ((a + 2) / 4) * 100;
+      return `<div class="bd-row"><span class="lab" style="color:${col}">${lab}</span>
+        <div class="bd-track"><div class="bd-fill" style="width:${Math.max(0, Math.min(100, pct))}%;background:${col}"></div></div>
+        <span class="bd-val">${a >= 0 ? "+" : ""}${a != null ? a.toFixed(2) : "—"}</span></div>`;
+    }).join("");
+
+    // Recession prob
+    const prob = rp.prob;
+    const recEl = $("rec-prob-val");
+    const bar = $("rec-prob-bar");
+    if (rp.status === "ok" && typeof prob === "number") {
+      const color = prob < 20 ? cssVar("--strong-buy") : prob < 40 ? cssVar("--hold") : prob < 60 ? cssVar("--sell") : cssVar("--strong-sell");
+      recEl.textContent = prob.toFixed(1) + "%";
+      recEl.style.color = color;
+      bar.style.width = Math.max(0, Math.min(100, prob)) + "%";
+      bar.style.background = color;
+      const risk = prob < 20 ? "Low recession risk" : prob < 40 ? "Elevated recession risk" : prob < 60 ? "High recession risk" : "Very high recession risk";
+      $("rec-prob-label").textContent = risk + (rp.as_of ? " · as of " + rp.as_of : "");
+      $("rec-prob-src").innerHTML = esc(rp.method || "") +
+        (rp.source_url ? ` · <a href="${esc(rp.source_url)}" target="_blank" rel="noopener">${esc(rp.source_name || "source")}</a>` : "");
+    } else {
+      recEl.textContent = "—";
+      recEl.style.color = cssVar("--muted");
+      bar.style.width = "0%";
+      $("rec-prob-label").textContent = "unavailable";
+      $("rec-prob-src").textContent = rp.unavailable_reason || "Recession probability unavailable.";
+    }
+
+    // Sections
+    const cats = [
+      { id: "valuation", title: "Valuation models", weight: "50%" },
+      { id: "recession", title: "Recession indicators", weight: "25%" },
+      { id: "sentiment", title: "Sentiment indicators", weight: "25%" },
+    ];
+    const host = $("sections");
+    host.innerHTML = "";
+    const sparklers = [];
+    cats.forEach(cat => {
+      const list = models.filter(m => m.category === cat.id);
+      const sec = document.createElement("section");
+      sec.className = "section " + cat.id;
+      sec.innerHTML = `<div class="section-head"><h2>${esc(cat.title)}</h2><span class="count">${list.length} models · weight ${cat.weight}</span></div>`;
+      const grid = document.createElement("div");
+      grid.className = "grid";
+      list.forEach(m => {
+        const el = document.createElement("article");
+        el.className = "mcard " + cat.id + (m.status === "unavailable" ? " unavailable" : "");
+        let tag = "";
+        if (m.status === "unavailable") tag = `<span class="tag err">Unavailable</span>`;
+        else if (m.status === "substitute") tag = `<span class="tag warn">Substitute</span>`;
+        else tag = `<span class="tag">${esc(sdLabel(m.sd))}</span>`;
+        const valColor = m.status === "unavailable" ? cssVar("--muted") : sdColor(m.sd);
+        el.innerHTML = `
+          <div class="mcard-top"><h3>${esc(m.name)}</h3>${tag}</div>
+          <p class="mdesc">${esc(m.desc)}</p>
+          <div class="mvalue" style="color:${valColor}">${esc(m.value_display || "—")}</div>
+          <div class="msd" style="color:${valColor}">${m.status === "unavailable" ? "—" : esc(sdLabel(m.sd))}</div>
+          <div class="mdir">${esc(m.direction_note || (m.unavailable_reason || ""))}</div>
+          <div class="mcharts">
+            <canvas class="mini-gauge" width="88" height="64" aria-hidden="true"></canvas>
+            <canvas class="spark" width="200" height="64" aria-hidden="true"></canvas>
+          </div>
+          <p class="mmeta">
+            ${m.as_of ? "As of " + esc(m.as_of) + " · " : ""}
+            ${m.substitute_note ? `<span class="tag warn" style="margin-right:4px">Note</span>${esc(m.substitute_note)} · ` : ""}
+            ${m.source_url ? `<a href="${esc(m.source_url)}" target="_blank" rel="noopener">${esc(m.source_name || "Source")}</a>` : esc(m.source_name || "")}
+            ${m.window ? " · " + esc(m.window) : ""}
+          </p>`;
+        grid.appendChild(el);
+        sparklers.push({ el, m, color: catColor(cat.id) });
+      });
+      sec.appendChild(grid);
+      host.appendChild(sec);
+    });
+
+    // Draw after layout
+    requestAnimationFrame(() => {
+      sparklers.forEach(({ el, m, color }) => {
+        const g = el.querySelector(".mini-gauge");
+        const s = el.querySelector(".spark");
+        drawMiniGauge(g, m.sd);
+        drawSpark(s, m.history, color);
+      });
+    });
+
+    const nOk = models.filter(m => m.status === "ok" || m.status === "substitute").length;
+    const nSub = models.filter(m => m.status === "substitute").length;
+    const nNa = models.filter(m => m.status === "unavailable").length;
+    $("status").innerHTML =
+      `<span class="pill">${esc(comp.signal || "—")}</span>` +
+      `<span>${nOk} live · ${nSub} substitute · ${nNa} unavailable</span>` +
+      `<span>Updated ${esc(data.updated || "")}</span>`;
+  }
+
+  fetch("data/gauges.json", { cache: "no-cache" }).then(r => {
+    if (!r.ok) throw new Error("HTTP " + r.status);
+    return r.json();
+  }).then(render).catch(e => {
+    $("status").innerHTML = `<span class="pill err">Could not load gauges</span>`;
+    console.warn(e);
+  });
+})();
+</script>
+</body>
+</html>

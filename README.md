@@ -1,6 +1,19 @@
 # sp500-forward-pe
 
-Static site: https://allenfulmer.github.io/sp500-forward-pe/ (Valuation & Macro, Charts, Momentum, Monthly DCA).
+Static site: https://allenfulmer.github.io/sp500-forward-pe/
+(Valuation & Macro, Charts, Momentum, Monthly DCA, Gauges).
+
+## Gauges tab
+
+`gauges.html` reads `data/gauges.json`, built by:
+
+```bash
+python3 scripts/build_gauges.py
+# on the shared box (xlrd via the Playwright venv):
+/workspace/.pwvenv/bin/python scripts/build_gauges.py
+```
+
+A weekday GitHub Action (`.github/workflows/gauges-daily.yml`) rebuilds and commits the JSON after the US close. The full rebuild is also intended for the monthly data-refresh routine (16th).
 
 ## Adding a chart to the Charts tab
 

@@ -1,0 +1,46 @@
+name: Gauges daily refresh
+
+# Weekdays after the US cash equity close (approx 22:30 UTC = 5:30 PM ET / 6:30 PM EDT).
+# Refreshes daily-moving series (VIX, 10Y-2Y, and anything else the builder pulls) and
+# commits data/gauges.json only when values change. No secrets or paid services.
+on:
+  schedule:
+    - cron: "30 22 * * 1-5"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: gauges-daily
+  cancel-in-progress: false
+
+jobs:
+  refresh:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install deps
+        run: pip install --quiet xlrd openpyxl
+
+      - name: Build gauges.json
+        run: python3 scripts/build_gauges.py --daily
+
+      - name: Commit if changed
+        run: |
+          if git diff --quiet -- data/gauges.json; then
+            echo "UNCHANGED"
+            exit 0
+          fi
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add data/gauges.json
+          git commit -m "chore(gauges): daily data refresh"
+          git push
