@@ -1,8 +1,10 @@
 name: Gauges daily refresh
 
 # Weekdays after the US cash equity close (approx 22:30 UTC = 5:30 PM ET / 6:30 PM EDT).
-# Refreshes daily-moving series (VIX, 10Y-2Y, and anything else the builder pulls) and
-# commits data/gauges.json only when values change. No secrets or paid services.
+# Rebuilds the active gauge set and commits data/gauges.json only when values change.
+# The model list lives in scripts/build_gauges.py. Retired gauges (Mean Reversion / meanrev)
+# are not rebuilt and are not restored from the previous JSON on this daily run or on the
+# monthly full rebuild. No secrets or paid services.
 on:
   schedule:
     - cron: "30 22 * * 1-5"

@@ -1,13 +1,18 @@
 #!/usr/bin/env python3
 """Build data/gauges.json for the Gauges tab.
 
-Fetches public series, computes each of the 14 models' current value and
+Fetches public series, computes each of the 13 models' current value and
 z-score (capped at +/-2), writes sparkline history, composite signal, and
 NY Fed recession probability.
 
+Mean Reversion (id meanrev) is retired. Full rebuilds and --daily both omit
+it, drop a stale meanrev row from an existing gauges.json, and do not include
+it in category or composite scores. Category weights stay valuation 50%,
+recession 25%, sentiment 25%.
+
 Usage:
   python3 scripts/build_gauges.py           # full rebuild
-  python3 scripts/build_gauges.py --daily   # lightweight: refresh daily series only
+  python3 scripts/build_gauges.py --daily   # full rebuild of the active set; does not restore retired gauges
 
 On the shared box, prefer:
   /workspace/.pwvenv/bin/python scripts/build_gauges.py
@@ -28,7 +33,6 @@ import argparse
 import csv
 import io
 import json
-import math
 import os
 import re
 import statistics
@@ -51,6 +55,14 @@ if _VENV_SP.exists() and str(_VENV_SP) not in sys.path:
 try:
     import xlrd
 except ImportError:
+    xlrd = None  # ensure_xlrd() re-execs or exits when a rebuild actually runs
+
+
+def ensure_xlrd():
+    """Import xlrd, re-exec into the shared venv if needed. Scoring does not call this."""
+    global xlrd
+    if xlrd is not None:
+        return
     venv = Path("/workspace/.pwvenv/bin/python")
     if venv.exists() and not os.environ.get("BUILD_GAUGES_REEXEC"):
         os.environ["BUILD_GAUGES_REEXEC"] = "1"
@@ -154,16 +166,6 @@ def zscore_series(pairs: list[tuple[str, float]], window_start: str | None = "19
 
 def clamp_sd(sd: float) -> float:
     return max(-2.0, min(2.0, sd))
-
-
-def linreg(xs: list[float], ys: list[float]) -> tuple[float, float]:
-    n = len(xs)
-    mx, my = statistics.fmean(xs), statistics.fmean(ys)
-    num = sum((x - mx) * (y - my) for x, y in zip(xs, ys))
-    den = sum((x - mx) ** 2 for x in xs) or 1.0
-    b = num / den
-    a = my - b * mx
-    return a, b
 
 
 # ---------------------------------------------------------------------------
@@ -466,8 +468,122 @@ def make_model(
     }
 
 
+# Retired gauges are never rebuilt and never restored from data/gauges.json
+# (daily fallback or monthly full rebuild). meanrev is Mean Reversion.
+RETIRED_MODEL_IDS = frozenset({"meanrev"})
+
+# Valuation, recession, sentiment. Unavailable placeholders (ps) stay in the list
+# but do not affect averages, because scoring ignores non-numeric sd values.
+MODEL_ORDER = (
+    "buffett", "cape", "ps", "interest", "eyg",
+    "yieldcurve", "sahm", "statecoin",
+    "margin", "junk", "vix", "epu", "consumer",
+)
+
+CATEGORY_WEIGHTS = {"valuation": 0.50, "recession": 0.25, "sentiment": 0.25}
+
+
+def cached_model(existing: dict | None, id_: str) -> dict | None:
+    """Previous JSON row used when a fetch fails. Retired ids are never returned."""
+    if not existing or id_ in RETIRED_MODEL_IDS:
+        return None
+    for model in existing.get("models") or []:
+        if model.get("id") == id_ and model.get("id") not in RETIRED_MODEL_IDS:
+            return model
+    return None
+
+
+def take_model(models: dict, existing: dict | None, id_: str, builder, errors: list[str]) -> None:
+    """Build one gauge. On failure, reuse the previous row. Skip retired ids entirely."""
+    if id_ in RETIRED_MODEL_IDS:
+        return
+    try:
+        models[id_] = builder()
+    except Exception as e:
+        errors.append(f"{id_}: {e}")
+        print(f"[error] {id_}: {e}", file=sys.stderr)
+        old = cached_model(existing, id_)
+        if old:
+            models[id_] = old
+            return
+        models[id_] = unavailable(id_, id_, "valuation", "", str(e))
+
+
+def active_models(models: list[dict] | dict[str, dict]) -> list[dict]:
+    """Models in dashboard order, with retired ids removed."""
+    if isinstance(models, dict):
+        by_id = {i: m for i, m in models.items() if i not in RETIRED_MODEL_IDS}
+    else:
+        by_id = {}
+        for model in models:
+            mid = model.get("id")
+            if mid and mid not in RETIRED_MODEL_IDS:
+                by_id[mid] = model
+    return [by_id[i] for i in MODEL_ORDER if i in by_id]
+
+
+def category_sd_avg(model_list: list[dict], category: str) -> float:
+    sds = [
+        m["sd"] for m in model_list
+        if m.get("category") == category and isinstance(m.get("sd"), (int, float))
+    ]
+    return statistics.fmean(sds) if sds else 0.0
+
+
+def signal_for(composite: float) -> tuple[str, str]:
+    if composite <= -1.5:
+        return "STRONG BUY", "#00C853"
+    if composite <= -0.5:
+        return "BUY", "#69F0AE"
+    if composite <= 0.5:
+        return "HOLD", "#FFD600"
+    if composite <= 1.5:
+        return "SELL", "#FF8A65"
+    return "STRONG SELL", "#FF1744"
+
+
+def score_models(model_list: list[dict]) -> dict:
+    """Category averages and composite. Weights stay 50/25/25. No network."""
+    val_avg = category_sd_avg(model_list, "valuation")
+    rec_avg = category_sd_avg(model_list, "recession")
+    sen_avg = category_sd_avg(model_list, "sentiment")
+    composite = (
+        val_avg * CATEGORY_WEIGHTS["valuation"]
+        + rec_avg * CATEGORY_WEIGHTS["recession"]
+        + sen_avg * CATEGORY_WEIGHTS["sentiment"]
+    )
+    signal, signal_color = signal_for(composite)
+    return {
+        "score": round(composite, 2),
+        "signal": signal,
+        "signal_color": signal_color,
+        "valuation_avg": round(val_avg, 2),
+        "recession_avg": round(rec_avg, 2),
+        "sentiment_avg": round(sen_avg, 2),
+        "weights": {
+            "valuation": CATEGORY_WEIGHTS["valuation"],
+            "recession": CATEGORY_WEIGHTS["recession"],
+            "sentiment": CATEGORY_WEIGHTS["sentiment"],
+        },
+    }
+
+
+def rescore_payload(payload: dict) -> dict:
+    """Drop retired gauges and recompute scores from the remaining rows. No network."""
+    out = dict(payload)
+    out["models"] = active_models(payload.get("models") or [])
+    out["composite"] = score_models(out["models"])
+    return out
+
+
 def build_all(daily_only: bool = False) -> dict:
-    """Build full gauges payload. If daily_only and an existing file exists, reuse monthly models."""
+    """Build full gauges payload.
+
+    --daily still rebuilds every active model. An existing file is only a
+    fallback when a fetch fails. Retired ids are never built and never restored
+    from that fallback, on the daily run or the monthly full rebuild.
+    """
+    ensure_xlrd()
     existing = None
     if daily_only and OUT.exists():
         try:
@@ -479,18 +595,7 @@ def build_all(daily_only: bool = False) -> dict:
     models: dict[str, dict] = {}
 
     def keep_or(id_, builder):
-        try:
-            models[id_] = builder()
-        except Exception as e:
-            errors.append(f"{id_}: {e}")
-            print(f"[error] {id_}: {e}", file=sys.stderr)
-            if existing:
-                old = next((m for m in existing.get("models", []) if m["id"] == id_), None)
-                if old:
-                    models[id_] = old
-                    return
-            # stub unavailable
-            models[id_] = unavailable(id_, id_, "valuation", "", str(e))
+        take_model(models, existing, id_, builder, errors)
 
     # ----- shared fetches -----
     print("Fetching FRED + market data…")
@@ -602,39 +707,6 @@ def build_all(daily_only: bool = False) -> dict:
             window_start="1990-01",
         )
     keep_or("interest", build_interest)
-
-    # Mean Reversion: % above log-linear trend of Shiller P
-    def build_meanrev():
-        if not shiller:
-            raise RuntimeError("Shiller unavailable")
-        # Fit on 1871–present (or since 1990 for z-window); trend fit uses long history
-        dates = shiller["date"]
-        Ps = shiller["P"]
-        xs, ys, keep = [], [], []
-        for i, (d, P) in enumerate(zip(dates, Ps)):
-            if P and P > 0:
-                # months since 1871-01
-                y, m = int(d[:4]), int(d[5:7])
-                t = (y - 1871) * 12 + (m - 1)
-                xs.append(float(t))
-                ys.append(math.log(P))
-                keep.append((d, P, t))
-        a, b = linreg(xs, ys)
-        pairs = []
-        for d, P, t in keep:
-            trend = math.exp(a + b * t)
-            pairs.append((d + "-01", (P / trend - 1.0) * 100.0))
-        return make_model(
-            id_="meanrev", name="Mean Reversion", category="valuation",
-            desc="S&P 500 vs exponential (log-linear) trend.",
-            pairs=pairs, direction=1,
-            direction_note="Above trend = expensive (+)",
-            unit="% above trend", value_fmt="{:+.1f}%",
-            source_name="S&P price from Robert Shiller (shillerdata.com); log-linear trend fit since 1871",
-            source_url="https://shillerdata.com/",
-            window_start="1990-01",
-        )
-    keep_or("meanrev", build_meanrev)
 
     # Earnings Yield Gap: Shiller E/P − GS10
     def build_eyg():
@@ -799,33 +871,11 @@ def build_all(daily_only: bool = False) -> dict:
         )
     keep_or("consumer", build_consumer)
 
-    # Order
-    order = [
-        "buffett", "cape", "ps", "interest", "meanrev", "eyg",
-        "yieldcurve", "sahm", "statecoin",
-        "margin", "junk", "vix", "epu", "consumer",
-    ]
-    model_list = [models[i] for i in order if i in models]
-
-    # Composite
-    def avg_sd(cat):
-        sds = [m["sd"] for m in model_list if m["category"] == cat and isinstance(m.get("sd"), (int, float))]
-        return statistics.fmean(sds) if sds else 0.0
-
-    val_avg = avg_sd("valuation")
-    rec_avg = avg_sd("recession")
-    sen_avg = avg_sd("sentiment")
-    composite = val_avg * 0.5 + rec_avg * 0.25 + sen_avg * 0.25
-    if composite <= -1.5:
-        signal, signal_color = "STRONG BUY", "#00C853"
-    elif composite <= -0.5:
-        signal, signal_color = "BUY", "#69F0AE"
-    elif composite <= 0.5:
-        signal, signal_color = "HOLD", "#FFD600"
-    elif composite <= 1.5:
-        signal, signal_color = "SELL", "#FF8A65"
-    else:
-        signal, signal_color = "STRONG SELL", "#FF1744"
+    # Drop retired ids even if a stale gauges.json row was assigned directly.
+    for retired_id in RETIRED_MODEL_IDS:
+        models.pop(retired_id, None)
+    model_list = active_models(models)
+    comp = score_models(model_list)
 
     # Recession probability — NY Fed preferred
     rec_prob = {
@@ -862,15 +912,7 @@ def build_all(daily_only: bool = False) -> dict:
         "updated": now,
         "timezone": "America/New_York",
         "models": model_list,
-        "composite": {
-            "score": round(composite, 2),
-            "signal": signal,
-            "signal_color": signal_color,
-            "valuation_avg": round(val_avg, 2),
-            "recession_avg": round(rec_avg, 2),
-            "sentiment_avg": round(sen_avg, 2),
-            "weights": {"valuation": 0.50, "recession": 0.25, "sentiment": 0.25},
-        },
+        "composite": comp,
         "recession_probability": rec_prob,
         "errors": errors,
         "notes": [
@@ -886,7 +928,7 @@ def build_all(daily_only: bool = False) -> dict:
 
 def main():
     ap = argparse.ArgumentParser()
-    ap.add_argument("--daily", action="store_true", help="Same full rebuild today (daily job); reserved for future lighter path")
+    ap.add_argument("--daily", action="store_true", help="Full rebuild of the active set; do not restore retired gauges from the existing JSON")
     ap.add_argument("--out", type=Path, default=OUT)
     args = ap.parse_args()
     payload = build_all(daily_only=args.daily)
