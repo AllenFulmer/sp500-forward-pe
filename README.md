@@ -13,7 +13,7 @@ python3 scripts/build_gauges.py
 /workspace/.pwvenv/bin/python scripts/build_gauges.py
 ```
 
-A weekday GitHub Action (`.github/workflows/gauges-daily.yml`) rebuilds and commits the JSON after the US close. The full rebuild is also intended for the monthly data-refresh routine (16th).
+A weekday GitHub Action (`.github/workflows/gauges-daily.yml`) rebuilds and commits the JSON after the US close. The full rebuild is also intended for the monthly data-refresh routine (16th). Both paths run `scripts/build_gauges.py`, which scores 13 models at valuation 50% / recession 25% / sentiment 25%. Mean Reversion (`meanrev`) is retired: it is not built, not restored from an older `data/gauges.json`, and not included in category or composite scores.
 
 ## Adding a chart to the Charts tab
 
