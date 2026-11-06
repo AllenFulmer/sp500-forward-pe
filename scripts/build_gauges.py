@@ -1,14 +1,19 @@
 #!/usr/bin/env python3
 """Build data/gauges.json for the Gauges tab.
 
-Fetches public series, computes each of the 13 models' current value and
+Fetches public series, computes each of the 12 models' current value and
 z-score (capped at +/-2), writes sparkline history, composite signal, and
 NY Fed recession probability.
 
-Mean Reversion (id meanrev) is retired. Full rebuilds and --daily both omit
-it, drop a stale meanrev row from an existing gauges.json, and do not include
-it in category or composite scores. Category weights stay valuation 50%,
-recession 25%, sentiment 25%.
+Mean Reversion (id meanrev) and Price/Sales (id ps) are retired. Full rebuilds
+and --daily both omit them, drop a stale row from an existing gauges.json, and
+do not include them in category or composite scores. Category weights stay
+valuation 50%, recession 25%, sentiment 25%.
+
+The S&P price chart is forward-only. Composite readings are appended to
+data/gauge_signal_history.json on a successful build, one per calendar date.
+Older readings are never replaced, and a partial or failed build does not
+append. Prices before the first saved reading are context only.
 
 Usage:
   python3 scripts/build_gauges.py           # full rebuild
@@ -25,7 +30,9 @@ Licence policy (see comments on each model):
   - Copyrighted: Pre-Approval Required (ICE BofA HY OAS): DO NOT embed; use
     Moody's Baa minus 10Y Treasury as a labeled substitute
   - History of Market CAPE/forward PE: CC BY 4.0, credit required
-  - Price/Sales: no free redistributable source -> status unavailable
+  - Price/Sales: no free redistributable source; the placeholder is retired
+  - S&P price line: Shiller monthly average (shillerdata.com), not the FRED
+    SP500 series (S&P Dow Jones prohibits reproduction without permission)
 """
 from __future__ import annotations
 
@@ -44,6 +51,8 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
 OUT = ROOT / "data" / "gauges.json"
+HISTORY = ROOT / "data" / "gauge_signal_history.json"
+PRICE_START = "1996-01"  # same start as the Valuation & Macro charts
 CACHE = Path(os.environ.get("GAUGES_CACHE", "/tmp/gauges-cache"))
 CACHE.mkdir(parents=True, exist_ok=True)
 
@@ -469,13 +478,13 @@ def make_model(
 
 
 # Retired gauges are never rebuilt and never restored from data/gauges.json
-# (daily fallback or monthly full rebuild). meanrev is Mean Reversion.
-RETIRED_MODEL_IDS = frozenset({"meanrev"})
+# (daily fallback or monthly full rebuild).
+# meanrev = Mean Reversion. ps = Price / Sales Ratio (no redistributable series).
+RETIRED_MODEL_IDS = frozenset({"meanrev", "ps"})
 
-# Valuation, recession, sentiment. Unavailable placeholders (ps) stay in the list
-# but do not affect averages, because scoring ignores non-numeric sd values.
+# Valuation, recession, sentiment. Scoring uses numeric sd values only.
 MODEL_ORDER = (
-    "buffett", "cape", "ps", "interest", "eyg",
+    "buffett", "cape", "interest", "eyg",
     "yieldcurve", "sahm", "statecoin",
     "margin", "junk", "vix", "epu", "consumer",
 )
@@ -498,15 +507,21 @@ def take_model(models: dict, existing: dict | None, id_: str, builder, errors: l
     if id_ in RETIRED_MODEL_IDS:
         return
     try:
-        models[id_] = builder()
+        built = builder()
+        built["_fresh"] = True
+        models[id_] = built
     except Exception as e:
         errors.append(f"{id_}: {e}")
         print(f"[error] {id_}: {e}", file=sys.stderr)
         old = cached_model(existing, id_)
         if old:
-            models[id_] = old
+            row = dict(old)
+            row["_fresh"] = False
+            models[id_] = row
             return
-        models[id_] = unavailable(id_, id_, "valuation", "", str(e))
+        missing = unavailable(id_, id_, "valuation", "", str(e))
+        missing["_fresh"] = False
+        models[id_] = missing
 
 
 def active_models(models: list[dict] | dict[str, dict]) -> list[dict]:
@@ -574,6 +589,243 @@ def rescore_payload(payload: dict) -> dict:
     out["models"] = active_models(payload.get("models") or [])
     out["composite"] = score_models(out["models"])
     return out
+
+
+def model_version() -> str:
+    return "v1:" + ",".join(MODEL_ORDER)
+
+
+def shiller_monthly_prices(shiller: dict | None) -> list[dict]:
+    """Monthly average S&P price from an already loaded Shiller workbook. No network."""
+    if not shiller:
+        return []
+    out = []
+    for date, price in zip(shiller.get("date") or [], shiller.get("P") or []):
+        if not isinstance(date, str) or date < PRICE_START:
+            continue
+        if not isinstance(price, (int, float)) or isinstance(price, bool) or not price > 0:
+            continue
+        out.append({"date": date[:7], "price": round(float(price), 2)})
+    return merge_price_points([], out)
+
+
+def merge_price_points(existing: list | None, incoming: list | None) -> list[dict]:
+    """Append-only monthly prices. The first stored price for a month is kept."""
+    by: dict[str, dict] = {}
+    for src in (existing or []), (incoming or []):
+        for point in src:
+            if not isinstance(point, dict):
+                continue
+            date = str(point.get("date") or "")[:7]
+            price = point.get("price")
+            if len(date) != 7 or date[4] != "-":
+                continue
+            if not isinstance(price, (int, float)) or isinstance(price, bool) or not price > 0:
+                continue
+            if date not in by:
+                by[date] = {"date": date, "price": round(float(price), 2)}
+    return [by[d] for d in sorted(by)]
+
+
+def price_on_or_before(prices: list[dict], signal_date: str) -> dict | None:
+    """Latest stored month that was already on file by the signal date."""
+    month = (signal_date or "")[:7]
+    if len(month) != 7:
+        return None
+    eligible = [p for p in prices if p["date"] <= month]
+    return eligible[-1] if eligible else None
+
+
+def _valid_obs_date(value: str) -> str | None:
+    date = str(value or "")[:10]
+    if len(date) == 10 and date[4] == "-" and date[7] == "-":
+        return date
+    return None
+
+
+def normalize_observations(observations: list | None) -> list[dict]:
+    """Keep the first well-formed reading for each date. No network."""
+    kept: list[dict] = []
+    seen: set[str] = set()
+    for obs in observations or []:
+        if not isinstance(obs, dict):
+            continue
+        date = _valid_obs_date(str(obs.get("date") or ""))
+        score = obs.get("score")
+        if date is None or date in seen:
+            continue
+        if not isinstance(score, (int, float)) or isinstance(score, bool):
+            continue
+        if not obs.get("signal"):
+            continue
+        row = dict(obs)
+        row["date"] = date
+        kept.append(row)
+        seen.add(date)
+    kept.sort(key=lambda row: row["date"])
+    return kept
+
+
+def make_signal_snapshot(payload: dict, price_point: dict | None, *, fresh_count: int, min_fresh: int = 8) -> dict | None:
+    """A new dated reading, or None when the build is partial, stale, or priceless.
+
+    Callers pass fresh_count from models built in this run. A cache fallback
+    does not count. Errors mean at least one input was not rebuilt, so the
+    reading is not appended.
+    """
+    if payload.get("errors"):
+        return None
+    if fresh_count < min_fresh:
+        return None
+    comp = payload.get("composite") or {}
+    score = comp.get("score")
+    if not isinstance(score, (int, float)) or isinstance(score, bool) or not comp.get("signal"):
+        return None
+    if not price_point or not isinstance(price_point.get("price"), (int, float)):
+        return None
+    date = _valid_obs_date(str(payload.get("updated") or ""))
+    if date is None:
+        return None
+    inputs = {}
+    for model in payload.get("models") or []:
+        mid = model.get("id")
+        if mid and mid not in RETIRED_MODEL_IDS:
+            inputs[mid] = model.get("as_of")
+    return {
+        "date": date,
+        "observed_at": payload.get("updated"),
+        "score": score,
+        "signal": comp["signal"],
+        "signal_color": comp.get("signal_color"),
+        "valuation_avg": comp.get("valuation_avg"),
+        "recession_avg": comp.get("recession_avg"),
+        "sentiment_avg": comp.get("sentiment_avg"),
+        "weights": comp.get("weights") or dict(CATEGORY_WEIGHTS),
+        "price": price_point["price"],
+        "price_as_of": price_point["date"],
+        "price_kind": "shiller_monthly_average",
+        "model_version": model_version(),
+        "constituent_ids": list(MODEL_ORDER),
+        "inputs_as_of": inputs,
+    }
+
+
+def merge_signal_history(existing: dict | None, snapshot: dict | None) -> dict:
+    """Append a new date. Never replace a stored date or insert an earlier one."""
+    existing = existing or {}
+    observations = normalize_observations(existing.get("observations"))
+    dates = {row["date"] for row in observations}
+    if snapshot and isinstance(snapshot, dict):
+        date = _valid_obs_date(str(snapshot.get("date") or ""))
+        score = snapshot.get("score")
+        if (
+            date is not None
+            and snapshot.get("signal")
+            and isinstance(score, (int, float))
+            and not isinstance(score, bool)
+            and date not in dates
+            and (not dates or date > max(dates))
+        ):
+            row = dict(snapshot)
+            row["date"] = date
+            observations.append(row)
+    tracking = observations[0]["date"] if observations else None
+    return {
+        "model_version": model_version(),
+        "constituent_ids": list(MODEL_ORDER),
+        "weights": {
+            "valuation": CATEGORY_WEIGHTS["valuation"],
+            "recession": CATEGORY_WEIGHTS["recession"],
+            "sentiment": CATEGORY_WEIGHTS["sentiment"],
+        },
+        "tracking_started": tracking,
+        "history_unavailable_before": tracking,
+        "observations": observations,
+        "notes": [
+            "Append-only record of composite readings this builder actually saved.",
+            "Nothing before tracking_started is reconstructed. The live z-score uses each series' full sample through the latest point, so a past reading of that same statistic would use information that was not yet known.",
+            "Several inputs (GDP, Z.1 equities, Shiller, Philly Fed state indexes, Sahm) are revised vintages. This file does not treat them as point-in-time.",
+            "A second run on a stored date does not replace that reading. A failed or partial rebuild does not append.",
+            "price is the Shiller monthly average then on file (price_as_of), not a daily close and not an intraday quote.",
+        ],
+    }
+
+
+def price_chart_block(prices: list[dict], history: dict) -> dict:
+    tracking = history.get("tracking_started")
+    return {
+        "title": "S&P 500 and the saved composite signal",
+        "frequency": "monthly",
+        "price_kind": "shiller_monthly_average",
+        "source_name": "Robert J. Shiller, Irrational Exuberance data (monthly average price)",
+        "source_url": "https://shillerdata.com/",
+        "tracking_started": tracking,
+        "history_unavailable_before": tracking,
+        "disclaimer": (
+            "Signal tracking starts on the first date a composite was saved. "
+            "Prices before that are shown in gray because no composite history was saved, and none is estimated. "
+            "The line is Shiller's monthly average S&P price as first stored here, not a daily close and not an intraday quote. "
+            "Stored months are not rewritten when Shiller revises them. "
+            "Colored marks are saved gauge readings at the price then on file. "
+            "This chart illustrates those readings. It is not a backtest of strategy returns."
+        ),
+        "prices": prices,
+        "observations": history.get("observations") or [],
+    }
+
+
+def apply_signal_tracking(
+    payload: dict,
+    prev: dict | None,
+    history: dict | None,
+    prices_incoming: list | None = None,
+) -> tuple[dict, dict]:
+    """Attach the price chart and append today's reading when the build is healthy.
+
+    Does not fetch. Previous prices and observations are kept. A missing
+    fresh-id list means the caller does not know this run rebuilt the inputs,
+    so no reading is appended.
+    """
+    payload = dict(payload)
+    fresh_ids = payload.pop("_fresh_ids", None)
+    incoming = payload.pop("_prices_incoming", None)
+    if prices_incoming is not None:
+        incoming = prices_incoming
+    prev_chart = (prev or {}).get("price_chart") or {}
+    prices = merge_price_points(prev_chart.get("prices") or [], incoming or [])
+    if history and history.get("observations"):
+        hist_in = history
+    else:
+        hist_in = {"observations": prev_chart.get("observations") or []}
+    snapshot = None
+    if fresh_ids is not None:
+        updated = str(payload.get("updated") or "")
+        snapshot = make_signal_snapshot(
+            payload,
+            price_on_or_before(prices, updated[:10]),
+            fresh_count=len(fresh_ids),
+        )
+    merged = merge_signal_history(hist_in, snapshot)
+    payload["price_chart"] = price_chart_block(prices, merged)
+    return payload, merged
+
+
+def load_signal_history(path: Path | None = None) -> dict:
+    path = path or HISTORY
+    if not path.exists():
+        return {"observations": []}
+    try:
+        data = json.loads(path.read_text())
+    except Exception:
+        return {"observations": []}
+    return data if isinstance(data, dict) else {"observations": []}
+
+
+def atomic_write(path: Path, text: str) -> None:
+    path.parent.mkdir(parents=True, exist_ok=True)
+    tmp = path.with_suffix(path.suffix + ".tmp")
+    tmp.write_text(text)
+    tmp.replace(path)
 
 
 def build_all(daily_only: bool = False) -> dict:
@@ -663,15 +915,6 @@ def build_all(daily_only: bool = False) -> dict:
             window_start="1990-01",
         )
     keep_or("cape", build_cape)
-
-    # Price / Sales — unavailable
-    models["ps"] = unavailable(
-        "ps", "Price / Sales Ratio", "valuation",
-        "S&P 500 price-to-sales.",
-        "No free redistributable S&P 500 price-to-sales series found (index-level sales data is proprietary). Card left as a placeholder.",
-        source_name="—",
-        source_url="",
-    )
 
     # Interest Rate Model: forward earnings yield − Baa
     def build_interest():
@@ -874,6 +1117,7 @@ def build_all(daily_only: bool = False) -> dict:
     # Drop retired ids even if a stale gauges.json row was assigned directly.
     for retired_id in RETIRED_MODEL_IDS:
         models.pop(retired_id, None)
+    fresh_ids = [mid for mid, model in models.items() if model.pop("_fresh", False)]
     model_list = active_models(models)
     comp = score_models(model_list)
 
@@ -920,8 +1164,11 @@ def build_all(daily_only: bool = False) -> dict:
             "Weights: Valuation 50%, Recession 25%, Sentiment 25%.",
             "Signal map: ≤−1.5 Strong Buy; ≤−0.5 Buy; ≤0.5 Hold; ≤1.5 Sell; else Strong Sell.",
             "ICE BofA HY OAS is not redistributed (FRED Pre-Approval Required); Baa−10Y is the labeled substitute.",
-            "Price/Sales has no free redistributable source and is shown as unavailable.",
+            "Price/Sales had no free redistributable source and has been removed. It is not scored.",
+            "The S&P price chart colors only composite readings saved in gauge_signal_history.json. Earlier prices are context. No historical signal is estimated.",
         ],
+        "_fresh_ids": fresh_ids,
+        "_prices_incoming": shiller_monthly_prices(shiller),
     }
     return payload
 
@@ -930,15 +1177,27 @@ def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--daily", action="store_true", help="Full rebuild of the active set; do not restore retired gauges from the existing JSON")
     ap.add_argument("--out", type=Path, default=OUT)
+    ap.add_argument("--history", type=Path, default=HISTORY)
     args = ap.parse_args()
     payload = build_all(daily_only=args.daily)
     args.out.parent.mkdir(parents=True, exist_ok=True)
+    prev_payload = None
+    if args.out.exists():
+        try:
+            prev_payload = json.loads(args.out.read_text())
+        except Exception:
+            prev_payload = None
+    # Append only after a healthy rebuild. History is loaded first so a write
+    # cannot drop older readings, including when the price fetch failed.
+    payload, history = apply_signal_tracking(payload, prev_payload, load_signal_history(args.history), None)
     text = json.dumps(payload, indent=2)
-    # Stable trailing newline
     if not text.endswith("\n"):
         text += "\n"
+    hist_text = json.dumps(history, indent=2)
+    if not hist_text.endswith("\n"):
+        hist_text += "\n"
     prev = args.out.read_text() if args.out.exists() else None
-    # Compare without updated timestamp for CHANGED detection
+
     def strip_updated(s):
         try:
             o = json.loads(s)
@@ -947,13 +1206,19 @@ def main():
         except Exception:
             return s
     changed = prev is None or strip_updated(prev) != strip_updated(text)
-    args.out.write_text(text)
+    prev_hist = args.history.read_text() if args.history.exists() else None
+    if prev_hist != hist_text:
+        changed = True
+    atomic_write(args.history, hist_text)
+    atomic_write(args.out, text)
     n_ok = sum(1 for m in payload["models"] if m["status"] in ("ok", "substitute"))
     n_na = sum(1 for m in payload["models"] if m["status"] == "unavailable")
+    n_sig = len((payload.get("price_chart") or {}).get("observations") or [])
     print(
         f"{'CHANGED' if changed else 'UNCHANGED'} "
         f"models_ok={n_ok} unavailable={n_na} "
         f"composite={payload['composite']['score']:+.2f} {payload['composite']['signal']} "
+        f"signals={n_sig} "
         f"rec_prob={payload['recession_probability'].get('prob')} "
         f"errors={len(payload['errors'])}"
     )

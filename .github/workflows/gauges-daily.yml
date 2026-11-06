@@ -2,9 +2,12 @@ name: Gauges daily refresh
 
 # Weekdays after the US cash equity close (approx 22:30 UTC = 5:30 PM ET / 6:30 PM EDT).
 # Rebuilds the active gauge set and commits data/gauges.json only when values change.
-# The model list lives in scripts/build_gauges.py. Retired gauges (Mean Reversion / meanrev)
-# are not rebuilt and are not restored from the previous JSON on this daily run or on the
-# monthly full rebuild. No secrets or paid services.
+# The model list lives in scripts/build_gauges.py. Retired gauges (Mean Reversion / meanrev,
+# Price/Sales / ps) are not rebuilt and are not restored from the previous JSON on this
+# daily run or on the monthly full rebuild.
+# data/gauge_signal_history.json is append-only: the builder keeps prior readings, skips
+# a partial or failed rebuild, and does not replace a date already stored. Commit it
+# together with data/gauges.json. No secrets or paid services.
 on:
   schedule:
     - cron: "30 22 * * 1-5"
@@ -37,12 +40,12 @@ jobs:
 
       - name: Commit if changed
         run: |
-          if git diff --quiet -- data/gauges.json; then
+          git add data/gauges.json data/gauge_signal_history.json
+          if git diff --cached --quiet; then
             echo "UNCHANGED"
             exit 0
           fi
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add data/gauges.json
           git commit -m "chore(gauges): daily data refresh"
           git push

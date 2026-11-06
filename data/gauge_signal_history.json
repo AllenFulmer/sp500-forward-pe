@@ -1,0 +1,80 @@
+{
+  "model_version": "v1:buffett,cape,interest,eyg,yieldcurve,sahm,statecoin,margin,junk,vix,epu,consumer",
+  "constituent_ids": [
+    "buffett",
+    "cape",
+    "interest",
+    "eyg",
+    "yieldcurve",
+    "sahm",
+    "statecoin",
+    "margin",
+    "junk",
+    "vix",
+    "epu",
+    "consumer"
+  ],
+  "weights": {
+    "valuation": 0.5,
+    "recession": 0.25,
+    "sentiment": 0.25
+  },
+  "tracking_started": "2026-11-06",
+  "history_unavailable_before": "2026-11-06",
+  "observations": [
+    {
+      "date": "2026-11-06",
+      "observed_at": "2026-11-06T16:44:52+00:00",
+      "score": 0.52,
+      "signal": "SELL",
+      "signal_color": "#FF8A65",
+      "valuation_avg": 1.23,
+      "recession_avg": -0.01,
+      "sentiment_avg": -0.37,
+      "weights": {
+        "valuation": 0.5,
+        "recession": 0.25,
+        "sentiment": 0.25
+      },
+      "price": 7722.72,
+      "price_as_of": "2026-10",
+      "price_kind": "shiller_monthly_average",
+      "model_version": "v1:buffett,cape,interest,eyg,yieldcurve,sahm,statecoin,margin,junk,vix,epu,consumer",
+      "constituent_ids": [
+        "buffett",
+        "cape",
+        "interest",
+        "eyg",
+        "yieldcurve",
+        "sahm",
+        "statecoin",
+        "margin",
+        "junk",
+        "vix",
+        "epu",
+        "consumer"
+      ],
+      "inputs_as_of": {
+        "buffett": "2026-04-01",
+        "cape": "2026-10-30",
+        "interest": "2026-08-05",
+        "eyg": "2026-06-01",
+        "yieldcurve": "2026-11-05",
+        "sahm": "2026-10-01",
+        "statecoin": "2026-09-01",
+        "margin": "2026-09-01",
+        "junk": "2026-10-01",
+        "vix": "2026-11-05",
+        "epu": "2026-10-01",
+        "consumer": "2026-09-01"
+      }
+    }
+  ],
+  "notes": [
+    "Append-only record of composite readings this builder actually saved.",
+    "Nothing before tracking_started is reconstructed. The live z-score uses each series' full sample through the latest point, so a past reading of that same statistic would use information that was not yet known.",
+    "Several inputs (GDP, Z.1 equities, Shiller, Philly Fed state indexes, Sahm) are revised vintages. This file does not treat them as point-in-time.",
+    "A second run on a stored date does not replace that reading. A failed or partial rebuild does not append.",
+    "price is the Shiller monthly average then on file (price_as_of), not a daily close and not an intraday quote."
+  ]
+}
