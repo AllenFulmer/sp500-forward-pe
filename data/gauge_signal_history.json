@@ -68,6 +68,53 @@
         "epu": "2026-10-01",
         "consumer": "2026-09-01"
       }
+    },
+    {
+      "date": "2026-11-07",
+      "observed_at": "2026-11-07T02:04:48+00:00",
+      "score": 0.52,
+      "signal": "SELL",
+      "signal_color": "#FF8A65",
+      "valuation_avg": 1.23,
+      "recession_avg": -0.0,
+      "sentiment_avg": -0.37,
+      "weights": {
+        "valuation": 0.5,
+        "recession": 0.25,
+        "sentiment": 0.25
+      },
+      "price": 7722.72,
+      "price_as_of": "2026-10",
+      "price_kind": "shiller_monthly_average",
+      "model_version": "v1:buffett,cape,interest,eyg,yieldcurve,sahm,statecoin,margin,junk,vix,epu,consumer",
+      "constituent_ids": [
+        "buffett",
+        "cape",
+        "interest",
+        "eyg",
+        "yieldcurve",
+        "sahm",
+        "statecoin",
+        "margin",
+        "junk",
+        "vix",
+        "epu",
+        "consumer"
+      ],
+      "inputs_as_of": {
+        "buffett": "2026-04-01",
+        "cape": "2026-10-30",
+        "interest": "2026-08-05",
+        "eyg": "2026-06-01",
+        "yieldcurve": "2026-11-06",
+        "sahm": "2026-10-01",
+        "statecoin": "2026-09-01",
+        "margin": "2026-09-01",
+        "junk": "2026-10-01",
+        "vix": "2026-11-05",
+        "epu": "2026-10-01",
+        "consumer": "2026-09-01"
+      }
     }
   ],
   "notes": [

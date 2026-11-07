@@ -1,5 +1,5 @@
 {
-  "updated": "2026-11-06T16:44:52+00:00",
+  "updated": "2026-11-07T02:04:48+00:00",
   "timezone": "America/New_York",
   "models": [
     {
@@ -1715,14 +1715,14 @@
       "name": "Yield Curve (10Y-2Y)",
       "category": "recession",
       "desc": "Yield curve spread.",
-      "value": 0.38,
-      "value_display": "+0.38%",
+      "value": 0.35,
+      "value_display": "+0.35%",
       "unit": "%",
-      "sd": 0.67,
-      "sd_raw": -0.675,
+      "sd": 0.71,
+      "sd_raw": -0.708,
       "direction": -1,
       "direction_note": "Inverted / low spread = recession risk (+)",
-      "as_of": "2026-11-05",
+      "as_of": "2026-11-06",
       "status": "ok",
       "unavailable_reason": null,
       "substitute_of": null,
@@ -2212,7 +2212,7 @@
         },
         {
           "date": "2026-11",
-          "value": 0.38
+          "value": 0.35
         }
       ],
       "window": "z-score vs history since 1990-01"
@@ -5768,7 +5768,7 @@
     "signal": "SELL",
     "signal_color": "#FF8A65",
     "valuation_avg": 1.23,
-    "recession_avg": -0.01,
+    "recession_avg": -0.0,
     "sentiment_avg": -0.37,
     "weights": {
       "valuation": 0.5,
@@ -7845,6 +7845,53 @@
           "interest": "2026-08-05",
           "eyg": "2026-06-01",
           "yieldcurve": "2026-11-05",
+          "sahm": "2026-10-01",
+          "statecoin": "2026-09-01",
+          "margin": "2026-09-01",
+          "junk": "2026-10-01",
+          "vix": "2026-11-05",
+          "epu": "2026-10-01",
+          "consumer": "2026-09-01"
+        }
+      },
+      {
+        "date": "2026-11-07",
+        "observed_at": "2026-11-07T02:04:48+00:00",
+        "score": 0.52,
+        "signal": "SELL",
+        "signal_color": "#FF8A65",
+        "valuation_avg": 1.23,
+        "recession_avg": -0.0,
+        "sentiment_avg": -0.37,
+        "weights": {
+          "valuation": 0.5,
+          "recession": 0.25,
+          "sentiment": 0.25
+        },
+        "price": 7722.72,
+        "price_as_of": "2026-10",
+        "price_kind": "shiller_monthly_average",
+        "model_version": "v1:buffett,cape,interest,eyg,yieldcurve,sahm,statecoin,margin,junk,vix,epu,consumer",
+        "constituent_ids": [
+          "buffett",
+          "cape",
+          "interest",
+          "eyg",
+          "yieldcurve",
+          "sahm",
+          "statecoin",
+          "margin",
+          "junk",
+          "vix",
+          "epu",
+          "consumer"
+        ],
+        "inputs_as_of": {
+          "buffett": "2026-04-01",
+          "cape": "2026-10-30",
+          "interest": "2026-08-05",
+          "eyg": "2026-06-01",
+          "yieldcurve": "2026-11-06",
           "sahm": "2026-10-01",
           "statecoin": "2026-09-01",
           "margin": "2026-09-01",
